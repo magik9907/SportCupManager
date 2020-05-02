@@ -23,6 +23,7 @@ namespace SportCupManager
         public MainWindow()
         {
             InitializeComponent();
+            //Nie warto tego rozszerzenia pobierać, ale działa
         }
     }
 }
