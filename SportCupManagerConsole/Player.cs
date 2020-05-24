@@ -10,9 +10,7 @@ namespace SportCupManagerConsole
 
         public Player(string firstName, string lastName, Byte age, Byte number) : base(firstName, lastName, age)
         {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.age = age;
+            this.number = number;
         }
 
         public void setNumber(Byte number)
