@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TournamentManager.TPerson;
@@ -21,7 +22,7 @@ namespace TournamentManager
         /// Creating playoff round 
         /// </summary>
         /// <param name="teams">list of teams allow to play in competition</param>
-        void setPlayOff(List<TTeam.ITeam> teams);
+        void setPlayOff(List <TTeam.ITeam> teams);
         /// <summary>
         /// adding referee to the tournament
         /// </summary>
@@ -50,6 +51,12 @@ namespace TournamentManager
     class Tournament : ITournament
     {
         private string typeOfTournament;
+        private string name;
+        private TRound.League league;
+        private TRound.PlayOff playoff;
+        private List<TPerson.Referee> listReferees = new List<TPerson.Referee>();
+        private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
+
 
         Tournament()
         {
@@ -67,6 +74,9 @@ namespace TournamentManager
                 TDException("tournament name");
             if (string.IsNullOrEmpty(type))
                 TDException("tournament type");
+            this.name = name;
+            this.typeOfTournament = type;
+
         }
 
         public void addReferee(Referee referee)
