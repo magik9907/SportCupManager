@@ -54,7 +54,7 @@ namespace TournamentManager
         private string name;
         private TRound.League league;
         private TRound.PlayOff playoff;
-        private List<TPerson.Referee> listReferees = new List<TPerson.Referee>();
+        private List<TPerson.Referee> referees = new List<TPerson.Referee>();
         private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
 
         public Tournament()
@@ -64,7 +64,7 @@ namespace TournamentManager
 
         public Tournament(string name)
         {
-            TDException("tournament name");
+            TDException("tournament type");
         }
 
         public Tournament(string name, string type)
@@ -80,34 +80,34 @@ namespace TournamentManager
 
         }
 
-        public void AddReferee(Referee referee)
+        public void AddReferee(TPerson.Referee referee = null)
         {
-
+            referees.Add(referee);
         }
 
-        public void AddTeam(ITeam team)
+        public void AddTeam(ITeam team = null)
         {
-
+            teams.Add(team);
         }
 
-        public void RemoveReferee(Referee referee)
+        public void RemoveReferee(TPerson.Referee referee)
         {
-
+            referees.Remove(referee);
         }
 
         public void RemoveTeam(ITeam team)
         {
-
+            teams.Remove(team);
         }
 
         public void SetLeague()
         {
-
+            league = new TRound.League(teams, referees);
         }
 
         public void SetPlayOff(List<ITeam> teams)
         {
-
+            playoff = new TRound.PlayOff(teams, referees);
         }
 
         public string Type

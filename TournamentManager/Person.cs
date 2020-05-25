@@ -5,7 +5,7 @@ using System.Text;
 namespace TournamentManager
 {
     namespace TPerson {
-        interface IPerson
+        public interface IPerson
         {
 
         }
