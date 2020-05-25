@@ -5,27 +5,27 @@ using System.Text;
 namespace TournamentManager
 {
     namespace TTeam {
-        interface ITeam
+        public interface ITeam
         {
 
         }
 
-        abstract class Team : ITeam
+        public abstract class Team : ITeam
         {
 
         }
 
-        class DodgeballTeam : Team
+        public class DodgeballTeam : Team
         {
 
         }
 
-        class VoleyballTeam : Team
+        public class VoleyballTeam : Team
         {
 
         }
 
-        class TugOfWarTeam : Team
+        public class TugOfWarTeam : Team
         {
 
         }

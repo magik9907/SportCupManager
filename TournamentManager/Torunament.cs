@@ -17,38 +17,38 @@ namespace TournamentManager
         /// <summary>
         /// Create league type from Team list
         /// </summary>
-        void setLeague();
+        void SetLeague();
         /// <summary>
         /// Creating playoff round 
         /// </summary>
         /// <param name="teams">list of teams allow to play in competition</param>
-        void setPlayOff(List <TTeam.ITeam> teams);
+        void SetPlayOff(List <TTeam.ITeam> teams);
         /// <summary>
         /// adding referee to the tournament
         /// </summary>
         /// <param name="referee"> referee object to delete</param>
-        void addReferee(TPerson.Referee referee);
+        void AddReferee(TPerson.Referee referee);
         /// <summary>
         /// remove referee
         /// </summary>
         /// <param name="referee">referee object to delete</param>
-        void removeReferee(TPerson.Referee referee);
+        void RemoveReferee(TPerson.Referee referee);
         /// <summary>
         /// add team to competition
         /// </summary>
         /// <param name="team">team object</param>
-        void addTeam(TTeam.ITeam team);
+        void AddTeam(TTeam.ITeam team);
         /// <summary>
         /// remove team from competition
         /// </summary>
         /// <param name="team">team object</param>
-        void removeTeam(TTeam.ITeam team);
+        void RemoveTeam(TTeam.ITeam team);
     }
     /// <summary>
     /// Main class of TournamentManager
     /// 
     /// </summary>
-    class Tournament : ITournament
+    public class Tournament : ITournament
     {
         private string typeOfTournament;
         private string name;
@@ -57,19 +57,20 @@ namespace TournamentManager
         private List<TPerson.Referee> listReferees = new List<TPerson.Referee>();
         private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
 
-
-        Tournament()
+        public Tournament()
         {
-            throw new TException.TournamentMustBeDefine();
+            TNDException();
         }
 
-        Tournament(string name)
+        public Tournament(string name)
         {
             TDException("tournament name");
         }
 
-        Tournament(string name, string type)
+        public Tournament(string name, string type)
         {
+            if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(type))
+                TNDException();
             if (string.IsNullOrEmpty(name))
                 TDException("tournament name");
             if (string.IsNullOrEmpty(type))
@@ -79,39 +80,60 @@ namespace TournamentManager
 
         }
 
-        public void addReferee(Referee referee)
+        public void AddReferee(Referee referee)
         {
-            throw new NotImplementedException();
+
         }
 
-        public void addTeam(ITeam team)
+        public void AddTeam(ITeam team)
         {
-            throw new NotImplementedException();
+
         }
 
-        public void removeReferee(Referee referee)
+        public void RemoveReferee(Referee referee)
         {
-            throw new NotImplementedException();
+
         }
 
-        public void removeTeam(ITeam team)
+        public void RemoveTeam(ITeam team)
         {
-            throw new NotImplementedException();
+
         }
 
-        public void setLeague()
+        public void SetLeague()
         {
-            throw new NotImplementedException();
+
         }
 
-        public void setPlayOff(List<ITeam> teams)
+        public void SetPlayOff(List<ITeam> teams)
         {
-            throw new NotImplementedException();
+
+        }
+
+        public string Type
+        {
+            get
+            {
+                return typeOfTournament;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
         }
 
         private void TDException(string message)
         {
             throw new TException.TournamentDataException(message);
+        }
+
+        private void TNDException()
+        {
+            throw new TException.TournamentMustBeDefine(); 
         }
     }
 

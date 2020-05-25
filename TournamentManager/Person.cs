@@ -10,16 +10,16 @@ namespace TournamentManager
 
         }
 
-        abstract class Person : IPerson
+        public abstract class Person : IPerson
         {
         }
         
-        class Player : Person
+        public class Player : Person
         {
 
         }
 
-        class Referee : Person
+        public class Referee : Person
         {
 
         }

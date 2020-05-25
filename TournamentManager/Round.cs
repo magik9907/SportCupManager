@@ -6,17 +6,17 @@ namespace TournamentManager
 {
     namespace TRound
     {
-        class PlayOff
+        public class PlayOff
         {
 
         }
 
-        class League
+        public class League
         {
 
         }
 
-        class Round
+        public class Round
         {
         }
     }

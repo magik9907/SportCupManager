@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportCupManager", "SportCup
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentManager", "TournamentManager\TournamentManager.csproj", "{BDBE7DA0-C2A3-4C61-A077-11F2C5CDD84A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentManagerTest", "TournamentManagerTest\TournamentManagerTest.csproj", "{98DF7C92-04C7-4536-BCEE-9F83D6B808C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BDBE7DA0-C2A3-4C61-A077-11F2C5CDD84A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDBE7DA0-C2A3-4C61-A077-11F2C5CDD84A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDBE7DA0-C2A3-4C61-A077-11F2C5CDD84A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98DF7C92-04C7-4536-BCEE-9F83D6B808C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98DF7C92-04C7-4536-BCEE-9F83D6B808C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98DF7C92-04C7-4536-BCEE-9F83D6B808C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98DF7C92-04C7-4536-BCEE-9F83D6B808C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

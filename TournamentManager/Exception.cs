@@ -6,7 +6,10 @@ namespace TournamentManager
 {
     namespace TException
     {
-        class TournamentMustBeDefine : Exception
+        /// <summary>
+        /// custom exception when no data given
+        /// </summary>
+        public class TournamentMustBeDefine : Exception
         {
             public TournamentMustBeDefine() : base("Name and type must be define")
             {
@@ -16,7 +19,7 @@ namespace TournamentManager
         /// <summary>
         /// custom exception of tournament data
         /// </summary>
-        class TournamentDataException : Exception
+        public class TournamentDataException : Exception
         {
             /// <summary>
             /// define what type of incorect data exception
@@ -26,6 +29,8 @@ namespace TournamentManager
             {
          
             }
+
+          
         }
 
     }
