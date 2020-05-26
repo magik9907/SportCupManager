@@ -10,22 +10,22 @@ namespace TournamentManager
 
         }
 
-        public abstract class Team : ITeam
+         public abstract class Team : ITeam
         {
 
         }
 
-        public class DodgeballTeam : Team
+         public class DodgeballTeam : Team
         {
 
         }
 
-        public class VoleyballTeam : Team
+         public class VoleyballTeam : Team
         {
 
         }
 
-        public class TugOfWarTeam : Team
+         public class TugOfWarTeam : Team
         {
 
         }

@@ -6,7 +6,7 @@ namespace TournamentManager
     {
         static void Main(string[] args)
         {
-            new Tournament();
+            new Tournament("Name","Typo");
         }
     }
 }
