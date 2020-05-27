@@ -4,31 +4,33 @@ using System.Text;
 
 namespace SportCupManagerConsole
 {
-    abstract class Team
-    {
-        protected string name;
-        protected List<Player> listPlayers = new List<Player>();
-        protected int matchesPlayed;
-        protected int matchesWon;
-
-        public Team(string name)
+     namespace TTeam {
+        abstract class Team
         {
-            this.name = name;
-        }
+            protected string name;
+            protected List<Player> listPlayers = new List<Player>();
+            protected int matchesPlayed;
+            protected int matchesWon;
 
-        public void addPlayer(Player p)
-        {
-            listPlayers.Add(p);
-        }
+            public Team(string name)
+            {
+                this.name = name;
+            }
 
-        public void removePlayer(Player p)
-        {
-            listPlayers.Remove(p);
-        }
+            public void addPlayer(Player p)
+            {
+                listPlayers.Add(p);
+            }
 
-        public string ToString()
-        {
-            return "Name: " + name + ", Played matches: " + matchesPlayed + ", Won matches: " + matchesWon + ", List of players: " + listPlayers.ToString();
+            public void removePlayer(Player p)
+            {
+                listPlayers.Remove(p);
+            }
+
+            public string ToString()
+            {
+                return "Name: " + name + ", Played matches: " + matchesPlayed + ", Won matches: " + matchesWon + ", List of players: " + listPlayers.ToString();
+            }
         }
     }
 }

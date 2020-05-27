@@ -4,47 +4,49 @@ using System.Text;
 
 namespace SportCupManagerConsole
 {
-    abstract class Person
-    {
-        protected string firstName;
-        protected string lastName;
-        protected Byte age;
-
-        public Person(string firstName, string lastName, Byte age)
+    namespace TPerson {
+        abstract class Person
         {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.age = age;
-        }
+            protected string firstName;
+            protected string lastName;
+            protected Byte age;
 
-        public void setFirstName(string name)
-        {
-            this.firstName = name;
-        }
+            public Person(string firstName, string lastName, Byte age)
+            {
+                this.firstName = firstName;
+                this.lastName = lastName;
+                this.age = age;
+            }
 
-        public string getFirstName()
-        {
-            return firstName;
-        }
+            public void setFirstName(string name)
+            {
+                this.firstName = name;
+            }
 
-        public void setLastName(string name)
-        {
-            this.lastName = name;
-        }
+            public string getFirstName()
+            {
+                return firstName;
+            }
 
-        public string getLastName()
-        {
-            return lastName;
-        }
+            public void setLastName(string name)
+            {
+                this.lastName = name;
+            }
 
-        public void setAge(Byte age)
-        {
-            this.age = age;
-        }
+            public string getLastName()
+            {
+                return lastName;
+            }
 
-        public Byte getAge()
-        {
-            return age;
+            public void setAge(Byte age)
+            {
+                this.age = age;
+            }
+
+            public Byte getAge()
+            {
+                return age;
+            }
         }
     }
 }
