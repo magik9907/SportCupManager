@@ -82,7 +82,6 @@ namespace TournamentManagerTest
 
         }
 
-
         [TestMethod]
         public void TestAddReferee()
         {
@@ -103,7 +102,6 @@ namespace TournamentManagerTest
             Assert.IsTrue(t.Referees.Contains(refA));
 
         }
-
 
         [TestMethod]
         public void TestAddRefereeNoDefined()
@@ -141,7 +139,6 @@ namespace TournamentManagerTest
 
         }
 
-
         [TestMethod]
         public void TestAddTeam()
         {
@@ -162,7 +159,6 @@ namespace TournamentManagerTest
             Assert.IsTrue(t.Teams.Contains(teamA));
 
         }
-
 
         [TestMethod]
         public void TestAddTeamNoDefined()

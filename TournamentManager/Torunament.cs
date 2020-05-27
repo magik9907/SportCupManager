@@ -72,7 +72,7 @@ namespace TournamentManager
     }
     /// <summary>
     /// Main class of TournamentManager
-    /// 
+    /// It can create league and playoff, add teams and referees to tournament
     /// </summary>
     public class Tournament : ITournament
     {
@@ -138,39 +138,31 @@ namespace TournamentManager
             IsObjectNotDefined(referee, "Referee");
             referees.Add(referee);
         }
-
         public void AddTeam(TTeam.ITeam team = null)
         {
             IsObjectNotDefined(team,"ITeam");
             teams.Add(team);
         }
-
         public void RemoveReferee(TPerson.Referee referee)
         {
             IsObjectNotDefined(referee, "Referee");
             referees.Remove(referee);
         }
-
         public void RemoveTeam(TTeam.ITeam team)
         {
             IsObjectNotDefined(team,"Iteam");
             teams.Remove(team);
         }
-
         public void SetLeague()
         {
             CheckNumberOfTeams(teams);
             league = new TRound.League(teams, referees);
         }
-
         public void SetPlayOff(List<TTeam.ITeam> teams)
         {
             CheckNumberOfTeams(teams);
             playoff = new TRound.PlayOff(teams, referees);
         }
-        /// <summary>
-        /// return list of referees
-        /// </summary>
         public List<TPerson.Referee> Referees
         {
             get{
@@ -191,7 +183,6 @@ namespace TournamentManager
                 return dyscypline;
             }
         }
-
         public string Name
         {
             get
