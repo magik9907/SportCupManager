@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using TournamentManager.TPerson;
-using TournamentManager.TTeam;
 /// <summary>
 ///     main name space 
 /// </summary>
@@ -141,7 +139,7 @@ namespace TournamentManager
             referees.Add(referee);
         }
 
-        public void AddTeam(ITeam team = null)
+        public void AddTeam(TTeam.ITeam team = null)
         {
             IsObjectNotDefined(team,"ITeam");
             teams.Add(team);
@@ -153,7 +151,7 @@ namespace TournamentManager
             referees.Remove(referee);
         }
 
-        public void RemoveTeam(ITeam team)
+        public void RemoveTeam(TTeam.ITeam team)
         {
             IsObjectNotDefined(team,"Iteam");
             teams.Remove(team);
@@ -165,7 +163,7 @@ namespace TournamentManager
             league = new TRound.League(teams, referees);
         }
 
-        public void SetPlayOff(List<ITeam> teams)
+        public void SetPlayOff(List<TTeam.ITeam> teams)
         {
             CheckNumberOfTeams(teams);
             playoff = new TRound.PlayOff(teams, referees);
