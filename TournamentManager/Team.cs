@@ -2,33 +2,33 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TournamentManager
+namespace SportCupManagerConsole
 {
-    namespace TTeam {
-        public interface ITeam
-        {
+    abstract class Team
+    {
+        protected string name;
+        protected List<Player> listPlayers = new List<Player>();
+        protected int matchesPlayed;
+        protected int matchesWon;
 
+        public Team(string name)
+        {
+            this.name = name;
         }
 
-         public abstract class Team : ITeam
+        public void addPlayer(Player p)
         {
-
+            listPlayers.Add(p);
         }
 
-         public class DodgeballTeam : Team
+        public void removePlayer(Player p)
         {
-
+            listPlayers.Remove(p);
         }
 
-         public class VoleyballTeam : Team
+        public string ToString()
         {
-
-        }
-
-         public class TugOfWarTeam : Team
-        {
-
+            return "Name: " + name + ", Played matches: " + matchesPlayed + ", Won matches: " + matchesWon + ", List of players: " + listPlayers.ToString();
         }
     }
-    
 }

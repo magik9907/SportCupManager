@@ -2,28 +2,49 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TournamentManager
+namespace SportCupManagerConsole
 {
-    namespace TPerson {
-        public interface IPerson
-        {
+    abstract class Person
+    {
+        protected string firstName;
+        protected string lastName;
+        protected Byte age;
 
+        public Person(string firstName, string lastName, Byte age)
+        {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.age = age;
         }
 
-        public abstract class Person : IPerson
+        public void setFirstName(string name)
         {
-        }
-        
-        public class Player : Person
-        {
-
+            this.firstName = name;
         }
 
-        public class Referee : Person
+        public string getFirstName()
         {
-
+            return firstName;
         }
 
+        public void setLastName(string name)
+        {
+            this.lastName = name;
+        }
+
+        public string getLastName()
+        {
+            return lastName;
+        }
+
+        public void setAge(Byte age)
+        {
+            this.age = age;
+        }
+
+        public Byte getAge()
+        {
+            return age;
+        }
     }
-    
 }
