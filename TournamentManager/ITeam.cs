@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
-    interface ITeam
+    namespace TTeam
     {
-        public void addPlayer(Player p);
-        public void removePlayer(Player p);
-        public string ToString();
+        public interface ITeam
+        {
+            public void addPlayer(TPerson.Player p);
+            public void removePlayer(TPerson.Player p);
+            public string ToString();
+        }
     }
 }

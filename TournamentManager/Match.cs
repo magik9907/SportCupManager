@@ -4,52 +4,52 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace TournamentManager
-{
+{	
 	namespace TMatch
 	{
 		//exceptions used by class are defined below the class (will be changed in the future)
 		public abstract class Match
 		{
-			private ITeam teamA;
-			private ITeam teamB;
-			private ITeam winner;
-			private Referee refA;
+			private TTeam.ITeam teamA;
+			private TTeam.ITeam teamB;
+			private TTeam.ITeam winner;
+			private TPerson.Referee refA;
 			//ref is a reserved word, so I changed it to ref_ 
-			public Match(ITeam a, ITeam b, List<Referee> ref_)
+			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> ref_)
 			{
 				teamA = a;
 				teamB = b;
 				refA = ref_.ElementAt(0);
 			}
 			//Function takes a list of referees because VolleyballMatch needs 3 of them
-			public virtual void setReferees(List<Referee> ref_) { refA = ref_.ElementAt(0); }
-			public void setWinner(ITeam winner_) { winner = winner_; }
+			public virtual void setReferees(List<TPerson.Referee> ref_) { refA = ref_.ElementAt(0); }
+			public void setWinner(TTeam.ITeam winner_) { winner = winner_; }
 			public string getWinner() { return winner.ToString(); }
 			//those virtual methods will be defined in subclasses
 			public virtual void setStat(string stat) { }
-			public virtual string getStat() { }
+			public virtual string getStat() { return null; }
 			//It's just a basic try, can be changed if needed
 		}
 
-		class TugOfWarMatch : Match
+		public class TugOfWarMatch : Match
 		{
 			private float matchLength;
 			//constructor uses a constructor of its superclass
-			public TugOfWarMatch(Team a, Team b, List<Referee> ref_) : base(a, b, ref_) { }
+			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> ref_) : base(a, b, ref_) { }
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
 			public override void setStat(string stat)
 			{
 				//a safety check just in case stat is not a number 
 				try
 				{
-					matchLength = float.Parse(stat, Globalization.CultureInfo.InvariantCulture);
+					matchLength = float.Parse(stat, System.Globalization.CultureInfo.InvariantCulture);
 					if (matchLength < 0)
-						throw NegativeMatchLengthException;
+						throw new NegativeMatchLengthException();
 				}
 				//float.parse throws FormatException if stat can't be converted
 				catch (FormatException e)
 				{
-					throw NotNumberMatchLengthException;
+					throw new NotNumberMatchLengthException();
 				}
 			}
 			//getStat returns time in seconds (with miliseconds)
@@ -83,29 +83,29 @@ namespace TournamentManager
 			}
 		}
 
-		class DodgeballMatch : Match
+		public class DodgeballMatch : Match
 		{
 			//we might need to change that name
 			private int winnerPlayersLeft;
-			public DodgeballMatch(Team a, Team b, List<Referee> ref_) : base(a, b, ref_) { }
+			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> ref_) : base(a, b, ref_) { }
 			public override void setStat(string stat)
 			{
 				//if stat is not a number parse will throw format exception
 				try
 				{
-					winnerPlayersLeft = int.Pasre(stat);
+					winnerPlayersLeft = int.Parse(stat);
 					if(winnerPlayersLeft <= 0)
 					{
-						throw NegativePlayersNumberException;
+						throw new NegativePlayersNumberException();
 					}
 					if(winnerPlayersLeft > 6)
 					{
-						throw TooHighPlayersLeftException;
+						throw new TooHighPlayersLeftException();
 					}
 				}
 				catch (FormatException q)
 				{
-					throw NotIntPlayersException;
+					throw new NotIntPlayersException();
 				}
 			}
 			public override string getStat()
@@ -152,19 +152,19 @@ namespace TournamentManager
 
 		public class VolleyballMatch : Match
 		{
-			private List<Referee> assistantReferees = new List<Referee>(2);
+			private List<TPerson.Referee> assistantReferees = new List<TPerson.Referee>(2);
 			//the score means points gained by team in each set
 			//score from x set is kept under x-1 index in the table
 			private int[] scoreTeamA;
 			private int[] scoreTeamB;
-			public VolleyballMatch(Team a, Team b, List<Referee> ref_) : base(a, b, ref_)
+			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> ref_) : base(a, b, ref_)
 			{
 				setReferees(ref_);
 			}
-			public override void setReferees(List<Referee> ref_)
+			public override void setReferees(List<TPerson.Referee> ref_)
 			{
 				base.setReferees(ref_);
-				assistantReferees.AddRange = ref_.GetRange(1, 2);
+				assistantReferees.AddRange( ref_.GetRange(1, 2));
 			}
 			//the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
 			public override void setStat(string stat)

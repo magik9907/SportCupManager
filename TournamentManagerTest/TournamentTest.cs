@@ -58,20 +58,20 @@ namespace TournamentManagerTest
         public void TestRemoveRefereeNoDefined()
         {
             TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
-            TournamentManager.TPerson.Referee refA = (TournamentManager.TPerson.Referee)CreatePerson("Referee");
+            TournamentManager.TPerson.Referee refA = (TournamentManager.TPerson.Referee)CreatePerson("Referee","imei","nazwisko",5);
             try
             {
-                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
-                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
+                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee","imei", "nazwisko", 5));
+                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
                 t.AddReferee(refA);
-                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
-                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
+                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
+                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
 
-                t.RemoveReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
-                t.RemoveReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
+                t.RemoveReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
+                t.RemoveReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
                 t.RemoveReferee(refA);
-                t.RemoveReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
-                t.RemoveReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
+                t.RemoveReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
+                t.RemoveReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
                 
             }
             catch (System.Exception ex)
@@ -86,14 +86,14 @@ namespace TournamentManagerTest
         public void TestAddReferee()
         {
             TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
-            TournamentManager.TPerson.Referee refA = (TournamentManager.TPerson.Referee)CreatePerson("Referee");
+            TournamentManager.TPerson.Referee refA = (TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5);
             try
             {
-                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
-                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
+                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
+                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
                 t.AddReferee(refA);
-                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
-                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee"));
+                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
+                t.AddReferee((TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5));
             }
             catch (System.Exception ex)
             {
@@ -107,7 +107,7 @@ namespace TournamentManagerTest
         public void TestAddRefereeNoDefined()
         {
             TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
-            TournamentManager.TPerson.Referee refA =(TournamentManager.TPerson.Referee) CreatePerson("Referee");
+            TournamentManager.TPerson.Referee refA =(TournamentManager.TPerson.Referee) CreatePerson("Referee", "imei", "nazwisko", 5);
 
             Assert.ThrowsException<TournamentManager.TException.ObjectNotDefined>(
                 () =>
@@ -120,13 +120,13 @@ namespace TournamentManagerTest
         public void TestRemoveTeam()
         {
             TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
-            TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall");
+            TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall","name");
             try
             {
-                t.AddTeam((TournamentManager.TTeam.ITeam)CreateTeam("DodgeBall"));
-                t.AddTeam((TournamentManager.TTeam.ITeam)CreateTeam("DodgeBall"));
-                t.AddTeam((TournamentManager.TTeam.ITeam)CreateTeam("DodgeBall"));
-                t.AddTeam((TournamentManager.TTeam.ITeam)CreateTeam("DodgeBall"));
+                t.AddTeam(CreateTeam("DodgeBall", "name"));
+                t.AddTeam(CreateTeam("DodgeBall", "name"));
+                t.AddTeam(CreateTeam("DodgeBall", "name"));
+                t.AddTeam(CreateTeam("DodgeBall", "name"));
 
                 t.RemoveTeam(teamA);
 
@@ -143,14 +143,14 @@ namespace TournamentManagerTest
         public void TestAddTeam()
         {
             TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
-            TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall");
+            TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall", "name");
             try
             {
-                t.AddTeam(CreateTeam("DodgeBall"));
-                t.AddTeam(CreateTeam("DodgeBall"));
+                t.AddTeam(CreateTeam("DodgeBall", "name"));
+                t.AddTeam(CreateTeam("DodgeBall", "name"));
                 t.AddTeam(teamA);
-                t.AddTeam(CreateTeam("DodgeBall"));
-                t.AddTeam(CreateTeam("DodgeBall"));
+                t.AddTeam(CreateTeam("DodgeBall", "name"));
+                t.AddTeam(CreateTeam("DodgeBall", "name"));
             }
             catch (System.Exception ex)
             {
@@ -164,7 +164,7 @@ namespace TournamentManagerTest
         public void TestAddTeamNoDefined()
         {
             TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
-            TournamentManager.TTeam.ITeam teamA = (TournamentManager.TTeam.ITeam)CreateTeam("DodgeBall");
+            TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall", "name");
 
             Assert.ThrowsException<TournamentManager.TException.ObjectNotDefined>(
                 () =>
@@ -173,28 +173,33 @@ namespace TournamentManagerTest
                 });
         }
 
-        private TournamentManager.TTeam.ITeam CreateTeam(string type)
+        private TournamentManager.TTeam.ITeam CreateTeam(string type,string name)
         {
             switch (type)
             {
                 case "DodgeBall":
-                    return new TournamentManager.TTeam.DodgeballTeam();
+                    return (TournamentManager.TTeam.ITeam)new TournamentManager.TTeam.DodgeballTeam(name);
                 case "TugOfWar":
-                    return new TournamentManager.TTeam.TugOfWarTeam();
+                    return (TournamentManager.TTeam.ITeam)new TournamentManager.TTeam.TugOfWarTeam(name);
                 case "Voleyball":
-                    return new TournamentManager.TTeam.VoleyballTeam();
+                    return (TournamentManager.TTeam.ITeam)new TournamentManager.TTeam.VolleyballTeam(name);
                 default: return null;
             }
         }
 
-        private TournamentManager.TPerson.IPerson CreatePerson(string type)
+        private TournamentManager.TPerson.IPerson CreatePerson(string type, string name, string surname,byte age)
+        {
+            return CreatePerson( type, name, surname, age, 0);
+        }
+
+        private TournamentManager.TPerson.IPerson CreatePerson(string type,string name, string surname, byte age, byte number)
         {
             switch (type)
             {
                 case "Referee":
-                    return new TournamentManager.TPerson.Referee();
+                    return (TournamentManager.TPerson.IPerson)new TournamentManager.TPerson.Referee(name, surname, age);
                 case "Player":
-                    return new TournamentManager.TPerson.Player();
+                    return (TournamentManager.TPerson.IPerson)new TournamentManager.TPerson.Player(name, surname, age, number);
                 default:return null;
             }
         }

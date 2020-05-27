@@ -3,36 +3,39 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Text;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
-    class DodgeballTeam : Team
+    namespace TTeam
     {
-        private int playersEliminated;
-        private int sumOfPlayersLeft;
-
-        public DodgeballTeam(string name) : base(name)
+        public class DodgeballTeam : Team
         {
-            this.name = name;
-        }
+            private int playersEliminated;
+            private int sumOfPlayersLeft;
 
-        public static bool operator< (DodgeballTeam a, DodgeballTeam b)
-        {
-            return (a.matchesWon < b.matchesWon) ? true : false;
-        }
+            public DodgeballTeam(string name) : base(name)
+            {
+                this.name = name;
+            }
 
-        public static bool operator> (DodgeballTeam a, DodgeballTeam b)
-        {
-            return (a.matchesWon > b.matchesWon) ? true : false;
-        }
+            public static bool operator <(DodgeballTeam a, DodgeballTeam b)
+            {
+                return (a.matchesWon < b.matchesWon) ? true : false;
+            }
 
-        public void setPlayersEliminated(int eliminated)
-        {
-            this.playersEliminated = eliminated;
-        }
+            public static bool operator >(DodgeballTeam a, DodgeballTeam b)
+            {
+                return (a.matchesWon > b.matchesWon) ? true : false;
+            }
 
-        public void setSumOfPlayersLeft(int sum)
-        {
-            this.sumOfPlayersLeft = sum;
+            public void setPlayersEliminated(int eliminated)
+            {
+                this.playersEliminated = eliminated;
+            }
+
+            public void setSumOfPlayersLeft(int sum)
+            {
+                this.sumOfPlayersLeft = sum;
+            }
         }
     }
 }

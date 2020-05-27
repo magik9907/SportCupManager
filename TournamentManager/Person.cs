@@ -2,10 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
     namespace TPerson {
-        abstract class Person
+        public interface IPerson
+        {
+            byte getAge();
+            string getFirstName();
+            string getLastName();
+            void setAge(byte age);
+            void setFirstName(string name);
+            void setLastName(string name);
+        }
+
+        public abstract class Person : IPerson
         {
             protected string firstName;
             protected string lastName;

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
      namespace TTeam {
-        abstract class Team
+        public abstract class Team : ITeam
         {
             protected string name;
-            protected List<Player> listPlayers = new List<Player>();
+            protected List<TPerson.Player> listPlayers = new List<TPerson.Player>();
             protected int matchesPlayed;
             protected int matchesWon;
 
@@ -17,17 +17,17 @@ namespace SportCupManagerConsole
                 this.name = name;
             }
 
-            public void addPlayer(Player p)
+            public void addPlayer(TPerson.Player p)
             {
                 listPlayers.Add(p);
             }
 
-            public void removePlayer(Player p)
+            public void removePlayer(TPerson.Player p)
             {
                 listPlayers.Remove(p);
             }
 
-            public string ToString()
+            public override string ToString()
             {
                 return "Name: " + name + ", Played matches: " + matchesPlayed + ", Won matches: " + matchesWon + ", List of players: " + listPlayers.ToString();
             }

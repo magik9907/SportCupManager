@@ -2,25 +2,28 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
-    class Player : Person
+    namespace TPerson
     {
-        private Byte number;
-
-        public Player(string firstName, string lastName, Byte age, Byte number) : base(firstName, lastName, age)
+        public class Player : Person
         {
-            this.number = number;
-        }
+            private Byte number;
 
-        public void setNumber(Byte number)
-        {
-            this.number = number;
-        }
+            public Player(string firstName, string lastName, Byte age, Byte number) : base(firstName, lastName, age)
+            {
+                this.number = number;
+            }
 
-        public Byte getNumber()
-        {
-            return number;
+            public void setNumber(Byte number)
+            {
+                this.number = number;
+            }
+
+            public Byte getNumber()
+            {
+                return number;
+            }
         }
     }
 }

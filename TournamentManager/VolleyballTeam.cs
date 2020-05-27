@@ -2,9 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
-    class VolleyballTeam
+    namespace TTeam
     {
+        public class VolleyballTeam
+        {
+            public VolleyballTeam(string name)
+            {
+
+            }
+        }
     }
 }
