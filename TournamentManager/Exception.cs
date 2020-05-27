@@ -16,6 +16,7 @@ namespace TournamentManager
 
             }
         }
+
         /// <summary>
         /// custom exception of tournament data
         /// </summary>
@@ -32,6 +33,7 @@ namespace TournamentManager
 
 
         }
+
         /// <summary>
         /// throw exception of not enought teams in tournament
         /// </summary>
@@ -43,6 +45,7 @@ namespace TournamentManager
         
             }
         }
+
         /// <summary>
         /// exception of object dind't create
         /// </summary>
