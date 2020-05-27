@@ -7,32 +7,22 @@ namespace SportCupManagerConsole
 {
     class DodgeballTeam : Team
     {
-        private int playersEliminated;
-        private int sumOfPlayersLeft;
+        public int PlayersEliminated { get; set; }
+        public int SumOfPlayersLeft { get; set; }
 
         public DodgeballTeam(string name) : base(name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
         public static bool operator< (DodgeballTeam a, DodgeballTeam b)
         {
-            return (a.matchesWon < b.matchesWon) ? true : false;
+            return (a.MatchesWon < b.MatchesWon) ? true : false;
         }
 
         public static bool operator> (DodgeballTeam a, DodgeballTeam b)
         {
-            return (a.matchesWon > b.matchesWon) ? true : false;
-        }
-
-        public void setPlayersEliminated(int eliminated)
-        {
-            this.playersEliminated = eliminated;
-        }
-
-        public void setSumOfPlayersLeft(int sum)
-        {
-            this.sumOfPlayersLeft = sum;
+            return (a.MatchesWon > b.MatchesWon) ? true : false;
         }
     }
 }

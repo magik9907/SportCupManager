@@ -4,16 +4,16 @@ using System.Text;
 
 namespace SportCupManagerConsole
 {
-    abstract class Team
+    abstract class Team : ITeam
     {
-        protected string name;
+        public string Name { get; set; }
         protected List<Player> listPlayers = new List<Player>();
-        protected int matchesPlayed;
-        protected int matchesWon;
+        public int MatchesPlayed { get; set; }
+        public int MatchesWon { get; set; }
 
         public Team(string name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
         public void addPlayer(Player p)
@@ -26,9 +26,9 @@ namespace SportCupManagerConsole
             listPlayers.Remove(p);
         }
 
-        public string ToString()
+        public override string ToString()
         {
-            return "Name: " + name + ", Played matches: " + matchesPlayed + ", Won matches: " + matchesWon + ", List of players: " + listPlayers.ToString();
+            return "Name: " + Name + ", Played matches: " + MatchesPlayed + ", Won matches: " + MatchesWon + ", List of players: " + listPlayers.ToString();
         }
     }
 }

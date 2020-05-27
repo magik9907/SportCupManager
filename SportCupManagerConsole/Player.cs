@@ -6,21 +6,11 @@ namespace SportCupManagerConsole
 {
     class Player : Person
     {
-        private Byte number;
+        private Byte Number { get; set; }
 
-        public Player(string firstName, string lastName, Byte age, Byte number) : base(firstName, lastName, age)
+        public Player(string firstname, string lastname, Byte age, Byte number) : base(firstname, lastname, age)
         {
-            this.number = number;
-        }
-
-        public void setNumber(Byte number)
-        {
-            this.number = number;
-        }
-
-        public Byte getNumber()
-        {
-            return number;
+            this.Number = number;
         }
     }
 }

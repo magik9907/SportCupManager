@@ -6,45 +6,17 @@ namespace SportCupManagerConsole
 {
     abstract class Person
     {
-        protected string firstName;
-        protected string lastName;
-        protected Byte age;
+        public string Firstname { get; set; }
 
-        public Person(string firstName, string lastName, Byte age)
-        {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.age = age;
-        }
+        public string Lastname { get; set; }
 
-        public void setFirstName(string name)
-        {
-            this.firstName = name;
-        }
+        public Byte Age { get; set; }
 
-        public string getFirstName()
+        public Person(string firstname, string lastname, Byte age)
         {
-            return firstName;
-        }
-
-        public void setLastName(string name)
-        {
-            this.lastName = name;
-        }
-
-        public string getLastName()
-        {
-            return lastName;
-        }
-
-        public void setAge(Byte age)
-        {
-            this.age = age;
-        }
-
-        public Byte getAge()
-        {
-            return age;
+            this.Firstname = firstname;
+            this.Lastname = lastname;
+            this.Age = age;
         }
     }
 }

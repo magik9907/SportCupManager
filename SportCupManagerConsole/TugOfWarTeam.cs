@@ -6,29 +6,22 @@ namespace SportCupManagerConsole
 {
     class TugOfWarTeam : Team
     {
-        private float avWinTime;
-        private float avLossTime;
+        public float AvWinTime { get; set; }
+        public float AvLossTime { get; set; }
 
         public TugOfWarTeam(string name) : base(name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
         public static bool operator <(TugOfWarTeam a, TugOfWarTeam b)
         {
-            return (a.matchesWon < b.matchesWon) ? true : false;
+            return (a.MatchesWon < b.MatchesWon) ? true : false;
         }
 
         public static bool operator >(TugOfWarTeam a, TugOfWarTeam b)
         {
-            return (a.matchesWon > b.matchesWon) ? true : false;
+            return (a.MatchesWon > b.MatchesWon) ? true : false;
         }
-
-        public void setAvWinTime(int minutes, int seconds)
-        {
-
-        }
-
-        public void 
     }
 }
