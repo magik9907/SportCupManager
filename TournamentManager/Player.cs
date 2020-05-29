@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
-    public class Player : Person
+    namespace TPerson
     {
-        private Byte Number { get; set; }
-
-        public Player(string firstname, string lastname, Byte age, Byte number) : base(firstname, lastname, age)
+        public class Player : Person
         {
-            this.Number = number;
+            private Byte Number { get; set; }
+
+            public Player(string firstName, string lastName, Byte age, Byte number) : base(firstName, lastName, age)
+            {
+                this.Number = number;
+            }
         }
     }
 }

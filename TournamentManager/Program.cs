@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            new Tournament("Name","Typo");
         }
     }
 }

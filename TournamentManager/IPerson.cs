@@ -1,10 +1,13 @@
-﻿namespace SportCupManagerConsole
+﻿namespace TournamentManager
 {
-    public interface IPerson
+    namespace TPerson
     {
-        byte Age { get; set; }
-        string Firstname { get; set; }
-        string Fullname { get; }
-        string Lastname { get; set; }
+        public interface IPerson
+        {
+            byte Age { get; set; }
+            string Firstname { get; set; }
+            string Fullname { get; }
+            string Lastname { get; set; }
+        }
     }
 }

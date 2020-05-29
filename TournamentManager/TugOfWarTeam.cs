@@ -2,38 +2,41 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
-    class TugOfWarTeam : Team
+    namespace TTeam
     {
-        public float AvWinTime { get; set; }
-        public float AvLossTime { get; set; }
-
-        public TugOfWarTeam(string name) : base(name)
+        public class TugOfWarTeam : Team
         {
-            this.Name = name;
-        }
+            public float AvWinTime { get; set; }
+            public float AvLossTime { get; set; }
 
-        public static bool operator <(TugOfWarTeam a, TugOfWarTeam b)
-        {
-            if (a.MatchesWon != b.MatchesWon)
-                return a.MatchesWon < b.MatchesWon;
-            if (a.AvWinTime != b.AvWinTime)
-                return a.AvWinTime < b.AvWinTime;
-            if (a.AvLossTime != b.AvLossTime)
-                return a.AvLossTime < b.AvLossTime;
-            return String.Compare(a.Name, b.Name) < 0;
-        }
+            public TugOfWarTeam(string name) : base(name)
+            {
+                this.Name = name;
+            }
 
-        public static bool operator >(TugOfWarTeam a, TugOfWarTeam b)
-        {
-            if (a.MatchesWon != b.MatchesWon)
-                return a.MatchesWon > b.MatchesWon;
-            if (a.AvWinTime != b.AvWinTime)
-                return a.AvWinTime > b.AvWinTime;
-            if (a.AvLossTime != b.AvLossTime)
-                return a.AvLossTime > b.AvLossTime;
-            return String.Compare(a.Name, b.Name) > 0;
+            public static bool operator <(TugOfWarTeam a, TugOfWarTeam b)
+            {
+                if (a.MatchesWon != b.MatchesWon)
+                    return a.MatchesWon < b.MatchesWon;
+                if (a.AvWinTime != b.AvWinTime)
+                    return a.AvWinTime < b.AvWinTime;
+                if (a.AvLossTime != b.AvLossTime)
+                    return a.AvLossTime < b.AvLossTime;
+                return String.Compare(a.Name, b.Name) < 0;
+            }
+
+            public static bool operator >(TugOfWarTeam a, TugOfWarTeam b)
+            {
+                if (a.MatchesWon != b.MatchesWon)
+                    return a.MatchesWon > b.MatchesWon;
+                if (a.AvWinTime != b.AvWinTime)
+                    return a.AvWinTime > b.AvWinTime;
+                if (a.AvLossTime != b.AvLossTime)
+                    return a.AvLossTime > b.AvLossTime;
+                return String.Compare(a.Name, b.Name) > 0;
+            }
         }
     }
 }
