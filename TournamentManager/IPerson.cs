@@ -1,4 +1,4 @@
-﻿namespace SportCupManagerConsole
+﻿namespace TournamentManager
 {
     public interface IPerson
     {

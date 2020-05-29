@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Text;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
     class DodgeballTeam : Team
     {

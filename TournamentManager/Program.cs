@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SportCupManagerConsole
+namespace TournamentManager
 {
     class Program
     {
