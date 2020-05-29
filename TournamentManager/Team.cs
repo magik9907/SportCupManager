@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SportCupManagerConsole
 {
-    abstract class Team : ITeam
+    public abstract class Team : ITeam
     {
         public string Name { get; set; }
         protected List<Player> listPlayers = new List<Player>();

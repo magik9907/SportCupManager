@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SportCupManagerConsole
 {
-    class Player : Person
+    public class Player : Person
     {
         private Byte Number { get; set; }
 

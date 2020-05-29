@@ -4,13 +4,21 @@ using System.Text;
 
 namespace SportCupManagerConsole
 {
-    abstract class Person
+    public abstract class Person : IPerson
     {
+        public Byte Age { get; set; }
+
         public string Firstname { get; set; }
 
         public string Lastname { get; set; }
 
-        public Byte Age { get; set; }
+        public string Fullname
+        {
+            get
+            {
+                return Firstname + " " + Lastname;
+            }
+        }        
 
         public Person(string firstname, string lastname, Byte age)
         {

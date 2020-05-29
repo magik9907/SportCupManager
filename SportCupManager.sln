@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportCupManager", "SportCupManager\SportCupManager.csproj", "{28664C5B-B268-4E18-B5B4-7397010E0E62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportCupManagerConsole", "SportCupManagerConsole\SportCupManagerConsole.csproj", "{0DD8B693-C189-45C1-88CE-9917B8065CB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentManager", "SportCupManagerConsole\TournamentManager.csproj", "{0DD8B693-C189-45C1-88CE-9917B8065CB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

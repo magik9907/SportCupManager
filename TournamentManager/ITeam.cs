@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SportCupManagerConsole
 {
-    interface ITeam
+    public interface ITeam
     {
         public void addPlayer(Player p);
         public void removePlayer(Player p);
