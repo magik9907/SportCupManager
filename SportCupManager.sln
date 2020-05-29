@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportCupManager", "SportCupManager\SportCupManager.csproj", "{28664C5B-B268-4E18-B5B4-7397010E0E62}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentManager", "SportCupManagerConsole\TournamentManager.csproj", "{0DD8B693-C189-45C1-88CE-9917B8065CB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentManager", "TournamentManager\TournamentManager.csproj", "{AC5F911D-DBFF-40BB-A155-371ABE73B138}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{28664C5B-B268-4E18-B5B4-7397010E0E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28664C5B-B268-4E18-B5B4-7397010E0E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28664C5B-B268-4E18-B5B4-7397010E0E62}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0DD8B693-C189-45C1-88CE-9917B8065CB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0DD8B693-C189-45C1-88CE-9917B8065CB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0DD8B693-C189-45C1-88CE-9917B8065CB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0DD8B693-C189-45C1-88CE-9917B8065CB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC5F911D-DBFF-40BB-A155-371ABE73B138}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC5F911D-DBFF-40BB-A155-371ABE73B138}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC5F911D-DBFF-40BB-A155-371ABE73B138}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC5F911D-DBFF-40BB-A155-371ABE73B138}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

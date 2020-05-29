@@ -16,12 +16,24 @@ namespace SportCupManagerConsole
 
         public static bool operator <(TugOfWarTeam a, TugOfWarTeam b)
         {
-            return (a.MatchesWon < b.MatchesWon) ? true : false;
+            if (a.MatchesWon != b.MatchesWon)
+                return a.MatchesWon < b.MatchesWon;
+            if (a.AvWinTime != b.AvWinTime)
+                return a.AvWinTime < b.AvWinTime;
+            if (a.AvLossTime != b.AvLossTime)
+                return a.AvLossTime < b.AvLossTime;
+            return String.Compare(a.Name, b.Name) < 0;
         }
 
         public static bool operator >(TugOfWarTeam a, TugOfWarTeam b)
         {
-            return (a.MatchesWon > b.MatchesWon) ? true : false;
+            if (a.MatchesWon != b.MatchesWon)
+                return a.MatchesWon > b.MatchesWon;
+            if (a.AvWinTime != b.AvWinTime)
+                return a.AvWinTime > b.AvWinTime;
+            if (a.AvLossTime != b.AvLossTime)
+                return a.AvLossTime > b.AvLossTime;
+            return String.Compare(a.Name, b.Name) > 0;
         }
     }
 }

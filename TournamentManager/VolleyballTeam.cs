@@ -16,12 +16,24 @@ namespace SportCupManagerConsole
 
         public static bool operator <(VolleyballTeam a, VolleyballTeam b)
         {
-            return (a.MatchesWon < b.MatchesWon) ? true : false;
+            if (a.Points != b.Points)
+                return a.Points < b.Points;
+            if (a.MatchesWon != b.MatchesWon)
+                return a.MatchesWon < b.MatchesWon;
+            if (a.ScoreDiff != b.ScoreDiff)
+                return a.ScoreDiff < b.ScoreDiff;
+            return String.Compare(a.Name, b.Name) < 0;
         }
 
         public static bool operator >(VolleyballTeam a, VolleyballTeam b)
         {
-            return (a.MatchesWon > b.MatchesWon) ? true : false;
+            if (a.Points != b.Points)
+                return a.Points > b.Points;
+            if (a.MatchesWon != b.MatchesWon)
+                return a.MatchesWon > b.MatchesWon;
+            if (a.ScoreDiff != b.ScoreDiff)
+                return a.ScoreDiff > b.ScoreDiff;
+            return String.Compare(a.Name, b.Name) > 0;
         }
     }
 }
