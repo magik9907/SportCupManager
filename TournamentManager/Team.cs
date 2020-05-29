@@ -15,6 +15,9 @@ namespace TournamentManager
 
             public Team(string name)
             {
+                if (string.IsNullOrEmpty(name))
+                    throw new TException.TeamMissingNameException();
+
                 this.Name = name;
             }
 

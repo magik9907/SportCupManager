@@ -182,11 +182,11 @@ namespace TournamentManagerTest
             switch (type)
             {
                 case "DodgeBall":
-                    return new TournamentManager.TTeam.DodgeballTeam();
+                    return new TournamentManager.TTeam.DodgeballTeam("Dodgeball team");
                 case "TugOfWar":
-                    return new TournamentManager.TTeam.TugOfWarTeam();
+                    return new TournamentManager.TTeam.TugOfWarTeam("Tug of war team");
                 case "Voleyball":
-                    return new TournamentManager.TTeam.VoleyballTeam();
+                    return new TournamentManager.TTeam.VolleyballTeam("Volleyball team");
                 default: return null;
             }
         }
@@ -196,9 +196,9 @@ namespace TournamentManagerTest
             switch (type)
             {
                 case "Referee":
-                    return new TournamentManager.TPerson.Referee();
+                    return new TournamentManager.TPerson.Referee("name", "surname", 20);
                 case "Player":
-                    return new TournamentManager.TPerson.Player();
+                    return new TournamentManager.TPerson.Player("name2", "surname2", 30, 8);
                 default:return null;
             }
         }

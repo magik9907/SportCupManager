@@ -6,7 +6,7 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        class VolleyballTeam : Team
+        public class VolleyballTeam : Team
         {
             public int Points { get; set; }
             public int ScoreDiff { get; set; }

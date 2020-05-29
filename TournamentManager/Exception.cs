@@ -55,6 +55,12 @@ namespace TournamentManager
             }
         }
 
+        public class TeamMissingNameException : Exception
+        {
+            public TeamMissingNameException() : base("There is missing name parameter for Team.")
+            {
 
+            }
+        }
     }
 }
