@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+
 /// <summary>
 ///     main name space 
 /// </summary>
@@ -87,9 +88,9 @@ namespace TournamentManager
     {
 
         /// <summary>
-        /// contain tournament dyscipline
+        /// contain tournament dyscipline id
         /// </summary>
-        private readonly string dyscypline;
+        private readonly int dyscypline;
 
         /// <summary>
         /// contain name of tournament
@@ -138,16 +139,16 @@ namespace TournamentManager
         /// </summary>
         /// <param name="name">name of tournament</param>
         /// <param name="dyscypline">tournament discipline</param>
-        public Tournament(string name, string dyscypline)
+        public Tournament(string name, int dyscypline)
         {
-            if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(dyscypline))
+            if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(Enum.GetName(typeof(TEnum.TournamentDyscypline), dyscypline) )) 
                 TNDException();
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name) )
                 TDException("tournament name");
-            if (string.IsNullOrEmpty(dyscypline))
+            if (Enum.IsDefined(typeof(TEnum.TournamentDyscypline), dyscypline) == false )
                 TDException("tournament dyscypline");
             this.name = name;
-            this.dyscypline = dyscypline;
+            this.dyscypline = dyscypline;   
 
         }
 
@@ -206,7 +207,7 @@ namespace TournamentManager
         {
             get
             {
-                return dyscypline;
+                return Enum.GetName(typeof(TEnum.TournamentDyscypline),dyscypline);
             }
         }
 
