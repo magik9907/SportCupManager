@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace TournamentManagerTest
 {
@@ -25,14 +26,14 @@ namespace TournamentManagerTest
         public void ConstructorTestNull_NULL()
         {
             Assert.ThrowsException<TournamentManager.TException.TournamentMustBeDefine>(
-                () => new TournamentManager.Tournament(null,null)
-            );
+                () => new TournamentManager.Tournament(null, 0)
+            ); ;
         }
         [TestMethod]
         public void ConstructorTestString_null()
         {
             Assert.ThrowsException<TournamentManager.TException.TournamentDataException>(
-                () => new TournamentManager.Tournament("test",null)
+                () => new TournamentManager.Tournament("test",0)
             );
         }
 
@@ -40,24 +41,24 @@ namespace TournamentManagerTest
         public void ConstructorTestOneNull_String()
         {
             Assert.ThrowsException<TournamentManager.TException.TournamentDataException>(
-                () => new TournamentManager.Tournament(null,"test")
+                () => new TournamentManager.Tournament(null, (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball)
             );
         }
 
         [TestMethod]
         public void ConstructorTestDataVerify()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", "type");
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
 
             Assert.AreEqual("name",t.Name);
-            Assert.AreEqual("type", t.Dyscypline);
+            Assert.IsTrue(Enum.IsDefined(typeof(TournamentManager.TEnum.TournamentDyscypline),t.Dyscypline));
 
         }
 
         [TestMethod]
         public void TestRemoveRefereeNoDefined()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TPerson.Referee refA = (TournamentManager.TPerson.Referee)CreatePerson("Referee","imei","nazwisko",5);
             try
             {
@@ -85,7 +86,7 @@ namespace TournamentManagerTest
         [TestMethod]
         public void TestAddReferee()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TPerson.Referee refA = (TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5);
             try
             {
@@ -106,7 +107,7 @@ namespace TournamentManagerTest
         [TestMethod]
         public void TestAddRefereeNoDefined()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TPerson.Referee refA =(TournamentManager.TPerson.Referee) CreatePerson("Referee", "imei", "nazwisko", 5);
 
             Assert.ThrowsException<TournamentManager.TException.ObjectNotDefined>(
@@ -119,7 +120,7 @@ namespace TournamentManagerTest
         [TestMethod]
         public void TestRemoveTeam()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall","name");
             try
             {
@@ -142,7 +143,7 @@ namespace TournamentManagerTest
         [TestMethod]
         public void TestAddTeam()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall", "name");
             try
             {
@@ -163,7 +164,7 @@ namespace TournamentManagerTest
         [TestMethod]
         public void TestAddTeamNoDefined()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", "Test");
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall", "name");
 
             Assert.ThrowsException<TournamentManager.TException.ObjectNotDefined>(

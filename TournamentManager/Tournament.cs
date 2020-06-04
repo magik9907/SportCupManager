@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 /// <summary>
 ///     main name space 
@@ -86,12 +87,13 @@ namespace TournamentManager
     /// </summary>
     public class Tournament : ITournament
     {
-
+        [JsonProperty("Dyscypline")]
         /// <summary>
         /// contain tournament dyscipline id
         /// </summary>
         private readonly int dyscypline;
 
+        [JsonProperty("Name")]
         /// <summary>
         /// contain name of tournament
         /// </summary>
@@ -187,14 +189,16 @@ namespace TournamentManager
             CheckNumberOfTeams(teams);
             playoff = new TRound.PlayOff(teams, referees);
         }
-
+        
+        [JsonIgnore]
         public List<TPerson.Referee> Referees
         {
             get{
                 return referees;
             }
         }
-
+        
+        [JsonIgnore]
         public List<TTeam.ITeam> Teams
         {
             get
@@ -203,6 +207,7 @@ namespace TournamentManager
             }
         }
 
+        [JsonIgnore]
         public string Dyscypline
         {
             get
@@ -210,7 +215,7 @@ namespace TournamentManager
                 return Enum.GetName(typeof(TEnum.TournamentDyscypline),dyscypline);
             }
         }
-
+        [JsonIgnore]
         public string Name
         {
             get

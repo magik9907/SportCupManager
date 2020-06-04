@@ -11,7 +11,7 @@ namespace TournamentManager
         /// </summary>
         public enum TournamentDyscypline
         {
-            volleyball,
+            volleyball=1,
             tugofwar,
             dodgeball,
         }
