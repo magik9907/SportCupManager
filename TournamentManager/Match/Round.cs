@@ -11,7 +11,7 @@ namespace TournamentManager
     {
         public class PlayOff
         {
-            public PlayOff(List<TTeam.ITeam> t, List<TPerson.Referee> @ref)
+            public PlayOff(List<TTeam.ITeam> t, List<TPerson.Referee> referees)
             {
 
             }
@@ -19,7 +19,7 @@ namespace TournamentManager
 
         public class League
         {
-            public League(List<TTeam.ITeam> t, List<TPerson.Referee> @ref)
+            public League(List<TTeam.ITeam> t, List<TPerson.Referee> referees)
             {
 
             }
@@ -58,11 +58,16 @@ namespace TournamentManager
                 return roundName;
             }
 
-            public void addMatch(TMatch.Match match, List<Referee> r)
+            public void addMatch(TMatch.Match match, List<Referee> referees)
             {
-                match.setReferees(r);
-                for(int i = 0; i < listMatches.Count; i++)
-
+                match.setReferees(referees);
+                for (int i = 0; i < listMatches.Count; i++)
+                {
+                    if (match.getTeamA() == listMatches[i].getTeamA() || match.getTeamA() == listMatches[i].getTeamB())
+                        throw new AlreadyPlayingException(match, match.getTeamA());
+                    if (match.getTeamB() == listMatches[i].getTeamA() || match.getTeamB() == listMatches[i].getTeamB())
+                        throw new AlreadyPlayingException(match, match.getTeamB());
+                }
                 listMatches.Add(match);
             }
         }

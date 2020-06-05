@@ -15,11 +15,11 @@ namespace TournamentManager
 			private TTeam.ITeam teamB;
 			private TTeam.ITeam winner;
 			private TPerson.Referee refA;
-			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> @ref)
+			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
 				teamA = a;
 				teamB = b;
-				refA = @ref.ElementAt(0);
+				refA = r.ElementAt(0);
 			}
 			public TTeam.ITeam getTeamA()
             {
@@ -30,7 +30,7 @@ namespace TournamentManager
 				return teamB;
 			}
 			//Function takes a list of referees because VolleyballMatch needs 3 of them
-			public virtual void setReferees(List<TPerson.Referee> @ref) { refA = @ref.ElementAt(0); }
+			public virtual void setReferees(List<TPerson.Referee> r) { refA = r.ElementAt(0); }
 			public string getWinner() { return winner.ToString(); }
 			//those virtual methods will be defined in subclasses
 			public virtual void setResult(string stat, TTeam.ITeam winner)
@@ -60,7 +60,7 @@ namespace TournamentManager
 		{
 			private float matchLength;
 			//constructor uses a constructor of its superclass
-			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> @ref) : base(a, b, @ref) { }
+			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
 			public override void setResult(string stat, TTeam.ITeam winner)
 			{
@@ -113,7 +113,7 @@ namespace TournamentManager
 		{
 			//we might need to change that name
 			private int winnerPlayersLeft;
-			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> @ref) : base(a, b, @ref) { }
+			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
 			public override void setResult(string stat, TTeam.ITeam winner)
 			{
 				base.setResult(stat, winner);
@@ -184,9 +184,9 @@ namespace TournamentManager
 			//score from x set is kept under x-1 index in the table
 			private int[] scoreTeamA = new int[3];
 			private int[] scoreTeamB = new int[3];
-			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> @ref) : base(a, b, @ref)
+			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r)
 			{
-				setReferees(@ref);
+				setReferees(r);
 			}
 			public override void setReferees(List<TPerson.Referee> @ref)
 			{
