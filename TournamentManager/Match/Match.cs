@@ -188,6 +188,7 @@ namespace TournamentManager
 			//the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
 			public override void setResult(string stat, TTeam.ITeam @winner)
 			{
+				int resultCheck;
 				base.setResult(stat, @winner);
 				//split the strings into strings containing name of the teams and their scores
 				string[] tmp = stat.Split(new string[] {". ", ", ", ": "});
@@ -198,7 +199,13 @@ namespace TournamentManager
                 {
 					scoreTeamA[i] = int.Parse(tmp[i + 1]);
 					scoreTeamB[i] = int.Parse(tmp[i + 5]);
+					if (scoreTeamA[i] > scoreTeamB[i])
+						resultCheck++;
+					if (scoreTeamB[i] > scoreTeamA[i])
+						resultCheck--;
                 }
+				if ((resultCheck > 0 && teamA != @winner) || (resultCheck < 0 && scoreTeamB != @winner))
+					throw new WrongWinnerException(@winner);
 			}
 		}
 
@@ -226,7 +233,7 @@ namespace TournamentManager
 			{
 				get
 				{
-					return "Team" + supposedWinner.ToString() + "lost despite winning 2 sets!";
+					return "Team" + supposedWinner.ToString() + "was set as winner despite losing 2 or more sets";
 				}
 			}
 		}
