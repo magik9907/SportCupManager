@@ -20,15 +20,22 @@ namespace TournamentManager
 				teamB = b;
 				refA = @ref.ElementAt(0);
 			}
+			public TTeam.ITeam getTeamA()
+            {
+				return teamA;
+            }
+			public TTeam.ITeam getTeamB()
+			{
+				return teamB;
+			}
 			//Function takes a list of referees because VolleyballMatch needs 3 of them
-			public virtual void setReferees(List<TPerson.Referee> ref_) { refA = ref_.ElementAt(0); }
-			public void setWinner(TTeam.ITeam winner_) { winner = winner_; }
+			public virtual void setReferees(List<TPerson.Referee> @ref) { refA = @ref.ElementAt(0); }
 			public string getWinner() { return winner.ToString(); }
 			//those virtual methods will be defined in subclasses
-			public virtual void setResult(string stat, TTeam.ITeam @winner)
+			public virtual void setResult(string stat, TTeam.ITeam winner)
 			{
-				if (@winner == teamA || winner == teamB)
-					winner = winner;
+				if (winner == teamA || winner == teamB)
+					this.winner = winner;
 				else
 					throw new TeamIsNotPlayingException();
 			}
@@ -54,9 +61,9 @@ namespace TournamentManager
 			//constructor uses a constructor of its superclass
 			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> @ref) : base(a, b, @ref) { }
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
-			public override void setResult(string stat, TTeam.ITeam @winner)
+			public override void setResult(string stat, TTeam.ITeam winner)
 			{
-				base.setResult(stat, @winner);
+				base.setResult(stat, winner);
 				//a safety check just in case stat is not a number 
 				try
 				{
@@ -106,9 +113,9 @@ namespace TournamentManager
 			//we might need to change that name
 			private int winnerPlayersLeft;
 			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> @ref) : base(a, b, @ref) { }
-			public override void setResult(string stat, TTeam.ITeam @winner)
+			public override void setResult(string stat, TTeam.ITeam winner)
 			{
-				base.setResult(stat, @winner);
+				base.setResult(stat, winner);
 				//if stat is not a number parse will throw format exception
 				try
 				{
@@ -186,12 +193,12 @@ namespace TournamentManager
 				assistantReferees.AddRange( @ref.GetRange(1, 2));
 			}
 			//the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
-			public override void setResult(string stat, TTeam.ITeam @winner)
+			public override void setResult(string stat, TTeam.ITeam winner)
 			{
-				int resultCheck;
-				base.setResult(stat, @winner);
+				int resultCheck = 0;
+				base.setResult(stat, winner);
 				//split the strings into strings containing name of the teams and their scores
-				string[] tmp = stat.Split(new string[] {". ", ", ", ": "});
+				string[] tmp = stat.Split(new string[] {". ", ", ", ": "}, StringSplitOptions.RemoveEmptyEntries);
 				//string should split into 8 smaller string (2 for names of teams, 6 in total for scores in sets)
 				if (tmp.Length != 8)
 					throw new WrongStatFormatException();
@@ -204,9 +211,29 @@ namespace TournamentManager
 					if (scoreTeamB[i] > scoreTeamA[i])
 						resultCheck--;
                 }
-				if ((resultCheck > 0 && teamA != @winner) || (resultCheck < 0 && scoreTeamB != @winner))
-					throw new WrongWinnerException(@winner);
+				if ((resultCheck > 0 && getTeamA() != winner) || (resultCheck < 0 && getTeamB() != winner))
+					throw new WrongWinnerException(winner);
 			}
+			public override string getStat()
+            {
+				string stat = "a: ";
+				for (int i = 0; i < 3; i++)
+                {
+					stat += scoreTeamA[i].ToString();
+					if (i != 2)
+						stat += ", ";
+					else
+						stat += ". ";
+				}
+				stat += "b: ";
+				for (int i = 0; i < 3; i++)
+				{
+					stat += scoreTeamB[i].ToString();
+					if (i != 2)
+						stat += ", ";
+				}
+				return stat;
+            }
 		}
 
 		//Exception if string stat got seprated into a different amount of strings than expected
