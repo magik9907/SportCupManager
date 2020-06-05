@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TournamentManager.TTeam;
 
 namespace TournamentManager
 {	
@@ -204,11 +205,41 @@ namespace TournamentManager
 					throw new WrongStatFormatException();
 				for(int i = 0; i < 3; i++)
                 {
-					scoreTeamA[i] = int.Parse(tmp[i + 1]);
-					scoreTeamB[i] = int.Parse(tmp[i + 5]);
-					if (scoreTeamA[i] > scoreTeamB[i])
+					int scoreRequired;
+					if (i != 2)
+						scoreRequired = 21;
+					else
+						scoreRequired = 15;
+					try
+                    {
+						scoreTeamA[i] = int.Parse(tmp[i + 1]);
+						scoreTeamB[i] = int.Parse(tmp[i + 5]);
+						//score should be equal or higher than 0, but equal or lower than 21 in first two sets
+						//and equal or lower than 15 in the third set
+						if (scoreTeamA[i] < 0 || scoreTeamB[i] < 0)
+							throw new NegativeScoreException();
+						if (scoreTeamA[i] > scoreRequired || scoreTeamB[i] > scoreRequired)
+							throw new TooHighScoreException();
+						
+					}
+					catch(FormatException f)
+                    {
+						throw new NonIntScoreException();
+					}
+					//Checking whether the score makes sense and reflects the winner
+					//if a team has won in 2 sets third one should end 0:0
+					if (Math.Abs(resultCheck) == 2)
+						if (scoreTeamA[i] != 0 || scoreTeamB[i] != 0)
+							if (resultCheck > 0)
+								throw new ThirdSetException(getTeamA());
+							else
+								throw new ThirdSetException(getTeamB());
+					//Checking if exactly one team has reached the required points
+					if (scoreTeamA[i] == scoreTeamB[i] || (scoreTeamA[i] < scoreRequired && scoreTeamB[i] < scoreRequired))
+						throw new NoSetWinnerException(i+1);
+					if (scoreTeamA[i] == scoreRequired)
 						resultCheck++;
-					if (scoreTeamB[i] > scoreTeamA[i])
+					if (scoreTeamB[i] == scoreRequired)
 						resultCheck--;
                 }
 				if ((resultCheck > 0 && getTeamA() != winner) || (resultCheck < 0 && getTeamB() != winner))
@@ -236,7 +267,82 @@ namespace TournamentManager
             }
 		}
 
-		//Exception if string stat got seprated into a different amount of strings than expected
+		//Exception if third set was played in spite of a team winning in two sets
+		public class ThirdSetException : Exception
+		{
+			private ITeam winner;
+			public ThirdSetException(TTeam.ITeam winner)
+			{
+				this.winner = winner;
+			}
+			public override string Message
+			{
+				get
+				{
+					return winner + " has won the match in two sets, third set should not be played";
+				}
+			}
+		}
+
+		//Exception if set was played but no team has won
+		public class NoSetWinnerException : Exception
+        {
+			private int set;
+			private int scoreRequired;
+			public NoSetWinnerException(int set)
+			{
+				this.set = set;
+				if (set != 3)
+					scoreRequired = 21;
+				else
+					scoreRequired = 15;
+			}
+			public override string Message
+			{
+				get
+				{
+					return "No team has won the " + set + "set since no team has reached" + scoreRequired + "points while also having the lead";
+				}
+			}
+		}
+
+		//Exception if score was not an integer value
+		public class NonIntScoreException : Exception
+        {
+			public override string Message
+			{
+				get
+				{
+					return "Score should be a whole number";
+				}
+			}
+		}
+
+		//Exception if score was negative
+		public class NegativeScoreException : Exception
+		{
+			public override string Message
+			{
+				get
+				{
+					return "Score should be a positive number";
+				}
+			}
+		}
+
+		//Exception if a score entered was over the maximum points in a set
+		public class TooHighScoreException : Exception
+		{
+			public override string Message
+			{
+				get
+				{
+					return "No team can have more than 21 points in the first two sets and 15 in the last";
+				}
+			}
+		}
+
+		//Exception if string stat got separated into a different amount of strings than expected
 		public class WrongStatFormatException : Exception
 		{
 			public override string Message
@@ -251,7 +357,7 @@ namespace TournamentManager
 		//Exception if the team that was set as winner lost based on the points from stats
 		public class WrongWinnerException : Exception
 		{
-			public TTeam.ITeam supposedWinner;
+			private TTeam.ITeam supposedWinner;
 			public WrongWinnerException(TTeam.ITeam winner)
             {
 				supposedWinner = winner;
