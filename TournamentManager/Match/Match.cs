@@ -11,23 +11,29 @@ namespace TournamentManager
 		//exceptions used by class are defined below the class (will be changed in the future)
 		public abstract class Match
 		{
-			public TTeam.ITeam TeamA
-            {
-				get;
-            }
-			public TTeam.ITeam TeamB;
+			private TTeam.ITeam teamA;
+			private TTeam.ITeam teamB;
+		
 			private TTeam.ITeam Winner = null;
             private TPerson.Referee RefA;
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
 				if (a == b)
 					throw new IncorrectOpponentException();
-				TeamA = a;
-				TeamB = b;
+				teamA = a;
+				teamB = b;
 				RefA = r.ElementAt(0);
 			}
-            //Function takes a list of referees because VolleyballMatch needs 3 of them
-            public virtual void SetReferees(List<TPerson.Referee> r) { RefA = r.ElementAt(0); }
+			public TTeam.ITeam TeamA
+			{
+				get { return teamA; }
+			}
+			public TTeam.ITeam TeamB
+			{
+				get { return teamB; }
+			}
+			//Function takes a list of referees because VolleyballMatch needs 3 of them
+			public virtual void SetReferees(List<TPerson.Referee> r) { RefA = r.ElementAt(0); }
 			public string GetWinner() { return Winner.ToString(); }
 			//those virtual methods will be defined in subclasses
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
@@ -39,12 +45,12 @@ namespace TournamentManager
 			}
 			public virtual string GetStat() { return null; }
 			//It's just a basic try, can be changed if needed
-			public Boolean IsPlaying(TTeam.ITeam team)
+			public Boolean isPlaying(TTeam.ITeam team)
             {
 				return team == TeamA || team == TeamB;
             }
 
-			public Boolean WasPlayed()
+			public Boolean wasPlayed()
             {
 				return Winner != null;
             }
@@ -76,7 +82,7 @@ namespace TournamentManager
 
 		public class TugOfWarMatch : Match
 		{
-            private float matchLength = 0;
+			private float matchLength = 0;
 			//constructor uses a constructor of its superclass
 			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
@@ -129,8 +135,8 @@ namespace TournamentManager
 
 		public class DodgeballMatch : Match
 		{
-            //we might need to change that name
-            private int winnerPlayersLeft = 0;
+			//we might need to change that name
+			private int winnerPlayersLeft = 0;
 			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
@@ -214,7 +220,7 @@ namespace TournamentManager
 			//the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
-				int resultCheck = 0;
+                int resultCheck = 0;
 				base.SetResult(stat, winner);
 				//split the strings into strings containing name of the teams and their scores
 				string[] tmp = stat.Split(new string[] {". ", ", ", ": "}, StringSplitOptions.RemoveEmptyEntries);
