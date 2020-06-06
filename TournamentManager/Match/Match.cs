@@ -97,7 +97,7 @@ namespace TournamentManager
 						throw new NegativeMatchLengthException();
 				}
 				//float.parse throws FormatException if stat can't be converted
-				catch (FormatException e)
+				catch (FormatException)
 				{
 					throw new NotNumberMatchLengthException();
 				}
@@ -154,7 +154,7 @@ namespace TournamentManager
 						throw new TooHighPlayersLeftException();
 					}
 				}
-				catch (FormatException q)
+				catch (FormatException)
 				{
 					throw new NotIntPlayersException();
 				}
@@ -212,10 +212,10 @@ namespace TournamentManager
 			{
 				SetReferees(r);
 			}
-			public override void SetReferees(List<TPerson.Referee> @ref)
+			public override void SetReferees(List<TPerson.Referee> r)
 			{
-				base.SetReferees(@ref);
-				assistantReferees.AddRange( @ref.GetRange(1, 2));
+				base.SetReferees(r);
+				assistantReferees.AddRange( r.GetRange(1, 2));
 			}
 			//the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
 			public override void SetResult(string stat, TTeam.ITeam winner)
@@ -246,7 +246,7 @@ namespace TournamentManager
 							throw new TooHighScoreException();
 						
 					}
-					catch(FormatException f)
+					catch(FormatException)
                     {
 						throw new NonIntScoreException();
 					}

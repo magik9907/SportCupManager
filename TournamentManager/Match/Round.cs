@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,9 +13,49 @@ namespace TournamentManager
     {
         public class PlayOff
         {
-            public PlayOff(List<TTeam.ITeam> t, List<TPerson.Referee> referees)
+            private List<Round> rounds = new List<Round>(2);
+            private List<TPerson.Referee> referees;
+            public PlayOff(List<TTeam.ITeam> t, List<TPerson.Referee> referees, int[] startDate)
             {
-
+                //semis and finals will be generated on two consecutive days
+                rounds[0] = new Round("semi-finals", startDate);
+                try
+                {
+                    startDate[0]++;
+                    rounds[1] = new Round("final", startDate);
+                }
+                catch (WrongDayException)
+                {
+                    startDate[0] = 1;
+                    if (startDate[1] == 12)
+                    {
+                        startDate[1] = 1;
+                        startDate[2]++;
+                    }
+                    else
+                        startDate[1]++;
+                    rounds[1] = new Round("final", startDate);
+                }
+                GenerateRound(t, "semi-finals");
+            }
+            //having setReferees both 
+            private void GenerateRound(List<TTeam.ITeam> teams, string name)
+            {
+                int roundNumber;
+                if (name == "final")
+                    roundNumber = 1;
+                else
+                    roundNumber = 0;
+                if (teams[0] is DodgeballTeam)
+                    for (int i = 0; i < teams.Count / 2; i++)
+                        rounds[roundNumber].AddMatch(new TMatch.DodgeballMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i, 1)), referees.GetRange(i, 1));
+                else
+                    if (teams[0] is TugOfWarTeam)
+                        for (int i = 0; i < teams.Count / 2; i++)
+                            rounds[roundNumber].AddMatch(new TMatch.TugOfWarMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i, 1)), referees.GetRange(i, 1));
+                    else
+                        for (int i = 0; i < teams.Count / 2; i++)
+                            rounds[roundNumber].AddMatch(new TMatch.VolleyballMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i*3, 3)), referees.GetRange(i*3, 3));
             }
         }
 
@@ -39,6 +80,19 @@ namespace TournamentManager
                     }
                 }
                 this.referees = referees;
+            }
+
+            /*private void sortTeams()
+            {
+                int i, j;
+                for(j = teams.Count - 1; j > 0; j++)
+                    for(i = 0; i < j; i++)
+                        if (teams[i].GreaterThan(teams[i+1]))
+                            teams.Reverse(i, i + 1);
+            }*/
+            public List<TTeam.ITeam> getFinalTeams(int number)
+            {
+                return teams.GetRange(0, number);
             }
             public void ScheduleMatch(TMatch.Match match, List<Referee> referees, Round round)
             {
@@ -94,7 +148,7 @@ namespace TournamentManager
             {
                 get
                 {
-                    return "This schedule is impossible";
+                    return "Can't schedule this match as it would make scheduling rest of the season impossible";
                 }
             }
         }
@@ -146,6 +200,7 @@ namespace TournamentManager
                     throw new WrongDateFormatException();
                 if(date[1] > 12 || date[1] <= 0)
                     throw new WrongMonthException();
+                //figuring out what maxDays is supposed to be
                 if (date[1] == 2)
                     if ((date[2] % 4 == 0 && date[2] % 100 != 0) || date[2] % 400 == 0)
                         maxDays = 29;
