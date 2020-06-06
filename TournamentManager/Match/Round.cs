@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using TournamentManager.TPerson;
@@ -19,9 +20,43 @@ namespace TournamentManager
 
         public class League
         {
+            private List<Round> rounds;
+            private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
+            private List<TPerson.Referee> referees = new List<TPerson.Referee>();
+
+
             public League(List<TTeam.ITeam> t, List<TPerson.Referee> referees)
             {
+                if (t.Count % 2 == 0)
+                    rounds = new List<Round>(t.Count - 1);
+                else
+                    rounds = new List<Round>(t.Count);
+                for(int i = 0; i < t.Count; i++)
+                {
+                    for(int j = 1; j + i < t.Count; j++)
+                    {
+                        if (t[i] == t[j + i])
+                            throw new DuplicateTeamException(t[i]);
+                    }
+                }
+                this.referees = referees;
+            }
+        }
 
+        //Exception if there were two exactly same teams in the team list
+        public class DuplicateTeamException : Exception
+        {
+            private TTeam.Team team;
+            public DuplicateTeamException(TTeam.ITeam team)
+            {
+                this.team = (Team)team;
+            }
+            public override string Message
+            {
+                get
+                {
+                    return "Team" + team.Name + "is already playing in the league";
+                }
             }
         }
 
@@ -32,6 +67,7 @@ namespace TournamentManager
             private string roundName;
             public Round(string name, int[] date)
             {
+                //maxDays stores number of days in the month
                 int maxDays;
                 if (date.Length != 3)
                     throw new WrongDateFormatException();
@@ -61,17 +97,30 @@ namespace TournamentManager
             public void addMatch(TMatch.Match match, List<Referee> referees)
             {
                 match.setReferees(referees);
+                //this checks whether or not one of the teams specified are already playing someone this round
                 for (int i = 0; i < listMatches.Count; i++)
                 {
-                    if (match.getTeamA() == listMatches[i].getTeamA() || match.getTeamA() == listMatches[i].getTeamB())
+                    if (listMatches[i].isPlaying(match.getTeamA()))
                         throw new AlreadyPlayingException(match, match.getTeamA());
-                    if (match.getTeamB() == listMatches[i].getTeamA() || match.getTeamB() == listMatches[i].getTeamB())
+                    if (listMatches[i].isPlaying(match.getTeamB()))
                         throw new AlreadyPlayingException(match, match.getTeamB());
                 }
                 listMatches.Add(match);
             }
+
+            //check whether or not a team has played in this round
+            public Boolean isPlaying(TTeam.ITeam team)
+            {
+                Boolean flag = false;
+                for (int i = 0; i < listMatches.Count; i++)
+                {
+                    flag = flag || listMatches[i].isPlaying(team);
+                }
+                return flag;
+            }
         }
 
+        //Exception if team has already a match scheduled in this round
         public class AlreadyPlayingException : Exception
         {
             private TMatch.Match match;
@@ -95,6 +144,7 @@ namespace TournamentManager
             }
         }
 
+        //Exception if day doesn't fit in number of days in a specified month
         public class WrongDayException : Exception
         {
             public override string Message
@@ -106,6 +156,7 @@ namespace TournamentManager
             }
         }
 
+        //Exception if month sent doesn't match number of months
         public class WrongMonthException : Exception
         {
             public override string Message
@@ -117,6 +168,7 @@ namespace TournamentManager
             }
         }
 
+        //Exception if the table didn't have 3 fields for day, month and year
         public class WrongDateFormatException : Exception
         {
             public override string Message
