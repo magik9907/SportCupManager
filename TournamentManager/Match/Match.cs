@@ -13,10 +13,12 @@ namespace TournamentManager
 		{
 			private TTeam.ITeam teamA;
 			private TTeam.ITeam teamB;
-			private TTeam.ITeam winner;
+			private TTeam.ITeam winner = null;
 			private TPerson.Referee refA;
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
+				if (a == b)
+					throw new IncorrectOpponentException();
 				teamA = a;
 				teamB = b;
 				refA = r.ElementAt(0);
@@ -42,7 +44,28 @@ namespace TournamentManager
 			}
 			public virtual string getStat() { return null; }
 			//It's just a basic try, can be changed if needed
+			public Boolean isPlaying(TTeam.ITeam team)
+            {
+				return team == teamA || team == teamB;
+            }
+
+			public Boolean wasPlayed()
+            {
+				return winner != null;
+            }
 		}
+
+		//Excpetion if teamA and teamB are the same team
+		public class IncorrectOpponentException : Exception
+        {
+			public override string Message
+            {
+                get
+                {
+					return "A team cannot play against itself!";
+                }
+            }
+        }
 
 		//Exception if team set as winner is not playing in the match
 		public class TeamIsNotPlayingException : Exception
@@ -58,7 +81,7 @@ namespace TournamentManager
 
 		public class TugOfWarMatch : Match
 		{
-			private float matchLength;
+			private float matchLength = 0;
 			//constructor uses a constructor of its superclass
 			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
@@ -112,7 +135,7 @@ namespace TournamentManager
 		public class DodgeballMatch : Match
 		{
 			//we might need to change that name
-			private int winnerPlayersLeft;
+			private int winnerPlayersLeft = 0;
 			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
 			public override void setResult(string stat, TTeam.ITeam winner)
 			{
@@ -182,8 +205,8 @@ namespace TournamentManager
 			private List<TPerson.Referee> assistantReferees = new List<TPerson.Referee>(2);
 			//the score means points gained by team in each set
 			//score from x set is kept under x-1 index in the table
-			private int[] scoreTeamA = new int[3];
-			private int[] scoreTeamB = new int[3];
+			private int[] scoreTeamA = new int[3] {0, 0, 0};
+			private int[] scoreTeamB = new int[3] {0, 0, 0};
 			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r)
 			{
 				setReferees(r);
@@ -366,7 +389,7 @@ namespace TournamentManager
 			{
 				get
 				{
-					return "Team" + supposedWinner.ToString() + "was set as winner despite losing 2 or more sets";
+					return "Team" + supposedWinner + "was set as winner despite losing 2 or more sets";
 				}
 			}
 		}
