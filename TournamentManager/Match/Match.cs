@@ -11,47 +11,42 @@ namespace TournamentManager
 		//exceptions used by class are defined below the class (will be changed in the future)
 		public abstract class Match
 		{
-			private TTeam.ITeam teamA;
-			private TTeam.ITeam teamB;
-			private TTeam.ITeam winner = null;
-			private TPerson.Referee refA;
+			public TTeam.ITeam TeamA
+            {
+				get;
+            }
+			public TTeam.ITeam TeamB;
+			private TTeam.ITeam Winner = null;
+            private TPerson.Referee RefA;
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
 				if (a == b)
 					throw new IncorrectOpponentException();
-				teamA = a;
-				teamB = b;
-				refA = r.ElementAt(0);
+				TeamA = a;
+				TeamB = b;
+				RefA = r.ElementAt(0);
 			}
-			public TTeam.ITeam getTeamA()
-            {
-				return teamA;
-            }
-			public TTeam.ITeam getTeamB()
-			{
-				return teamB;
-			}
-			//Function takes a list of referees because VolleyballMatch needs 3 of them
-			public virtual void setReferees(List<TPerson.Referee> r) { refA = r.ElementAt(0); }
-			public string getWinner() { return winner.ToString(); }
+            //Function takes a list of referees because VolleyballMatch needs 3 of them
+            public virtual void SetReferees(List<TPerson.Referee> r) { RefA = r.ElementAt(0); }
+			public string GetWinner() { return Winner.ToString(); }
 			//those virtual methods will be defined in subclasses
-			public virtual void setResult(string stat, TTeam.ITeam winner)
+			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
-				if (winner == teamA || winner == teamB)
-					this.winner = winner;
+				if (winner == TeamA || winner == TeamB)
+					this.Winner = winner;
 				else
 					throw new TeamIsNotPlayingException();
 			}
-			public virtual string getStat() { return null; }
+			public virtual string GetStat() { return null; }
 			//It's just a basic try, can be changed if needed
-			public Boolean isPlaying(TTeam.ITeam team)
+			public Boolean IsPlaying(TTeam.ITeam team)
             {
-				return team == teamA || team == teamB;
+				return team == TeamA || team == TeamB;
             }
 
-			public Boolean wasPlayed()
+			public Boolean WasPlayed()
             {
-				return winner != null;
+				return Winner != null;
             }
 		}
 
@@ -67,27 +62,27 @@ namespace TournamentManager
             }
         }
 
-		//Exception if team set as winner is not playing in the match
+		//Exception if team set as Winner is not playing in the match
 		public class TeamIsNotPlayingException : Exception
         {
             public override string Message
             {
                 get 
 				{
-					return "Team you want to set as a winner is not playing!";
+					return "Team you want to set as a Winner is not playing!";
 				}
             }
         }
 
 		public class TugOfWarMatch : Match
 		{
-			private float matchLength = 0;
+            private float matchLength = 0;
 			//constructor uses a constructor of its superclass
 			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
-			public override void setResult(string stat, TTeam.ITeam winner)
+			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
-				base.setResult(stat, winner);
+				base.SetResult(stat, winner);
 				//a safety check just in case stat is not a number 
 				try
 				{
@@ -102,7 +97,7 @@ namespace TournamentManager
 				}
 			}
 			//getStat returns time in seconds (with miliseconds)
-			public override string getStat()
+			public override string GetStat()
 			{
 				return matchLength.ToString();
 			}
@@ -134,12 +129,12 @@ namespace TournamentManager
 
 		public class DodgeballMatch : Match
 		{
-			//we might need to change that name
-			private int winnerPlayersLeft = 0;
+            //we might need to change that name
+            private int winnerPlayersLeft = 0;
 			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
-			public override void setResult(string stat, TTeam.ITeam winner)
+			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
-				base.setResult(stat, winner);
+				base.SetResult(stat, winner);
 				//if stat is not a number parse will throw format exception
 				try
 				{
@@ -158,7 +153,7 @@ namespace TournamentManager
 					throw new NotIntPlayersException();
 				}
 			}
-			public override string getStat()
+			public override string GetStat()
 			{
 				return winnerPlayersLeft.ToString();
 			}
@@ -209,18 +204,18 @@ namespace TournamentManager
 			private int[] scoreTeamB = new int[3] {0, 0, 0};
 			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r)
 			{
-				setReferees(r);
+				SetReferees(r);
 			}
-			public override void setReferees(List<TPerson.Referee> @ref)
+			public override void SetReferees(List<TPerson.Referee> @ref)
 			{
-				base.setReferees(@ref);
+				base.SetReferees(@ref);
 				assistantReferees.AddRange( @ref.GetRange(1, 2));
 			}
 			//the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
-			public override void setResult(string stat, TTeam.ITeam winner)
+			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				int resultCheck = 0;
-				base.setResult(stat, winner);
+				base.SetResult(stat, winner);
 				//split the strings into strings containing name of the teams and their scores
 				string[] tmp = stat.Split(new string[] {". ", ", ", ": "}, StringSplitOptions.RemoveEmptyEntries);
 				//string should split into 8 smaller string (2 for names of teams, 6 in total for scores in sets)
@@ -249,14 +244,14 @@ namespace TournamentManager
                     {
 						throw new NonIntScoreException();
 					}
-					//Checking whether the score makes sense and reflects the winner
+					//Checking whether the score makes sense and reflects the Winner
 					//if a team has won in 2 sets third one should end 0:0
 					if (Math.Abs(resultCheck) == 2)
 						if (scoreTeamA[i] != 0 || scoreTeamB[i] != 0)
 							if (resultCheck > 0)
-								throw new ThirdSetException(getTeamA());
+								throw new ThirdSetException(TeamA);
 							else
-								throw new ThirdSetException(getTeamB());
+								throw new ThirdSetException(TeamB);
 					//Checking if exactly one team has reached the required points
 					if (scoreTeamA[i] == scoreTeamB[i] || (scoreTeamA[i] < scoreRequired && scoreTeamB[i] < scoreRequired))
 						throw new NoSetWinnerException(i+1);
@@ -265,10 +260,10 @@ namespace TournamentManager
 					if (scoreTeamB[i] == scoreRequired)
 						resultCheck--;
                 }
-				if ((resultCheck > 0 && getTeamA() != winner) || (resultCheck < 0 && getTeamB() != winner))
+				if ((resultCheck > 0 && TeamA != winner) || (resultCheck < 0 && TeamB != winner))
 					throw new WrongWinnerException(winner);
 			}
-			public override string getStat()
+			public override string GetStat()
             {
 				string stat = "a: ";
 				for (int i = 0; i < 3; i++)
@@ -377,7 +372,7 @@ namespace TournamentManager
 			}
 		}
 
-		//Exception if the team that was set as winner lost based on the points from stats
+		//Exception if the team that was set as Winner lost based on the points from stats
 		public class WrongWinnerException : Exception
 		{
 			private TTeam.ITeam supposedWinner;
@@ -389,7 +384,7 @@ namespace TournamentManager
 			{
 				get
 				{
-					return "Team" + supposedWinner + "was set as winner despite losing 2 or more sets";
+					return "Team" + supposedWinner + "was set as Winner despite losing 2 or more sets";
 				}
 			}
 		}

@@ -64,7 +64,10 @@ namespace TournamentManager
         {
             private List<TMatch.Match> listMatches = new List<TMatch.Match>();
             private int[] date = new int[3];
-            private string roundName;
+            public string RoundName
+            {
+                get;
+            }
             public Round(string name, int[] date)
             {
                 //maxDays stores number of days in the month
@@ -86,24 +89,19 @@ namespace TournamentManager
                 if (date[0] > maxDays || date[0] <= 0)
                     throw new WrongDayException();
                 this.date = date;
-                roundName = name;
-            }
-
-            public string getRoundName()
-            {
-                return roundName;
+                RoundName = name;
             }
 
             public void addMatch(TMatch.Match match, List<Referee> referees)
             {
-                match.setReferees(referees);
+                match.SetReferees(referees);
                 //this checks whether or not one of the teams specified are already playing someone this round
                 for (int i = 0; i < listMatches.Count; i++)
                 {
-                    if (listMatches[i].isPlaying(match.getTeamA()))
-                        throw new AlreadyPlayingException(match, match.getTeamA());
-                    if (listMatches[i].isPlaying(match.getTeamB()))
-                        throw new AlreadyPlayingException(match, match.getTeamB());
+                    if (listMatches[i].IsPlaying(match.TeamA))
+                        throw new AlreadyPlayingException(match, match.TeamA);
+                    if (listMatches[i].IsPlaying(match.TeamB))
+                        throw new AlreadyPlayingException(match, match.TeamB);
                 }
                 listMatches.Add(match);
             }
@@ -114,7 +112,7 @@ namespace TournamentManager
                 Boolean flag = false;
                 for (int i = 0; i < listMatches.Count; i++)
                 {
-                    flag = flag || listMatches[i].isPlaying(team);
+                    flag = flag || listMatches[i].IsPlaying(team);
                 }
                 return flag;
             }
@@ -135,10 +133,10 @@ namespace TournamentManager
                 get
                 {
                     TTeam.ITeam team2;
-                    if (team == match.getTeamA())
-                        team2 = match.getTeamB();
+                    if (team == match.TeamA)
+                        team2 = match.TeamB;
                     else
-                        team2 = match.getTeamA();
+                        team2 = match.TeamA;
                     return team + " is already scheduled to play this round against " + team2;
                 }
             }
