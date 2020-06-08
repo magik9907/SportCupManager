@@ -38,24 +38,25 @@ namespace TournamentManager
                 }
                 GenerateRound(t, "semi-finals");
             }
-            //having setReferees both 
+            public TTeam.ITeam GetWinner()
+            {
+                return rounds[1].ListMatches[0].Winner;
+            }
             private void GenerateRound(List<TTeam.ITeam> teams, string name)
             {
-                int roundNumber;
+                int roundNumber, refNumber = 1;
                 if (name == "final")
                     roundNumber = 1;
                 else
                     roundNumber = 0;
-                if (teams[0] is DodgeballTeam)
-                    for (int i = 0; i < teams.Count / 2; i++)
-                        rounds[roundNumber].AddMatch(new TMatch.DodgeballMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i, 1)), referees.GetRange(i, 1));
-                else
-                    if (teams[0] is TugOfWarTeam)
-                        for (int i = 0; i < teams.Count / 2; i++)
-                            rounds[roundNumber].AddMatch(new TMatch.TugOfWarMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i, 1)), referees.GetRange(i, 1));
-                    else
-                        for (int i = 0; i < teams.Count / 2; i++)
-                            rounds[roundNumber].AddMatch(new TMatch.VolleyballMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i*3, 3)), referees.GetRange(i*3, 3));
+                if (teams[0] is VolleyballTeam)
+                    refNumber = 3;
+                for (int i = 0; i < teams.Count / 2; i++)
+                    rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i*refNumber, refNumber)), referees.GetRange(i*refNumber, refNumber));
+            }
+            public void SetResult(string stat, TTeam.ITeam winner, int roundNumber)
+            {
+                rounds[roundNumber].SetResult(stat, winner);
             }
         }
 
@@ -84,11 +85,7 @@ namespace TournamentManager
 
             /*private void sortTeams()
             {
-                int i, j;
-                for(j = teams.Count - 1; j > 0; j++)
-                    for(i = 0; i < j; i++)
-                        if (teams[i].GreaterThan(teams[i+1]))
-                            teams.Reverse(i, i + 1);
+                
             }*/
             public List<TTeam.ITeam> getFinalTeams(int number)
             {
@@ -96,14 +93,11 @@ namespace TournamentManager
             }
             public void ScheduleMatch(TMatch.Match match, List<Referee> referees, Round round)
             {
-                Boolean flagA;
-                Boolean flagB;
-                Boolean flagAnB;
                 for (int i = 0; i < teams.Count; i++)
                 {
-                    flagA = false;
-                    flagB = false;
-                    flagAnB = false;
+                    Boolean flagA = false;
+                    Boolean flagB = false;
+                    Boolean flagAnB = false;
                     for (int j = 0; j < rounds.Count; j++)
                     {
                         /*
@@ -138,6 +132,44 @@ namespace TournamentManager
                         throw new ImpossibleScheduleException();
                 }
                 round.AddMatch(match, referees);
+            }
+
+            public void AutoSchedule(int[] startDate, int spaceBetweenMatches)
+            {
+                int i = 1, j = 1, refNumber = 1;
+                if (teams[0] is VolleyballTeam)
+                    refNumber = 3;
+                for(int index = 0; index < rounds.Count * (rounds.Count/2 + 1); index++)
+                {
+                    if (index % (rounds.Count/2 + 1) == 0)
+                    {
+                        rounds[index / (rounds.Count / 2 + 1)] = new Round(index / (rounds.Count / 2 + 1) + " Round", startDate);
+                        startDate = IncrementDate(startDate, spaceBetweenMatches);
+                        j = i;
+                    }
+                    if (i != j)
+                        rounds[index / (rounds.Count / 2 + 1)].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange((index % (rounds.Count / 2 + 1) - 1) * refNumber, refNumber)), referees.GetRange((index % (rounds.Count / 2 + 1) - 1) * refNumber, refNumber));
+                    else
+                        if (teams.Count != rounds.Count)
+                            rounds[index / (rounds.Count / 2 + 1)].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees.GetRange(referees.Count - refNumber, refNumber));
+                    i = ++i % rounds.Count;
+                    j = --j % rounds.Count;
+                }
+            }
+
+            private int[] IncrementDate(int[] date, int increment)
+            {
+                date[0] += increment;
+                while(date[0] > Round.MaxDays(date))
+                {
+                    date[0] -= Round.MaxDays(date);
+                    if (date[1]++ > 12)
+                    {
+                        date[1] = 1;
+                        date[2]++; 
+                    }
+                }
+                return date;
             }
         }
 
@@ -192,25 +224,19 @@ namespace TournamentManager
             private List<TMatch.Match> listMatches = new List<TMatch.Match>();
             private int[] date = new int[3];
             private string roundName;
+            public List<TMatch.Match> ListMatches
+            {
+                get { return listMatches; }
+            }
             public Round(string name, int[] date)
             {
                 //maxDays stores number of days in the month
                 int maxDays;
                 if (date.Length != 3)
                     throw new WrongDateFormatException();
-                if(date[1] > 12 || date[1] <= 0)
+                if (date[1] > 12 || date[1] <= 0)
                     throw new WrongMonthException();
-                //figuring out what maxDays is supposed to be
-                if (date[1] == 2)
-                    if ((date[2] % 4 == 0 && date[2] % 100 != 0) || date[2] % 400 == 0)
-                        maxDays = 29;
-                    else
-                        maxDays = 28;
-                else
-                    if ((date[1] < 8 && date[1] % 2 == 1) || (date[1] >= 8 && date[1] % 2 == 0))
-                        maxDays = 31;
-                    else
-                        maxDays = 30;
+                maxDays = MaxDays(date);
                 if (date[0] > maxDays || date[0] <= 0)
                     throw new WrongDayException();
                 this.date = date;
@@ -235,6 +261,15 @@ namespace TournamentManager
                 }
                 listMatches.Add(match);
             }
+            public TMatch.Match GetMatch(TTeam.ITeam team)
+            {
+                for (int i = 0; i < listMatches.Count; i++)
+                {
+                    if (listMatches[i].isPlaying(team))
+                        return listMatches[i];
+                }
+                throw new TeamNotPlayingException(team);
+            }
 
             //check whether or not a team has played in this round
             public Boolean IsPlaying(TTeam.ITeam team)
@@ -246,13 +281,57 @@ namespace TournamentManager
                 }
                 return flag;
             }
-
             public Boolean IsScheduled(TTeam.ITeam team1, TTeam.ITeam team2)
             {
                 for (int i = 0; i < listMatches.Count; i++)
                     if (listMatches[i].isPlaying(team1) && listMatches[i].isPlaying(team2))
                         return true;
                 return false;
+            }
+            public Boolean IsFinished()
+            {
+                for(int i = 0; i < listMatches.Count; i++)
+                {
+                    if (!listMatches[i].WasPlayed())
+                        return false;
+                }
+                return true;
+            }
+
+            public void SetResult(string stat, TTeam.ITeam winner)
+            {
+                GetMatch(winner).SetResult(stat, winner);
+            }
+
+            internal static int MaxDays(int[] date)
+            {
+                if (date[1] == 2)
+                    if ((date[2] % 4 == 0 && date[2] % 100 != 0) || date[2] % 400 == 0)
+                        return 29;
+                    else
+                        return 28;
+                else
+                    if ((date[1] < 8 && date[1] % 2 == 1) || (date[1] >= 8 && date[1] % 2 == 0))
+                        return 31;
+                    else
+                        return 30;
+            }
+        }
+
+        //Exception if team is not playing in the round
+        public class TeamNotPlayingException : Exception
+        {
+            private TTeam.ITeam team;
+            public TeamNotPlayingException(TTeam.ITeam team)
+            {
+                this.team = team;
+            }
+            public override string Message
+            {
+                get
+                {
+                    return team + " is not playing in this round";
+                }
             }
         }
 

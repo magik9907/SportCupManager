@@ -13,8 +13,8 @@ namespace TournamentManager
 		{
 			private TTeam.ITeam teamA;
 			private TTeam.ITeam teamB;
-		
-			private TTeam.ITeam Winner = null;
+
+			private TTeam.ITeam winner = null;
             private TPerson.Referee RefA;
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
@@ -32,16 +32,19 @@ namespace TournamentManager
 			{
 				get { return teamB; }
 			}
+			public TTeam.ITeam Winner
+			{
+				get { return winner; }
+			}
 			//Function takes a list of referees because VolleyballMatch needs 3 of them
 			public virtual void SetReferees(List<TPerson.Referee> r) { RefA = r.ElementAt(0); }
-			public string GetWinner() { return Winner.ToString(); }
 			//those virtual methods will be defined in subclasses
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
 				if (winner == TeamA || winner == TeamB)
-					this.Winner = winner;
+					this.winner = winner;
 				else
-					throw new TeamIsNotPlayingException();
+					throw new WinnerIsNotPlayingException();
 			}
 			public virtual string GetStat() { return null; }
 			//It's just a basic try, can be changed if needed
@@ -50,10 +53,21 @@ namespace TournamentManager
 				return team == TeamA || team == TeamB;
             }
 
-			public Boolean wasPlayed()
+			public Boolean WasPlayed()
             {
-				return Winner != null;
+				return winner != null;
             }
+
+			internal static Match CreateMatch(TTeam.ITeam team1, TTeam.ITeam team2, List<TPerson.Referee> refs)
+            {
+				if (team1 is DodgeballTeam)
+					return new TMatch.DodgeballMatch(team1, team2, refs);
+				else
+					if (team1 is TugOfWarTeam)
+						return new TMatch.TugOfWarMatch(team1, team2, refs);
+					else
+						return new TMatch.VolleyballMatch(team1, team2, refs);
+			}
 		}
 
 		//Excpetion if teamA and teamB are the same team
@@ -68,14 +82,14 @@ namespace TournamentManager
             }
         }
 
-		//Exception if team set as Winner is not playing in the match
-		public class TeamIsNotPlayingException : Exception
+		//Exception if team set as winner is not playing in the match
+		public class WinnerIsNotPlayingException : Exception
         {
             public override string Message
             {
                 get 
 				{
-					return "Team you want to set as a Winner is not playing!";
+					return "Team you want to set as a winner is not playing!";
 				}
             }
         }
@@ -220,7 +234,7 @@ namespace TournamentManager
 			//the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
-                int resultCheck = 0;
+				int resultCheck = 0;
 				base.SetResult(stat, winner);
 				//split the strings into strings containing name of the teams and their scores
 				string[] tmp = stat.Split(new string[] {". ", ", ", ": "}, StringSplitOptions.RemoveEmptyEntries);
@@ -250,7 +264,7 @@ namespace TournamentManager
                     {
 						throw new NonIntScoreException();
 					}
-					//Checking whether the score makes sense and reflects the Winner
+					//Checking whether the score makes sense and reflects the winner
 					//if a team has won in 2 sets third one should end 0:0
 					if (Math.Abs(resultCheck) == 2)
 						if (scoreTeamA[i] != 0 || scoreTeamB[i] != 0)
@@ -269,6 +283,7 @@ namespace TournamentManager
 				if ((resultCheck > 0 && TeamA != winner) || (resultCheck < 0 && TeamB != winner))
 					throw new WrongWinnerException(winner);
 			}
+
 			public override string GetStat()
             {
 				string stat = "a: ";
@@ -378,7 +393,7 @@ namespace TournamentManager
 			}
 		}
 
-		//Exception if the team that was set as Winner lost based on the points from stats
+		//Exception if the team that was set as winner lost based on the points from stats
 		public class WrongWinnerException : Exception
 		{
 			private TTeam.ITeam supposedWinner;
@@ -390,7 +405,7 @@ namespace TournamentManager
 			{
 				get
 				{
-					return "Team" + supposedWinner + "was set as Winner despite losing 2 or more sets";
+					return "Team" + supposedWinner + "was set as winner despite losing 2 or more sets";
 				}
 			}
 		}
