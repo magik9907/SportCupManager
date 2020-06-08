@@ -6,17 +6,23 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        public class TugOfWarTeam : Team
+        public class TugOfWarTeam : Team<TugOfWarTeam>
         {
             public float AvWinTime { get; set; }
             public float AvLossTime { get; set; }
+            public float SumWinTime { get; set; }
+            public float SumLossTime { get; set; }
 
             public TugOfWarTeam(string name) : base(name)
             {
                 this.Name = name;
+                this.AvWinTime = 0;
+                this.AvLossTime = 0;
+                this.SumWinTime = 0;
+                this.SumLossTime = 0;
             }
 
-            public static bool operator <(TugOfWarTeam a, TugOfWarTeam b)
+            public override bool LessThan(TugOfWarTeam a, TugOfWarTeam b)
             {
                 if (a.MatchesWon != b.MatchesWon)
                     return a.MatchesWon < b.MatchesWon;
@@ -27,7 +33,7 @@ namespace TournamentManager
                 return String.Compare(a.Name, b.Name) < 0;
             }
 
-            public static bool operator >(TugOfWarTeam a, TugOfWarTeam b)
+            public override bool GreaterThan(TugOfWarTeam a, TugOfWarTeam b)
             {
                 if (a.MatchesWon != b.MatchesWon)
                     return a.MatchesWon > b.MatchesWon;
@@ -36,6 +42,26 @@ namespace TournamentManager
                 if (a.AvLossTime != b.AvLossTime)
                     return a.AvLossTime > b.AvLossTime;
                 return String.Compare(a.Name, b.Name) > 0;
+            }
+
+            public override void SetMatchResult(bool result, string stat)
+            {
+                this.MatchesPlayed++;
+                if (result)
+                {
+                    this.MatchesWon++;
+                    this.SumWinTime += float.Parse(stat);
+                }
+                else
+                {
+                    this.SumLossTime += float.Parse(stat);
+                }
+                    
+            }
+
+            public override string GetStats()
+            {
+                return MatchesWon + ", " + AvWinTime + ", " + AvLossTime;
             }
         }
     }

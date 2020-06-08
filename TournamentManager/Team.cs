@@ -6,7 +6,7 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        public abstract class Team : ITeam
+        public abstract class Team<T> : ITeam<T>
         {
             public string Name { get; set; }
             protected List<TPerson.Player> listPlayers = new List<TPerson.Player>();
@@ -19,17 +19,27 @@ namespace TournamentManager
                     throw new TException.TeamMissingNameException();
 
                 this.Name = name;
+                this.MatchesPlayed = 0;
+                this.MatchesWon = 0;
             }
 
-            public void addPlayer(TPerson.Player p)
+            public void AddPlayer(TPerson.Player p)
             {
                 listPlayers.Add(p);
             }
 
-            public void removePlayer(TPerson.Player p)
+            public void RemovePlayer(TPerson.Player p)
             {
                 listPlayers.Remove(p);
             }
+
+            public abstract bool LessThan(T a, T b);
+
+            public abstract bool GreaterThan(T a, T b);
+
+            public abstract void SetMatchResult(bool result, string stat);
+
+            public abstract string GetStats();
 
             public override string ToString()
             {
