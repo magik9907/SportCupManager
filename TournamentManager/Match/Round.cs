@@ -37,6 +37,7 @@ namespace TournamentManager
                     rounds[1] = new Round("final", startDate);
                 }
                 GenerateRound(t, "semi-finals");
+                this.referees = referees;
             }
             public TTeam.ITeam GetWinner()
             {
