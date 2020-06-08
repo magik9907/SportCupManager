@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+<<<<<<< HEAD
 using TournamentManager.TTeam;
+=======
+>>>>>>> 65e476e... pull from SaveReadFile
 
 namespace TournamentManager
 {	
@@ -13,6 +16,7 @@ namespace TournamentManager
 		{
 			private TTeam.ITeam teamA;
 			private TTeam.ITeam teamB;
+<<<<<<< HEAD
 
 			private TTeam.ITeam winner = null;
             private TPerson.Referee RefA;
@@ -103,6 +107,35 @@ namespace TournamentManager
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				base.SetResult(stat, winner);
+=======
+			private TTeam.ITeam winner;
+			private TPerson.Referee refA;
+			//ref is a reserved word, so I changed it to ref_ 
+			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> ref_)
+			{
+				teamA = a;
+				teamB = b;
+				refA = ref_.ElementAt(0);
+			}
+			//Function takes a list of referees because VolleyballMatch needs 3 of them
+			public virtual void setReferees(List<TPerson.Referee> ref_) { refA = ref_.ElementAt(0); }
+			public void setWinner(TTeam.ITeam winner_) { winner = winner_; }
+			public string getWinner() { return winner.ToString(); }
+			//those virtual methods will be defined in subclasses
+			public virtual void setStat(string stat) { }
+			public virtual string getStat() { return null; }
+			//It's just a basic try, can be changed if needed
+		}
+
+		public class TugOfWarMatch : Match
+		{
+			private float matchLength;
+			//constructor uses a constructor of its superclass
+			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> ref_) : base(a, b, ref_) { }
+			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
+			public override void setStat(string stat)
+			{
+>>>>>>> 65e476e... pull from SaveReadFile
 				//a safety check just in case stat is not a number 
 				try
 				{
@@ -111,13 +144,21 @@ namespace TournamentManager
 						throw new NegativeMatchLengthException();
 				}
 				//float.parse throws FormatException if stat can't be converted
+<<<<<<< HEAD
 				catch (FormatException)
+=======
+				catch (FormatException e)
+>>>>>>> 65e476e... pull from SaveReadFile
 				{
 					throw new NotNumberMatchLengthException();
 				}
 			}
 			//getStat returns time in seconds (with miliseconds)
+<<<<<<< HEAD
 			public override string GetStat()
+=======
+			public override string getStat()
+>>>>>>> 65e476e... pull from SaveReadFile
 			{
 				return matchLength.ToString();
 			}
@@ -150,11 +191,18 @@ namespace TournamentManager
 		public class DodgeballMatch : Match
 		{
 			//we might need to change that name
+<<<<<<< HEAD
 			private int winnerPlayersLeft = 0;
 			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				base.SetResult(stat, winner);
+=======
+			private int winnerPlayersLeft;
+			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> ref_) : base(a, b, ref_) { }
+			public override void setStat(string stat)
+			{
+>>>>>>> 65e476e... pull from SaveReadFile
 				//if stat is not a number parse will throw format exception
 				try
 				{
@@ -168,12 +216,20 @@ namespace TournamentManager
 						throw new TooHighPlayersLeftException();
 					}
 				}
+<<<<<<< HEAD
 				catch (FormatException)
+=======
+				catch (FormatException q)
+>>>>>>> 65e476e... pull from SaveReadFile
 				{
 					throw new NotIntPlayersException();
 				}
 			}
+<<<<<<< HEAD
 			public override string GetStat()
+=======
+			public override string getStat()
+>>>>>>> 65e476e... pull from SaveReadFile
 			{
 				return winnerPlayersLeft.ToString();
 			}
@@ -220,6 +276,7 @@ namespace TournamentManager
 			private List<TPerson.Referee> assistantReferees = new List<TPerson.Referee>(2);
 			//the score means points gained by team in each set
 			//score from x set is kept under x-1 index in the table
+<<<<<<< HEAD
 			private int[] scoreTeamA = new int[3] {0, 0, 0};
 			private int[] scoreTeamB = new int[3] {0, 0, 0};
 			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r)
@@ -407,6 +464,23 @@ namespace TournamentManager
 				{
 					return "Team" + supposedWinner + "was set as winner despite losing 2 or more sets";
 				}
+=======
+			private int[] scoreTeamA;
+			private int[] scoreTeamB;
+			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> ref_) : base(a, b, ref_)
+			{
+				setReferees(ref_);
+			}
+			public override void setReferees(List<TPerson.Referee> ref_)
+			{
+				base.setReferees(ref_);
+				assistantReferees.AddRange( ref_.GetRange(1, 2));
+			}
+			//the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
+			public override void setStat(string stat)
+			{
+				stat.Split(new char[] {':', ',' });
+>>>>>>> 65e476e... pull from SaveReadFile
 			}
 		}
 	}
