@@ -12,16 +12,19 @@ namespace TournamentManager
 		//exceptions used by class are defined below the class (will be changed in the future)
 		public abstract class Match
 		{
-			private TTeam.ITeam<TTeam> TeamA;
-			private TTeam.ITeam TeamB;
-			private TTeam.ITeam Winner = null;
+			private TTeam.ITeam teamA;
+			private TTeam.ITeam teamB;
+			private TTeam.ITeam winner;
+			public TTeam.ITeam TeamA { get { return teamA; } }
+			public TTeam.ITeam TeamB { get { return teamB; } }
+			public TTeam.ITeam Winner { get { return winner; } }
             private TPerson.Referee RefA;
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
 				if (a == b)
 					throw new IncorrectOpponentException();
-				TeamA = a;
-				TeamB = b;
+				teamA = a;
+				teamB = b;
 				RefA = r.ElementAt(0);
 			}
 			
@@ -31,7 +34,7 @@ namespace TournamentManager
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
 				if (winner == TeamA || winner == TeamB)
-					this.Winner = winner;
+					this.winner = winner;
 				else
 					throw new WinnerIsNotPlayingException();
 			}
@@ -393,7 +396,7 @@ namespace TournamentManager
 			{
 				get
 				{
-					return "Team" + supposedWinner + "was set as winner despite losing 2 or more sets";
+					return "Team " + supposedWinner.Name + " was set as winner despite losing 2 or more sets";
 				}
 			}
 		}

@@ -6,7 +6,7 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        public class TugOfWarTeam : Team<TugOfWarTeam>
+        public class TugOfWarTeam : Team
         {
             public float AvWinTime { get; set; }
             public float AvLossTime { get; set; }
@@ -22,7 +22,7 @@ namespace TournamentManager
                 this.SumLossTime = 0;
             }
 
-            public override bool LessThan(TugOfWarTeam a, TugOfWarTeam b)
+            public static bool operator<(TugOfWarTeam a, TugOfWarTeam b)
             {
                 if (a.MatchesWon != b.MatchesWon)
                     return a.MatchesWon < b.MatchesWon;
@@ -33,7 +33,7 @@ namespace TournamentManager
                 return String.Compare(a.Name, b.Name) < 0;
             }
 
-            public override bool GreaterThan(TugOfWarTeam a, TugOfWarTeam b)
+            public static bool operator>(TugOfWarTeam a, TugOfWarTeam b)
             {
                 if (a.MatchesWon != b.MatchesWon)
                     return a.MatchesWon > b.MatchesWon;

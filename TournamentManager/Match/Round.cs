@@ -84,10 +84,34 @@ namespace TournamentManager
                 this.referees = referees;
             }
 
-            /*private void sortTeams()
+            private void sortTeams()
             {
-                
-            }*/
+                for(int i = 0; i < teams.Count; i++)
+                    for(int j = 0; j < teams.Count-1; j++)
+                    {
+                        if(teams[0] is VolleyballTeam)
+                            if((VolleyballTeam)teams[j] > (VolleyballTeam)teams[j+1])
+                            {
+                                var tmp = teams[j];
+                                teams[j] = teams[j + 1];
+                                teams[j + 1] = tmp;
+                            }
+                        if (teams[0] is DodgeballTeam)
+                            if ((DodgeballTeam)teams[j] > (DodgeballTeam)teams[j + 1])
+                            {
+                                var tmp = teams[j];
+                                teams[j] = teams[j + 1];
+                                teams[j + 1] = tmp;
+                            }
+                        if (teams[0] is TugOfWarTeam)
+                            if ((TugOfWarTeam)teams[j] > (TugOfWarTeam)teams[j + 1])
+                            {
+                                var tmp = teams[j];
+                                teams[j] = teams[j + 1];
+                                teams[j + 1] = tmp;
+                            }
+                    }
+            }
             public List<TTeam.ITeam> getFinalTeams(int number)
             {
                 return teams.GetRange(0, number);
@@ -201,7 +225,7 @@ namespace TournamentManager
             {
                 get
                 {
-                    return match.TeamA + " has already a match scheduled with " + match.TeamB;
+                    return match.TeamA.Name + " has already a match scheduled with " + match.TeamB.Name;
                 }
             }
         }
@@ -218,7 +242,7 @@ namespace TournamentManager
             {
                 get
                 {
-                    return "Team" + team + "is already playing in the league";
+                    return "Team " + team.Name + " is already playing in the league";
                 }
             }
         }
@@ -336,7 +360,7 @@ namespace TournamentManager
             {
                 get
                 {
-                    return team + " is not playing in this round";
+                    return team.Name + " is not playing in this round";
                 }
             }
         }
@@ -355,12 +379,10 @@ namespace TournamentManager
             {
                 get
                 {
-                    TTeam.ITeam team2;
                     if (team == match.TeamA)
-                        team2 = match.TeamB;
+                        return team.Name + " is already scheduled to play this round against " + match.TeamB.Name;
                     else
-                        team2 = match.TeamA;
-                    return team + " is already scheduled to play this round against " + team2;
+                        return team.Name + " is already scheduled to play this round against " + match.TeamA.Name;
                 }
             }
         }
