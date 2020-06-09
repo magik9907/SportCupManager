@@ -92,6 +92,7 @@ namespace TournamentManager
             {
                 return teams.GetRange(0, number);
             }
+            //this is for manual scheduling. Probably should make a flag to make it exclusive with 
             public void ScheduleMatch(TMatch.Match match, List<Referee> referees, Round round)
             {
                 for (int i = 0; i < teams.Count; i++)
@@ -134,12 +135,14 @@ namespace TournamentManager
                 }
                 round.AddMatch(match, referees);
             }
-
+            //this is for automatic scheduling
             public void AutoSchedule(int[] startDate, int spaceBetweenMatches)
             {
+                //refNumber holds the number of referees required for a match
                 int i = 1, j = 1, refNumber = 1;
                 if (teams[0] is VolleyballTeam)
                     refNumber = 3;
+                //rounds.Count/2 + 1 is the maximum number of matches played in a round
                 for(int index = 0; index < rounds.Count * (rounds.Count/2 + 1); index++)
                 {
                     if (index % (rounds.Count/2 + 1) == 0)
@@ -157,7 +160,7 @@ namespace TournamentManager
                     j = --j % rounds.Count;
                 }
             }
-
+            //increment date changes date by a specified number of days
             private int[] IncrementDate(int[] date, int increment)
             {
                 date[0] += increment;
@@ -231,14 +234,11 @@ namespace TournamentManager
             }
             public Round(string name, int[] date)
             {
-                //maxDays stores number of days in the month
-                int maxDays;
                 if (date.Length != 3)
                     throw new WrongDateFormatException();
                 if (date[1] > 12 || date[1] <= 0)
                     throw new WrongMonthException();
-                maxDays = MaxDays(date);
-                if (date[0] > maxDays || date[0] <= 0)
+                if (date[0] > MaxDays(date) || date[0] <= 0)
                     throw new WrongDayException();
                 this.date = date;
                 roundName = name;
@@ -262,6 +262,8 @@ namespace TournamentManager
                 }
                 listMatches.Add(match);
             }
+
+            //returns a match played in the round by a specified team
             public TMatch.Match GetMatch(TTeam.ITeam team)
             {
                 for (int i = 0; i < listMatches.Count; i++)
@@ -282,6 +284,7 @@ namespace TournamentManager
                 }
                 return flag;
             }
+            //check whether or not two teams are playing against each other
             public Boolean IsScheduled(TTeam.ITeam team1, TTeam.ITeam team2)
             {
                 for (int i = 0; i < listMatches.Count; i++)
@@ -289,6 +292,7 @@ namespace TournamentManager
                         return true;
                 return false;
             }
+            //check whether or not all of the matches in this round have been completed
             public Boolean IsFinished()
             {
                 for(int i = 0; i < listMatches.Count; i++)
@@ -304,6 +308,7 @@ namespace TournamentManager
                 GetMatch(winner).SetResult(stat, winner);
             }
 
+            //returns number of days in month and year held in date
             internal static int MaxDays(int[] date)
             {
                 if (date[1] == 2)

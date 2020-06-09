@@ -12,37 +12,26 @@ namespace TournamentManager
 		//exceptions used by class are defined below the class (will be changed in the future)
 		public abstract class Match
 		{
-			private TTeam.ITeam teamA;
-			private TTeam.ITeam teamB;
-			private TTeam.ITeam winner = null;
+			private TTeam.ITeam<TTeam> TeamA;
+			private TTeam.ITeam TeamB;
+			private TTeam.ITeam Winner = null;
             private TPerson.Referee RefA;
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
 				if (a == b)
 					throw new IncorrectOpponentException();
-				teamA = a;
-				teamB = b;
+				TeamA = a;
+				TeamB = b;
 				RefA = r.ElementAt(0);
 			}
-			public TTeam.ITeam TeamA
-			{
-				get { return teamA; }
-			}
-			public TTeam.ITeam TeamB
-			{
-				get { return teamB; }
-			}
-			public TTeam.ITeam Winner
-			{
-				get { return winner; }
-			}
+			
 			//Function takes a list of referees because VolleyballMatch needs 3 of them
 			public virtual void SetReferees(List<TPerson.Referee> r) { RefA = r.ElementAt(0); }
 			//those virtual methods will be defined in subclasses
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
 				if (winner == TeamA || winner == TeamB)
-					this.winner = winner;
+					this.Winner = winner;
 				else
 					throw new WinnerIsNotPlayingException();
 			}
@@ -55,7 +44,7 @@ namespace TournamentManager
 
 			public Boolean WasPlayed()
             {
-				return winner != null;
+				return Winner != null;
             }
 
 			internal static Match CreateMatch(TTeam.ITeam team1, TTeam.ITeam team2, List<TPerson.Referee> refs)

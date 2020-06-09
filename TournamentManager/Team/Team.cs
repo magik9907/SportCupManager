@@ -4,35 +4,46 @@ using System.Text;
 
 namespace TournamentManager
 {
-     namespace TTeam {
-        public abstract class Team : ITeam
+    namespace TTeam
+    {
+        public abstract class Team<T> : ITeam<T>
         {
-            protected string name;
+            public string Name { get; set; }
             protected List<TPerson.Player> listPlayers = new List<TPerson.Player>();
-            protected int matchesPlayed;
-            protected int matchesWon;
+            public int MatchesPlayed { get; set; }
+            public int MatchesWon { get; set; }
 
             public Team(string name)
             {
-                this.name = name;
+                if (string.IsNullOrEmpty(name))
+                    throw new TException.TeamMissingNameException();
+
+                this.Name = name;
+                this.MatchesPlayed = 0;
+                this.MatchesWon = 0;
             }
 
-            public void addPlayer(TPerson.Player p)
+            public void AddPlayer(TPerson.Player p)
             {
                 listPlayers.Add(p);
             }
 
-            public void removePlayer(TPerson.Player p)
+            public void RemovePlayer(TPerson.Player p)
             {
                 listPlayers.Remove(p);
             }
-            public string Name
-            {
-                get { return name; }
-            }
+
+            public abstract bool LessThan(T a, T b);
+
+            public abstract bool GreaterThan(T a, T b);
+
+            public abstract void SetMatchResult(bool result, string stat);
+
+            public abstract string GetStats();
+
             public override string ToString()
             {
-                return "Name: " + name + ", Played matches: " + matchesPlayed + ", Won matches: " + matchesWon + ", List of players: " + listPlayers.ToString();
+                return "Name: " + Name + ", Played matches: " + MatchesPlayed + ", Won matches: " + MatchesWon + ", List of players: " + listPlayers.ToString();
             }
         }
     }
