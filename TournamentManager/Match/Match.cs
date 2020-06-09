@@ -100,13 +100,21 @@ namespace TournamentManager
 				{
 					matchLength = float.Parse(stat, System.Globalization.CultureInfo.InvariantCulture);
 					if (matchLength < 0)
+                    {
+						matchLength = 0;
 						throw new NegativeMatchLengthException();
+					}
 				}
 				//float.parse throws FormatException if stat can't be converted
 				catch (FormatException)
 				{
 					throw new NotNumberMatchLengthException();
 				}
+				winner.SetMatchResult(true, stat);
+				if (winner == TeamA)
+					TeamB.SetMatchResult(false, stat);
+				else
+					TeamA.SetMatchResult(false, stat);
 			}
 			//getStat returns time in seconds (with miliseconds)
 			public override string GetStat()
@@ -153,10 +161,12 @@ namespace TournamentManager
 					winnerPlayersLeft = int.Parse(stat);
 					if(winnerPlayersLeft <= 0)
 					{
+						winnerPlayersLeft = 0;
 						throw new NegativePlayersNumberException();
 					}
 					if(winnerPlayersLeft > 6)
 					{
+						winnerPlayersLeft = 0;
 						throw new TooHighPlayersLeftException();
 					}
 				}
@@ -164,6 +174,11 @@ namespace TournamentManager
 				{
 					throw new NotIntPlayersException();
 				}
+				winner.SetMatchResult(true, stat);
+				if (winner == TeamA)
+					TeamB.SetMatchResult(false, (6 - winnerPlayersLeft).ToString());
+				else
+					TeamA.SetMatchResult(false, (6 - winnerPlayersLeft).ToString());
 			}
 			public override string GetStat()
 			{
@@ -240,19 +255,32 @@ namespace TournamentManager
 					else
 						scoreRequired = 15;
 					try
-                    {
+					{
 						scoreTeamA[i] = int.Parse(tmp[i + 1]);
 						scoreTeamB[i] = int.Parse(tmp[i + 5]);
 						//score should be equal or higher than 0, but equal or lower than 21 in first two sets
 						//and equal or lower than 15 in the third set
 						if (scoreTeamA[i] < 0 || scoreTeamB[i] < 0)
+						{
+							for (int j = 0; j < 3; j++)
+							{
+								scoreTeamA[j] = 0;
+								scoreTeamB[j] = 0;
+							}
 							throw new NegativeScoreException();
+						}
 						if (scoreTeamA[i] > scoreRequired || scoreTeamB[i] > scoreRequired)
+						{
+							for (int j = 0; j < 3; j++)
+							{
+								scoreTeamA[j] = 0;
+								scoreTeamB[j] = 0;
+							}
 							throw new TooHighScoreException();
-						
+						}
 					}
-					catch(FormatException)
-                    {
+					catch (FormatException)
+					{
 						throw new NonIntScoreException();
 					}
 					//Checking whether the score makes sense and reflects the winner
@@ -260,9 +288,23 @@ namespace TournamentManager
 					if (Math.Abs(resultCheck) == 2)
 						if (scoreTeamA[i] != 0 || scoreTeamB[i] != 0)
 							if (resultCheck > 0)
+                            {
+								for (int j = 0; j < 3; j++)
+								{
+									scoreTeamA[j] = 0;
+									scoreTeamB[j] = 0;
+								}
 								throw new ThirdSetException(TeamA);
+							}
 							else
+                            {
+								for (int j = 0; j < 3; j++)
+								{
+									scoreTeamA[j] = 0;
+									scoreTeamB[j] = 0;
+								}
 								throw new ThirdSetException(TeamB);
+                            }
 					//Checking if exactly one team has reached the required points
 					if (scoreTeamA[i] == scoreTeamB[i] || (scoreTeamA[i] < scoreRequired && scoreTeamB[i] < scoreRequired))
 						throw new NoSetWinnerException(i+1);
@@ -272,7 +314,19 @@ namespace TournamentManager
 						resultCheck--;
                 }
 				if ((resultCheck > 0 && TeamA != winner) || (resultCheck < 0 && TeamB != winner))
+				{
+					for (int j = 0; j < 3; j++)
+					{
+						scoreTeamA[j] = 0;
+						scoreTeamB[j] = 0;
+					}
 					throw new WrongWinnerException(winner);
+				}
+				winner.SetMatchResult(true, (Math.Abs(resultCheck) + 1).ToString());
+				if (winner == TeamA)
+					TeamB.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString());
+				else
+					TeamA.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString());
 			}
 
 			public override string GetStat()
