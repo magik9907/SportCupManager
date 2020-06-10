@@ -7,7 +7,7 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        public class DodgeballTeam : Team<DodgeballTeam>
+        public class DodgeballTeam : Team
         {
             public int PlayersEliminated { get; set; }
             public int SumOfPlayersLeft { get; set; }
@@ -19,7 +19,7 @@ namespace TournamentManager
                 this.SumOfPlayersLeft = 0;
             }
 
-            public override bool LessThan(DodgeballTeam a, DodgeballTeam b)
+            public static bool operator <(DodgeballTeam a, DodgeballTeam b)
             {
                 if (a.MatchesWon != b.MatchesWon)
                     return a.MatchesWon < b.MatchesWon;
@@ -30,7 +30,7 @@ namespace TournamentManager
                 return String.Compare(a.Name, b.Name) < 0;
             }
 
-            public override bool GreaterThan(DodgeballTeam a, DodgeballTeam b)
+            public static bool operator >(DodgeballTeam a, DodgeballTeam b)
             {
                 if (a.MatchesWon != b.MatchesWon)
                     return a.MatchesWon > b.MatchesWon;

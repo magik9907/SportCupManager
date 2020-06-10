@@ -6,7 +6,7 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        public class VolleyballTeam : Team<VolleyballTeam>
+        public class VolleyballTeam : Team
         {
             public int Points { get; set; }
             public int ScoreDiff { get; set; }
@@ -18,7 +18,7 @@ namespace TournamentManager
                 this.ScoreDiff = 0;
             }
 
-            public override bool LessThan(VolleyballTeam a, VolleyballTeam b)
+            public static bool operator <(VolleyballTeam a, VolleyballTeam b)
             {
                 if (a.Points != b.Points)
                     return a.Points < b.Points;
@@ -29,7 +29,7 @@ namespace TournamentManager
                 return String.Compare(a.Name, b.Name) < 0;
             }
 
-            public override bool GreaterThan(VolleyballTeam a, VolleyballTeam b)
+            public static bool operator >(VolleyballTeam a, VolleyballTeam b)
             {
                 if (a.Points != b.Points)
                     return a.Points > b.Points;
