@@ -13,16 +13,16 @@ namespace TournamentManager
 		public abstract class Match
 		{
 			
-			public TTeam.ITeam TeamA { get { return teamA; } }
-			public TTeam.ITeam TeamB { get { return teamB; } }
-			public TTeam.ITeam Winner { get { return winner; } }
+			public TTeam.ITeam TeamA { get { return TeamA; } }
+			public TTeam.ITeam TeamB { get { return TeamB; } }
+			public TTeam.ITeam Winner { get { return Winner; } }
             private TPerson.Referee RefA;
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
 				if (a == b)
 					throw new IncorrectOpponentException();
-				teamA = a;
-				teamB = b;
+				TeamA = a;
+				TeamB = b;
 				RefA = r.ElementAt(0);
 			}
 			
@@ -32,7 +32,7 @@ namespace TournamentManager
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
 				if (winner == TeamA || winner == TeamB)
-					this.winner = winner;
+					this.Winner = winner;
 				else
 					throw new WinnerIsNotPlayingException();
 			}
