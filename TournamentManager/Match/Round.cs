@@ -62,7 +62,7 @@ namespace TournamentManager
                 if (teams[0] is VolleyballTeam)
                     refNumber = 3;
                 for (int i = 0; i < teams.Count / 2; i++)
-                    rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i*refNumber, refNumber)), referees.GetRange(i*refNumber, refNumber));
+                    rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i * refNumber, refNumber)), referees.GetRange(i * refNumber, refNumber));
             }
             public void SetResult(string stat, TTeam.ITeam winner, int roundNumber)
             {
@@ -87,8 +87,8 @@ namespace TournamentManager
                 else
                     rounds = new List<Round>(t.Count);
                 //this part checks whether or not there are any duplicate teams on the list
-                for(int i = 0; i < t.Count; i++)
-                    for(int j = 1; j + i < t.Count; j++)
+                for (int i = 0; i < t.Count; i++)
+                    for (int j = 1; j + i < t.Count; j++)
                         if (t[i] == t[j + i])
                             throw new DuplicateTeamException(t[i]);
                 this.referees = referees;
@@ -96,11 +96,11 @@ namespace TournamentManager
 
             private void SortTeams()
             {
-                for(int i = 0; i < teams.Count; i++)
-                    for(int j = 0; j < teams.Count-1; j++)
+                for (int i = 0; i < teams.Count; i++)
+                    for (int j = 0; j < teams.Count - 1; j++)
                     {
-                        if(teams[0] is VolleyballTeam)
-                            if((VolleyballTeam)teams[j] < (VolleyballTeam)teams[j+1])
+                        if (teams[0] is VolleyballTeam)
+                            if ((VolleyballTeam)teams[j] < (VolleyballTeam)teams[j + 1])
                             {
                                 var tmp = teams[j];
                                 teams[j] = teams[j + 1];
@@ -161,7 +161,7 @@ namespace TournamentManager
                                     flagA = true;
                             else
                                 if (!rounds[j].IsPlaying(match.TeamB) && !rounds[j].IsPlaying(teams[i]))
-                                    flagB = true;
+                                flagB = true;
                         }
                     }
                     if (!(flagA || flagB) || !(flagAnB || (flagA && flagB)))
@@ -177,9 +177,9 @@ namespace TournamentManager
                 if (teams[0] is VolleyballTeam)
                     refNumber = 3;
                 //rounds.Count/2 + 1 is the maximum number of matches played in a round
-                for(int index = 0; index < rounds.Count * (rounds.Count/2 + 1); index++)
+                for (int index = 0; index < rounds.Count * (rounds.Count / 2 + 1); index++)
                 {
-                    if (index % (rounds.Count/2 + 1) == 0)
+                    if (index % (rounds.Count / 2 + 1) == 0)
                     {
                         rounds[index / (rounds.Count / 2 + 1)] = new Round(index / (rounds.Count / 2 + 1) + " Round", startDate);
                         startDate = IncrementDate(startDate, spaceBetweenMatches);
@@ -189,7 +189,7 @@ namespace TournamentManager
                         rounds[index / (rounds.Count / 2 + 1)].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange((index % (rounds.Count / 2 + 1) - 1) * refNumber, refNumber)), referees.GetRange((index % (rounds.Count / 2 + 1) - 1) * refNumber, refNumber));
                     else
                         if (teams.Count != rounds.Count)
-                            rounds[index / (rounds.Count / 2 + 1)].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees.GetRange(referees.Count - refNumber, refNumber));
+                        rounds[index / (rounds.Count / 2 + 1)].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees.GetRange(referees.Count - refNumber, refNumber));
                     i = ++i % rounds.Count;
                     j = --j % rounds.Count;
                 }
@@ -198,13 +198,13 @@ namespace TournamentManager
             private int[] IncrementDate(int[] date, int increment)
             {
                 date[0] += increment;
-                while(date[0] > Round.MaxDays(date))
+                while (date[0] > Round.MaxDays(date))
                 {
                     date[0] -= Round.MaxDays(date);
                     if (date[1]++ > 12)
                     {
                         date[1] = 1;
-                        date[2]++; 
+                        date[2]++;
                     }
                 }
                 return date;
@@ -295,7 +295,7 @@ namespace TournamentManager
 
             public string RoundName
             {
-                get{ return roundName; }
+                get { return roundName; }
             }
 
             public void AddMatch(TMatch.Match match, List<Referee> referees)
@@ -344,7 +344,7 @@ namespace TournamentManager
             //check whether or not all of the matches in this round have been completed
             public Boolean IsFinished()
             {
-                for(int i = 0; i < listMatches.Count; i++)
+                for (int i = 0; i < listMatches.Count; i++)
                 {
                     if (!listMatches[i].WasPlayed())
                         return false;
@@ -367,9 +367,9 @@ namespace TournamentManager
                         return 28;
                 else
                     if ((date[1] < 8 && date[1] % 2 == 1) || (date[1] >= 8 && date[1] % 2 == 0))
-                        return 31;
-                    else
-                        return 30;
+                    return 31;
+                else
+                    return 30;
             }
         }
 
@@ -429,7 +429,7 @@ namespace TournamentManager
         {
             public override string Message
             {
-                get 
+                get
                 {
                     return "Month number is out of expected range";
                 }
