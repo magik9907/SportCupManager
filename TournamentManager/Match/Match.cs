@@ -49,8 +49,7 @@ namespace TournamentManager
             {
 				return Winner != null;
             }
-
-			internal static Match CreateMatch(TTeam.ITeam team1, TTeam.ITeam team2, List<TPerson.Referee> refs)
+			public static Match CreateMatch(TTeam.ITeam team1, TTeam.ITeam team2, List<TPerson.Referee> refs)
             {
 				if (team1 is DodgeballTeam)
 					return new TMatch.DodgeballMatch(team1, team2, refs);
@@ -237,8 +236,8 @@ namespace TournamentManager
 				base.SetReferees(r);
 				assistantReferees.AddRange( r.GetRange(1, 2));
 			}
-			//the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
-			public override void SetResult(string stat, TTeam.ITeam winner)
+            //the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
+            public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				int resultCheck = 0;
 				base.SetResult(stat, winner);

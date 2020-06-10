@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using TournamentManager.TException;
 using TournamentManager.TPerson;
 using TournamentManager.TTeam;
 
@@ -18,6 +19,14 @@ namespace TournamentManager
             public PlayOff(List<TTeam.ITeam> t, List<TPerson.Referee> referees, int[] startDate)
             {
                 //semis and finals will be generated on two consecutive days
+                //PlayOffs require 4 teams
+                if (t.Count != 4)
+                    throw new NotEnoughtTeamsNumber(t.Count);
+                //this part checks whether or not there are any duplicate teams on the list
+                for (int i = 0; i < t.Count; i++)
+                    for (int j = 0; j < t.Count - i; j++)
+                        if (t[i] == t[j])
+                            throw new DuplicateTeamException(t[i]);
                 rounds[0] = new Round("semi-finals", startDate);
                 try
                 {
@@ -73,38 +82,35 @@ namespace TournamentManager
                     rounds = new List<Round>(t.Count - 1);
                 else
                     rounds = new List<Round>(t.Count);
+                //this part checks whether or not there are any duplicate teams on the list
                 for(int i = 0; i < t.Count; i++)
-                {
                     for(int j = 1; j + i < t.Count; j++)
-                    {
                         if (t[i] == t[j + i])
                             throw new DuplicateTeamException(t[i]);
-                    }
-                }
                 this.referees = referees;
             }
 
-            private void sortTeams()
+            private void SortTeams()
             {
                 for(int i = 0; i < teams.Count; i++)
                     for(int j = 0; j < teams.Count-1; j++)
                     {
                         if(teams[0] is VolleyballTeam)
-                            if((VolleyballTeam)teams[j] > (VolleyballTeam)teams[j+1])
+                            if((VolleyballTeam)teams[j] < (VolleyballTeam)teams[j+1])
                             {
                                 var tmp = teams[j];
                                 teams[j] = teams[j + 1];
                                 teams[j + 1] = tmp;
                             }
                         if (teams[0] is DodgeballTeam)
-                            if ((DodgeballTeam)teams[j] > (DodgeballTeam)teams[j + 1])
+                            if ((DodgeballTeam)teams[j] < (DodgeballTeam)teams[j + 1])
                             {
                                 var tmp = teams[j];
                                 teams[j] = teams[j + 1];
                                 teams[j + 1] = tmp;
                             }
                         if (teams[0] is TugOfWarTeam)
-                            if ((TugOfWarTeam)teams[j] > (TugOfWarTeam)teams[j + 1])
+                            if ((TugOfWarTeam)teams[j] < (TugOfWarTeam)teams[j + 1])
                             {
                                 var tmp = teams[j];
                                 teams[j] = teams[j + 1];
@@ -112,7 +118,7 @@ namespace TournamentManager
                             }
                     }
             }
-            public List<TTeam.ITeam> getFinalTeams(int number)
+            public List<TTeam.ITeam> GetFinalTeams(int number)
             {
                 return teams.GetRange(0, number);
             }
@@ -198,6 +204,21 @@ namespace TournamentManager
                     }
                 }
                 return date;
+            }
+        }
+
+        //Exception if the number of referees is not enough to hold all of the games at once
+        public class NotEnoughRefereesException : Exception
+        {
+            int refsRequired, refsNumber;
+            public NotEnoughRefereesException(int refsNumber, int refsRequired)
+            {
+                this.refsRequired = refsRequired;
+                this.refsNumber = refsNumber;
+            }
+            public override string Message
+            {
+                get { return "Received amount of referees: " + refsNumber + " is too low. The required number is " + refsRequired; }
             }
         }
 
