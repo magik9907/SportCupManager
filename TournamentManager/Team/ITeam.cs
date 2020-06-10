@@ -4,7 +4,7 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        public interface ITeam<T>
+        public interface ITeam
         {
             string Name { get; set; }
 
