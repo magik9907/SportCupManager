@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace TournamentManager
-{	
+{
 	namespace TMatch
 	{
 		//exceptions used by class are defined below the class (will be changed in the future)
@@ -94,11 +94,11 @@ namespace TournamentManager
 				try
 				{
 					winnerPlayersLeft = int.Parse(stat);
-					if(winnerPlayersLeft <= 0)
+					if (winnerPlayersLeft <= 0)
 					{
 						throw new NegativePlayersNumberException();
 					}
-					if(winnerPlayersLeft > 6)
+					if (winnerPlayersLeft > 6)
 					{
 						throw new TooHighPlayersLeftException();
 					}

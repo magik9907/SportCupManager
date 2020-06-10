@@ -16,7 +16,6 @@ namespace TournamentManager
 
             }
         }
-
         /// <summary>
         /// custom exception of tournament data
         /// </summary>
@@ -33,7 +32,6 @@ namespace TournamentManager
 
 
         }
-
         /// <summary>
         /// throw exception of not enought teams in tournament
         /// </summary>
@@ -45,7 +43,6 @@ namespace TournamentManager
         
             }
         }
-
         /// <summary>
         /// exception of object dind't create
         /// </summary>
@@ -58,5 +55,12 @@ namespace TournamentManager
             }
         }
 
+        public class TeamMissingNameException : Exception
+        {
+            public TeamMissingNameException() : base("There is missing name parameter for Team.")
+            {
+
+            }
+        }
     }
 }

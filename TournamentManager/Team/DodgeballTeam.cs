@@ -7,34 +7,52 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        public class DodgeballTeam : Team
+        public class DodgeballTeam : Team<DodgeballTeam>
         {
-            private int playersEliminated;
-            private int sumOfPlayersLeft;
+            public int PlayersEliminated { get; set; }
+            public int SumOfPlayersLeft { get; set; }
 
             public DodgeballTeam(string name) : base(name)
             {
-                this.name = name;
+                this.Name = name;
+                this.PlayersEliminated = 0;
+                this.SumOfPlayersLeft = 0;
             }
 
-            public static bool operator <(DodgeballTeam a, DodgeballTeam b)
+            public override bool LessThan(DodgeballTeam a, DodgeballTeam b)
             {
-                return (a.matchesWon < b.matchesWon) ? true : false;
+                if (a.MatchesWon != b.MatchesWon)
+                    return a.MatchesWon < b.MatchesWon;
+                if (a.PlayersEliminated != b.PlayersEliminated)
+                    return a.PlayersEliminated < b.PlayersEliminated;
+                if (a.SumOfPlayersLeft != b.SumOfPlayersLeft)
+                    return a.SumOfPlayersLeft < b.SumOfPlayersLeft;
+                return String.Compare(a.Name, b.Name) < 0;
             }
 
-            public static bool operator >(DodgeballTeam a, DodgeballTeam b)
+            public override bool GreaterThan(DodgeballTeam a, DodgeballTeam b)
             {
-                return (a.matchesWon > b.matchesWon) ? true : false;
+                if (a.MatchesWon != b.MatchesWon)
+                    return a.MatchesWon > b.MatchesWon;
+                if (a.PlayersEliminated != b.PlayersEliminated)
+                    return a.PlayersEliminated > b.PlayersEliminated;
+                if (a.SumOfPlayersLeft != b.SumOfPlayersLeft)
+                    return a.SumOfPlayersLeft > b.SumOfPlayersLeft;
+                return String.Compare(a.Name, b.Name) > 0;
             }
 
-            public void setPlayersEliminated(int eliminated)
+            public override void SetMatchResult(bool result, string stat)
             {
-                this.playersEliminated = eliminated;
+                this.MatchesPlayed++;
+                if (result)
+                    this.MatchesWon++;
+                    
+                SumOfPlayersLeft += Int32.Parse(stat);
             }
 
-            public void setSumOfPlayersLeft(int sum)
+            public override string GetStats()
             {
-                this.sumOfPlayersLeft = sum;
+                return MatchesWon + ", " + PlayersEliminated + ", " + SumOfPlayersLeft;
             }
         }
     }
