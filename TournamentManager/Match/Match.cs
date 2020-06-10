@@ -239,7 +239,7 @@ namespace TournamentManager
             //the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
             public override void SetResult(string stat, TTeam.ITeam winner)
 			{
-				int resultCheck = 0;
+				int resultCheck = 0, scoreDiff = 0;
 				base.SetResult(stat, winner);
 				//split the strings into strings containing name of the teams and their scores
 				string[] tmp = stat.Split(new string[] {". ", ", ", ": "}, StringSplitOptions.RemoveEmptyEntries);
@@ -311,6 +311,8 @@ namespace TournamentManager
 						resultCheck++;
 					if (scoreTeamB[i] == scoreRequired)
 						resultCheck--;
+					scoreDiff += scoreTeamA[i];
+					scoreDiff += scoreTeamB[i];
                 }
 				if ((resultCheck > 0 && TeamA != winner) || (resultCheck < 0 && TeamB != winner))
 				{
@@ -321,11 +323,11 @@ namespace TournamentManager
 					}
 					throw new WrongWinnerException(winner);
 				}
-				winner.SetMatchResult(true, (Math.Abs(resultCheck) + 1).ToString());
+				winner.SetMatchResult(true, (Math.Abs(resultCheck) + 1).ToString() + ", "+ scoreDiff.ToString());
 				if (winner == TeamA)
-					TeamB.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString());
+					TeamB.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + scoreDiff.ToString());
 				else
-					TeamA.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString());
+					TeamA.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + scoreDiff.ToString());
 			}
 
 			public override string GetStat()

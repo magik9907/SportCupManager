@@ -73,6 +73,10 @@ namespace TournamentManager
         public class League
         {
             private List<Round> rounds;
+            public List<Round> Rounds
+            {
+                get { return rounds; }
+            }
             private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
             private List<TPerson.Referee> referees = new List<TPerson.Referee>();
             public League(List<TTeam.ITeam> t, List<TPerson.Referee> referees)
