@@ -6,7 +6,7 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        public abstract class Team<T> : ITeam<T>
+        public abstract class Team : ITeam
         {
             public string Name { get; set; }
             protected List<TPerson.Player> listPlayers = new List<TPerson.Player>();
