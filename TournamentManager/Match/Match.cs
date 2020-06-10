@@ -13,9 +13,9 @@ namespace TournamentManager
 		public abstract class Match
 		{
 			
-			public TTeam.ITeam TeamA { get { return TeamA; } }
-			public TTeam.ITeam TeamB { get { return TeamB; } }
-			public TTeam.ITeam Winner { get { return Winner; } }
+			public TTeam.ITeam TeamA { get { return TeamA; } set { TeamA = value; } }
+			public TTeam.ITeam TeamB { get { return TeamB; } set { TeamB = value; } }
+			public TTeam.ITeam Winner { get { return Winner; } set { Winner = value; } }
             private TPerson.Referee RefA;
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{

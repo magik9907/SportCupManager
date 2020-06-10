@@ -187,7 +187,7 @@ namespace TournamentManager
         public void SetPlayOff(List<TTeam.ITeam> teams)
         {
             CheckNumberOfTeams(teams);
-            playoff = new TRound.PlayOff(teams, referees);
+            playoff = new TRound.PlayOff(teams, Referees,new int[3] { 23, 3, 2019 });
         }
         
         [JsonIgnore]
