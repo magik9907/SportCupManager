@@ -19,7 +19,7 @@ namespace TournamentManager
                 this.SumOfPlayersLeft = 0;
             }
 
-            public override bool LessThan(DodgeballTeam a, DodgeballTeam b)
+            public static bool operator<(DodgeballTeam a, DodgeballTeam b)
             {
                 if (a.MatchesWon != b.MatchesWon)
                     return a.MatchesWon < b.MatchesWon;
@@ -30,7 +30,7 @@ namespace TournamentManager
                 return String.Compare(a.Name, b.Name) < 0;
             }
 
-            public override bool GreaterThan(DodgeballTeam a, DodgeballTeam b)
+            public static bool operator>(DodgeballTeam a, DodgeballTeam b)
             {
                 if (a.MatchesWon != b.MatchesWon)
                     return a.MatchesWon > b.MatchesWon;

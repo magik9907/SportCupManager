@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -8,13 +8,10 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        public interface ITeam<T>
+        public interface ITeam
         {
             string Name { get; set; }
-
             void AddPlayer(Player p);
-            bool LessThan(T a, T b);
-            bool GreaterThan(T a, T b);
             void RemovePlayer(Player p);
             void SetMatchResult(bool result, string stat);
             //format stat for DodgeballTeam: "PlayersLeft"

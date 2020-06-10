@@ -33,10 +33,6 @@ namespace TournamentManager
                 listPlayers.Remove(p);
             }
 
-            public abstract bool LessThan(T a, T b);
-
-            public abstract bool GreaterThan(T a, T b);
-
             public abstract void SetMatchResult(bool result, string stat);
 
             public abstract string GetStats();
