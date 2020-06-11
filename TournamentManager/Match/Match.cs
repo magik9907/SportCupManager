@@ -167,7 +167,7 @@ namespace TournamentManager
 						throw new TooHighPlayersLeftException();
 					}
 				}
-				catch (FormatException e)
+				catch (FormatException)
 				{
 					throw new NotIntPlayersException();
 				}
@@ -309,8 +309,7 @@ namespace TournamentManager
 						resultCheck++;
 					if (scoreTeamB[i] == scoreRequired)
 						resultCheck--;
-					scoreDiff += scoreTeamA[i];
-					scoreDiff += scoreTeamB[i];
+					scoreDiff += scoreTeamA[i] - scoreTeamB[i];
                 }
 				if ((resultCheck > 0 && TeamA != winner) || (resultCheck < 0 && TeamB != winner))
 				{
@@ -321,11 +320,12 @@ namespace TournamentManager
 					}
 					throw new WrongWinnerException(winner);
 				}
+				scoreDiff = Math.Abs(scoreDiff);
 				winner.SetMatchResult(true, (Math.Abs(resultCheck) + 1).ToString() + ", "+ scoreDiff.ToString());
 				if (winner == TeamA)
-					TeamB.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + scoreDiff.ToString());
+					TeamB.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + (-scoreDiff).ToString());
 				else
-					TeamA.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + scoreDiff.ToString());
+					TeamA.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + (-scoreDiff).ToString());
 			}
 
 			public override string GetStat()
