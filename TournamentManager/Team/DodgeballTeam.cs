@@ -45,9 +45,12 @@ namespace TournamentManager
             {
                 this.MatchesPlayed++;
                 if (result)
+                {
                     this.MatchesWon++;
-                    
-                SumOfPlayersLeft += Int32.Parse(stat);
+                    SumOfPlayersLeft += Int32.Parse(stat);
+                }
+                else
+                    PlayersEliminated += Int32.Parse(stat);
             }
 
             public override string GetStats()
