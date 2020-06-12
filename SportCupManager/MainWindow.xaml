@@ -5,8 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SportCupManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="500" Width="900" Background="#FF939090">
+    <Window.Resources>
+        <DataTemplate x:Key="TournamentItem">
+            <StackPanel Background="White" Width="200" >
+                <TextBlock Text="{Binding Path = Name}" />
+                <Button Content="Usuń" HorizontalAlignment="Right"  VerticalAlignment="Center" Padding="10px"/>
+            </StackPanel>
+        </DataTemplate>
+        
+    </Window.Resources>
 
+
+    <Grid>
+        <ListBox  ItemTemplate="{StaticResource TournamentItem}" x:Name="TournamentList" Margin="188,21,25,41" >
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Background" Value="AliceBlue" />
+                    <Setter Property="BorderBrush" Value="BlanchedAlmond" />
+                    <Setter Property="BorderThickness" Value="2" />
+                    <Setter Property="Margin" Value="0,10,0,0"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="Red" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
+
+
+        </ListBox>
+        <Button Content="Dodaj" HorizontalAlignment="Left" Margin="40,29,0,0" VerticalAlignment="Top" Height="49" Width="86"/>
     </Grid>
 </Window>

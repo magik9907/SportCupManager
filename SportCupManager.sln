@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportCupManager", "SportCupManager\SportCupManager.csproj", "{28664C5B-B268-4E18-B5B4-7397010E0E62}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AC5F911D-DBFF-40BB-A155-371ABE73B138} = {AC5F911D-DBFF-40BB-A155-371ABE73B138}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentManager", "TournamentManager\TournamentManager.csproj", "{AC5F911D-DBFF-40BB-A155-371ABE73B138}"
 EndProject
