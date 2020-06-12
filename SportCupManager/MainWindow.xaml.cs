@@ -21,19 +21,21 @@ namespace SportCupManager
     /// </summary>
     public partial class MainWindow : Window
     {
+         List<Tournament> lists = new List<Tournament>();
         public MainWindow()
         {
             InitializeComponent();
-
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data";
             String[] list = Directory.GetDirectories(path);
-            List<Tournament> lists = new List<Tournament>();
+            
+            
+            
             for (int i = 0; i < list.Length; i++)
             {
                 lists.Add(new Tournament(list[i]));
             }
-            TournamentList.ItemsSource = lists;
-            TournamentList.Items.Refresh();
+
+            Resources.ItemsSource = lists;
         }
 
 
