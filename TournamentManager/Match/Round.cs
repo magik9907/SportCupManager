@@ -15,7 +15,8 @@ namespace TournamentManager
     namespace TRound
     {
         public class PlayOff
-        {
+        {   
+            [JsonProperty]
             private List<Round> rounds = new List<Round>(2);
             private List<TPerson.Referee> referees;
             public PlayOff(List<TTeam.ITeam> t, List<TPerson.Referee> referees, int[] startDate)
@@ -26,8 +27,8 @@ namespace TournamentManager
                     throw new NotEnoughtTeamsNumber(t.Count);
                 //this part checks whether or not there are any duplicate teams on the list
                 for (int i = 0; i < t.Count; i++)
-                    for (int j = 0; j < t.Count - i; j++)
-                        if (t[i] == t[j])
+                    for (int j = 1; j + i < t.Count; j++)
+                        if (t[i] == t[j + i])
                             throw new DuplicateTeamException(t[i]);
                 rounds.Add(new Round("semi-finals", startDate));
                 try
@@ -47,8 +48,9 @@ namespace TournamentManager
                         startDate[1]++;
                     rounds.Add(new Round("final", startDate));
                 }
-                GenerateRound(t, "semi-finals");
                 this.referees = referees;
+                GenerateRound(t, "semi-finals");
+                
             }
             public TTeam.ITeam GetWinner()
             {
