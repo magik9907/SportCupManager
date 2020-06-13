@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using Newtonsoft.Json;
 namespace TournamentManager
 {
     namespace TTeam
@@ -9,6 +9,7 @@ namespace TournamentManager
         public abstract class Team : ITeam
         {
             public string Name { get; set; }
+            [JsonProperty]
             protected List<TPerson.Player> listPlayers = new List<TPerson.Player>();
             public int MatchesPlayed { get; set; }
             public int MatchesWon { get; set; }

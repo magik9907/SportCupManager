@@ -15,9 +15,11 @@ namespace TournamentManager
     public interface ITournament
     {
         /// <summary>
-        /// Create league type from Team list
-        /// </summary>
-        void SetAutoLeague();
+         /// Create league type from Team list
+         /// </summary>
+         /// <param name="date">start date of first round</param>
+         /// <param name="space">space between rounds</param>
+        void SetAutoLeague(int[] date, int space);
 
         /// <summary>
         /// Creating playoff round 
@@ -186,11 +188,11 @@ namespace TournamentManager
             teams.Remove(team);
         }
 
-        public void SetAutoLeague()
+        public void SetAutoLeague(int[] date, int space)
         {
             CheckNumberOfTeams(teams);
             league = new TRound.League(teams, referees);
-            league.AutoSchedule(new int[]{ 1,1,2019},1);
+            league.AutoSchedule(date,space);
         }
 
         public void SetPlayOff(List<TTeam.ITeam> teams)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using Newtonsoft.Json;
 namespace TournamentManager
 {
     namespace TPerson {
@@ -12,7 +12,7 @@ namespace TournamentManager
             public string Firstname { get; set; }
 
             public string Lastname { get; set; }
-
+            [JsonIgnore]
             public string Fullname
             {
                 get
