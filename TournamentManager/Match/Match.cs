@@ -12,27 +12,28 @@ namespace TournamentManager
 		//exceptions used by class are defined below the class (will be changed in the future)
 		public abstract class Match
 		{
-			
-			public TTeam.ITeam TeamA { get { return TeamA; } set { TeamA = value; } }
-			public TTeam.ITeam TeamB { get { return TeamB; } set { TeamB = value; } }
-			public TTeam.ITeam Winner { get { return Winner; } set { Winner = value; } }
-            private TPerson.Referee RefA;
+			private TTeam.ITeam teamA;
+			private TTeam.ITeam teamB;
+			private TTeam.ITeam winner;
+			public TTeam.ITeam TeamA { get { return teamA; } }
+			public TTeam.ITeam TeamB { get { return teamB; } }
+			public TTeam.ITeam Winner { get { return winner; } }
+			private TPerson.Referee RefA;
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
 				if (a == b)
 					throw new IncorrectOpponentException();
-				TeamA = a;
-				TeamB = b;
+				teamA = a;
+				teamB = b;
 				RefA = r.ElementAt(0);
 			}
-			
 			//Function takes a list of referees because VolleyballMatch needs 3 of them
 			public virtual void SetReferees(List<TPerson.Referee> r) { RefA = r.ElementAt(0); }
 			//those virtual methods will be defined in subclasses
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
 				if (winner == TeamA || winner == TeamB)
-					this.Winner = winner;
+					this.winner = winner;
 				else
 					throw new WinnerIsNotPlayingException();
 			}

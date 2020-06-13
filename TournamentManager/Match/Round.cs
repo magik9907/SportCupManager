@@ -28,11 +28,11 @@ namespace TournamentManager
                     for (int j = 0; j < t.Count - i; j++)
                         if (t[i] == t[j])
                             throw new DuplicateTeamException(t[i]);
-                rounds[0] = new Round("semi-finals", startDate);
+                rounds.Add(new Round("semi-finals", startDate));
                 try
                 {
                     startDate[0]++;
-                    rounds[1] = new Round("final", startDate);
+                    rounds.Add(new Round("final", startDate));
                 }
                 catch (WrongDayException)
                 {
@@ -44,7 +44,7 @@ namespace TournamentManager
                     }
                     else
                         startDate[1]++;
-                    rounds[1] = new Round("final", startDate);
+                    rounds.Add(new Round("final", startDate));
                 }
                 GenerateRound(t, "semi-finals");
                 this.referees = referees;
@@ -179,7 +179,7 @@ namespace TournamentManager
             public void AutoSchedule(int[] startDate, int spaceBetweenMatches)
             {
                 //refNumber holds the number of referees required for a match
-                int i = 1, j = 1, refNumber = 1;
+                int i = 0, j = 0, refNumber = 1;
                 if (teams[0] is VolleyballTeam)
                     refNumber = 3;
                 //rounds.Capacity/2 + 1 is the maximum number of matches played in a round
@@ -187,15 +187,17 @@ namespace TournamentManager
                 {
                     Round tmp = new Round((index + 1) + "Round", startDate);
                     startDate = IncrementDate(startDate, spaceBetweenMatches);
-                    for (int index2 = 0; index2 < rounds.Capacity/2 + 1; index2 ++)
+                    for (int index2 = 0; index2 < rounds.Capacity/2 + 1; index2++)
                     {
                         if (i != j)
                             tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)), referees.GetRange(index2 * refNumber, refNumber));
                         else
+                        {
                             if (teams.Capacity != rounds.Capacity)
                                 tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees.GetRange(referees.Count - refNumber, refNumber));
-                        i = ++i % rounds.Capacity;
-                        j = --j % rounds.Capacity;
+                        }
+                        i = (i+1) % rounds.Capacity;
+                        j = ((j-1) + rounds.Capacity) % rounds.Capacity;
                     }
                     rounds.Add(tmp);
                     j = i;
