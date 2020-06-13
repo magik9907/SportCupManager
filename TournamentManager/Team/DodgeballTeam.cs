@@ -27,7 +27,7 @@ namespace TournamentManager
                     return a.PlayersEliminated < b.PlayersEliminated;
                 if (a.SumOfPlayersLeft != b.SumOfPlayersLeft)
                     return a.SumOfPlayersLeft < b.SumOfPlayersLeft;
-                return String.Compare(a.Name, b.Name) < 0;
+                return String.Compare(a.Name, b.Name) > 0;
             }
 
             public static bool operator >(DodgeballTeam a, DodgeballTeam b)
@@ -38,7 +38,7 @@ namespace TournamentManager
                     return a.PlayersEliminated > b.PlayersEliminated;
                 if (a.SumOfPlayersLeft != b.SumOfPlayersLeft)
                     return a.SumOfPlayersLeft > b.SumOfPlayersLeft;
-                return String.Compare(a.Name, b.Name) > 0;
+                return String.Compare(a.Name, b.Name) < 0;
             }
 
             public override void SetMatchResult(bool result, string stat)

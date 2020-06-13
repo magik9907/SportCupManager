@@ -30,7 +30,7 @@ namespace TournamentManager
                     return a.AvWinTime < b.AvWinTime;
                 if (a.AvLossTime != b.AvLossTime)
                     return a.AvLossTime < b.AvLossTime;
-                return String.Compare(a.Name, b.Name) < 0;
+                return String.Compare(a.Name, b.Name) > 0;
             }
 
             public static bool operator >(TugOfWarTeam a, TugOfWarTeam b)
@@ -41,7 +41,7 @@ namespace TournamentManager
                     return a.AvWinTime > b.AvWinTime;
                 if (a.AvLossTime != b.AvLossTime)
                     return a.AvLossTime > b.AvLossTime;
-                return String.Compare(a.Name, b.Name) > 0;
+                return String.Compare(a.Name, b.Name) < 0;
             }
 
             public override void SetMatchResult(bool result, string stat)

@@ -26,7 +26,7 @@ namespace TournamentManager
                     return a.MatchesWon < b.MatchesWon;
                 if (a.ScoreDiff != b.ScoreDiff)
                     return a.ScoreDiff < b.ScoreDiff;
-                return String.Compare(a.Name, b.Name) < 0;
+                return String.Compare(a.Name, b.Name) > 0;
             }
 
             public static bool operator >(VolleyballTeam a, VolleyballTeam b)
@@ -37,7 +37,7 @@ namespace TournamentManager
                     return a.MatchesWon > b.MatchesWon;
                 if (a.ScoreDiff != b.ScoreDiff)
                     return a.ScoreDiff > b.ScoreDiff;
-                return String.Compare(a.Name, b.Name) > 0;
+                return String.Compare(a.Name, b.Name) < 0;
             }
 
             public override void SetMatchResult(bool result, string stat)

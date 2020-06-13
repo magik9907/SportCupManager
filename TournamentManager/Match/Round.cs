@@ -163,14 +163,11 @@ namespace TournamentManager
             public void SetResult(TTeam.ITeam winner, TTeam.ITeam loser, string stat)
             {
                 for(int i = 0; i < rounds.Count; i++)
-                {
                     if(rounds[i].IsScheduled(winner, loser))
                     {
                         rounds[i].SetResult(stat, winner);
-                        SortTeams();
                         break;
                     }
-                }
             }
             public List<TTeam.ITeam> GetFinalTeams(int number)
             {

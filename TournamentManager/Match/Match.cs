@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TournamentManager.TRound;
 using TournamentManager.TTeam;
 
 
@@ -14,7 +15,7 @@ namespace TournamentManager
 		{
 			private TTeam.ITeam teamA;
 			private TTeam.ITeam teamB;
-			private TTeam.ITeam winner;
+			private TTeam.ITeam winner = null;
 			public TTeam.ITeam TeamA { get { return teamA; } }
 			public TTeam.ITeam TeamB { get { return teamB; } }
 			public TTeam.ITeam Winner { get { return winner; } }
@@ -32,6 +33,8 @@ namespace TournamentManager
 			//those virtual methods will be defined in subclasses
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
+				if (Winner != null)
+					throw new MatchAlreadyPlayedException(winner);
 				if (winner == TeamA || winner == TeamB)
 					this.winner = winner;
 				else
@@ -59,6 +62,19 @@ namespace TournamentManager
 						return new TMatch.VolleyballMatch(team1, team2, refs);
 			}
 		}
+		//Exception if user wanted to set result of a match that was already played
+		public class MatchAlreadyPlayedException : Exception
+        {
+			TTeam.ITeam winner;
+			public MatchAlreadyPlayedException(TTeam.ITeam winner)
+            {
+				this.winner = winner;
+            }
+			public override string Message
+            {
+                get { return "The match was already played. Team " + winner.Name + " has won the match"; }
+            }
+        }
 
 		//Excpetion if teamA and teamB are the same team
 		public class IncorrectOpponentException : Exception
@@ -235,7 +251,7 @@ namespace TournamentManager
 				base.SetReferees(r);
 				assistantReferees.AddRange( r.GetRange(1, 2));
 			}
-            //the expected format is "a: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). b:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
+            //the expected format is "team1.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). team2.Name:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
             public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				int resultCheck = 0, scoreDiff = 0;
@@ -254,8 +270,30 @@ namespace TournamentManager
 						scoreRequired = 15;
 					try
 					{
-						scoreTeamA[i] = int.Parse(tmp[i + 1]);
-						scoreTeamB[i] = int.Parse(tmp[i + 5]);
+						if(tmp[0].Equals(TeamA.Name) && tmp[4].Equals(TeamB.Name))
+                        {
+							scoreTeamA[i] = int.Parse(tmp[i + 1]);
+							scoreTeamB[i] = int.Parse(tmp[i + 5]);
+						}
+						else
+                        {
+							if (tmp[0].Equals(TeamB.Name) && tmp[4].Equals(TeamA.Name))
+							{
+								scoreTeamB[i] = int.Parse(tmp[i + 1]);
+								scoreTeamA[i] = int.Parse(tmp[i + 5]);
+							}
+							else
+                            {
+								if (TeamA.Name.Equals(tmp[0]) || TeamB.Name.Equals(tmp[0]))
+                                {
+									throw new WrongNameInStatException(tmp[4]);
+								}
+								else
+									throw new WrongNameInStatException(tmp[0]);
+                            }
+
+						}
+
 						//score should be equal or higher than 0, but equal or lower than 21 in first two sets
 						//and equal or lower than 15 in the third set
 						if (scoreTeamA[i] < 0 || scoreTeamB[i] < 0)
@@ -284,9 +322,10 @@ namespace TournamentManager
 					//Checking whether the score makes sense and reflects the winner
 					//if a team has won in 2 sets third one should end 0:0
 					if (Math.Abs(resultCheck) == 2)
+                    {
 						if (scoreTeamA[i] != 0 || scoreTeamB[i] != 0)
 							if (resultCheck > 0)
-                            {
+							{
 								for (int j = 0; j < 3; j++)
 								{
 									scoreTeamA[j] = 0;
@@ -295,22 +334,26 @@ namespace TournamentManager
 								throw new ThirdSetException(TeamA);
 							}
 							else
-                            {
+							{
 								for (int j = 0; j < 3; j++)
 								{
 									scoreTeamA[j] = 0;
 									scoreTeamB[j] = 0;
 								}
 								throw new ThirdSetException(TeamB);
-                            }
+							}
+					}
 					//Checking if exactly one team has reached the required points
-					if (scoreTeamA[i] == scoreTeamB[i] || (scoreTeamA[i] < scoreRequired && scoreTeamB[i] < scoreRequired))
-						throw new NoSetWinnerException(i+1);
-					if (scoreTeamA[i] == scoreRequired)
-						resultCheck++;
-					if (scoreTeamB[i] == scoreRequired)
-						resultCheck--;
+					else
+                    {
+						if (scoreTeamA[i] == scoreTeamB[i] || (scoreTeamA[i] < scoreRequired && scoreTeamB[i] < scoreRequired))
+							throw new NoSetWinnerException(i + 1);
+						if (scoreTeamA[i] == scoreRequired)
+							resultCheck++;
+						if (scoreTeamB[i] == scoreRequired)
+							resultCheck--;
 					scoreDiff += scoreTeamA[i] - scoreTeamB[i];
+					}
                 }
 				if ((resultCheck > 0 && TeamA != winner) || (resultCheck < 0 && TeamB != winner))
 				{
@@ -321,12 +364,16 @@ namespace TournamentManager
 					}
 					throw new WrongWinnerException(winner);
 				}
-				scoreDiff = Math.Abs(scoreDiff);
-				winner.SetMatchResult(true, (Math.Abs(resultCheck) + 1).ToString() + ", "+ scoreDiff.ToString());
 				if (winner == TeamA)
+                {
+					TeamA.SetMatchResult(true, (1+ Math.Abs(resultCheck)).ToString() + ", " + scoreDiff.ToString());
 					TeamB.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + (-scoreDiff).ToString());
+				}
 				else
-					TeamA.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + (-scoreDiff).ToString());
+                {
+					TeamA.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + scoreDiff.ToString());
+					TeamB.SetMatchResult(true, (1 + Math.Abs(resultCheck)).ToString() + ", " + (-scoreDiff).ToString());
+				}
 			}
 
 			public override string GetStat()
@@ -350,6 +397,20 @@ namespace TournamentManager
 				return stat;
             }
 		}
+
+		//Excpetion if name of a team passed to SetResult is not a name of any of the playing teams
+		public class WrongNameInStatException: Exception
+        {
+			private string name;
+			public WrongNameInStatException(string name)
+            {
+				this.name = name;
+            }
+            public override string Message
+            {
+                get { return name + " is not one of the teams playing in the match"; }
+            }
+        }
 
 		//Exception if third set was played in spite of a team winning in two sets
 		public class ThirdSetException : Exception
@@ -385,7 +446,7 @@ namespace TournamentManager
 			{
 				get
 				{
-					return "No team has won the " + set + "set since no team has reached" + scoreRequired + "points while also having the lead";
+					return "No team has won the set number " + set + " since no team has reached " + scoreRequired + " points while also having the lead";
 				}
 			}
 		}
