@@ -8,6 +8,7 @@ using TournamentManager.TException;
 using TournamentManager.TPerson;
 using TournamentManager.TTeam;
 using Newtonsoft.Json;
+using TournamentManager.TMatch;
 
 namespace TournamentManager
 {
@@ -65,9 +66,33 @@ namespace TournamentManager
                 for (int i = 0; i < teams.Count / 2; i++)
                     rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i * refNumber, refNumber)), referees.GetRange(i * refNumber, refNumber));
             }
-            public void SetResult(string stat, TTeam.ITeam winner, int roundNumber)
+            public void SetResult(string stat, TTeam.ITeam winner)
             {
-                rounds[roundNumber].SetResult(stat, winner);
+                if (!rounds[0].IsFinished())
+                    rounds[0].SetResult(stat, winner);
+                else
+                {
+                    if (!rounds[0].IsFinished())
+                        rounds[1].SetResult(stat, winner);
+                    else
+                        throw new AlreadyFinishedException(GetWinner());
+                }
+            }
+        }
+
+        public class AlreadyFinishedException : Exception
+        {
+            private TTeam.ITeam winner;
+            public AlreadyFinishedException(TTeam.ITeam winner)
+            {
+                this.winner = winner;
+            }
+            public override string Message
+            {
+                get
+                {
+                    return "The tournament has already finished! " + winner.Name + " has won the Tournament";
+                }
             }
         }
 
@@ -79,10 +104,17 @@ namespace TournamentManager
             {
                 get { return rounds; }
             }
+            public List<TTeam.ITeam> Teams
+            {
+                get { return teams; }
+            }
             private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
             private List<TPerson.Referee> referees = new List<TPerson.Referee>();
             public League(List<TTeam.ITeam> t, List<TPerson.Referee> referees)
             {
+                int refsRequired = 1;
+                if (t[0] is VolleyballTeam)
+                    refsRequired = 3;
                 //If teams number is even we need one less round than teams
                 if (t.Count % 2 == 0)
                     rounds = new List<Round>(t.Count - 1);
@@ -93,7 +125,10 @@ namespace TournamentManager
                     for (int j = 1; j + i < t.Count; j++)
                         if (t[i] == t[j + i])
                             throw new DuplicateTeamException(t[i]);
-                this.referees = referees;
+                if (referees.Count < t.Count / 2 * refsRequired)
+                    throw new NotEnoughRefereesException(referees.Count, t.Count / 2 * refsRequired);
+                else
+                    this.referees = referees;
                 this.teams = t;
             }
 
@@ -125,9 +160,21 @@ namespace TournamentManager
                             }
                     }
             }
-
+            public void SetResult(TTeam.ITeam winner, TTeam.ITeam loser, string stat)
+            {
+                for(int i = 0; i < rounds.Count; i++)
+                {
+                    if(rounds[i].IsScheduled(winner, loser))
+                    {
+                        rounds[i].SetResult(stat, winner);
+                        SortTeams();
+                        break;
+                    }
+                }
+            }
             public List<TTeam.ITeam> GetFinalTeams(int number)
             {
+                SortTeams();
                 return teams.GetRange(0, number);
             }
 
@@ -185,7 +232,7 @@ namespace TournamentManager
                 //rounds.Capacity/2 + 1 is the maximum number of matches played in a round
                 for (int index = 0; index < rounds.Capacity; index++)
                 {
-                    Round tmp = new Round((index + 1) + "Round", startDate);
+                    Round tmp = new Round("Round " + (index + 1), startDate);
                     startDate = IncrementDate(startDate, spaceBetweenMatches);
                     for (int index2 = 0; index2 < rounds.Capacity/2 + 1; index2++)
                     {
@@ -361,8 +408,7 @@ namespace TournamentManager
                 }
                 return true;
             }
-
-            public void SetResult(string stat, TTeam.ITeam winner)
+            internal void SetResult(string stat, TTeam.ITeam winner)
             {
                 GetMatch(winner).SetResult(stat, winner);
             }
