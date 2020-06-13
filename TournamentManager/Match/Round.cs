@@ -177,21 +177,21 @@ namespace TournamentManager
                 if (teams[0] is VolleyballTeam)
                     refNumber = 3;
                 //rounds.Count/2 + 1 is the maximum number of matches played in a round
-                for (int index = 0; index < rounds.Count * (rounds.Count / 2 + 1); index++)
+                for (int index = 0; index < rounds.Capacity * (rounds.Capacity / 2 + 1); index++)
                 {
-                    if (index % (rounds.Count / 2 + 1) == 0)
+                    if (index % (rounds.Capacity / 2 + 1) == 0)
                     {
-                        rounds[index / (rounds.Count / 2 + 1)] = new Round(index / (rounds.Count / 2 + 1) + " Round", startDate);
+                        rounds[index / (rounds.Capacity / 2 + 1)] = new Round((index / (rounds.Capacity / 2 + 1)) + " Round", startDate);
                         startDate = IncrementDate(startDate, spaceBetweenMatches);
                         j = i;
                     }
                     if (i != j)
-                        rounds[index / (rounds.Count / 2 + 1)].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange((index % (rounds.Count / 2 + 1) - 1) * refNumber, refNumber)), referees.GetRange((index % (rounds.Count / 2 + 1) - 1) * refNumber, refNumber));
+                        rounds[index / (rounds.Capacity / 2 + 1)].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange((index % (rounds.Count / 2 + 1)) * refNumber, refNumber)), referees.GetRange((index % (rounds.Count / 2 + 1)) * refNumber, refNumber));
                     else
-                        if (teams.Count != rounds.Count)
-                        rounds[index / (rounds.Count / 2 + 1)].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees.GetRange(referees.Count - refNumber, refNumber));
-                    i = ++i % rounds.Count;
-                    j = --j % rounds.Count;
+                        if (teams.Capacity != rounds.Capacity)
+                            rounds[index / (rounds.Capacity / 2 + 1)].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees.GetRange(referees.Count - refNumber, refNumber));
+                    i = ++i % rounds.Capacity;
+                    j = --j % rounds.Capacity;
                 }
             }
             //increment date changes date by a specified number of days
