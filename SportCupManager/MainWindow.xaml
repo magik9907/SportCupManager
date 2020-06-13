@@ -5,8 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SportCupManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="500" Width="900" Background="#FF939090">
+    <Window.Resources>
+      
+    </Window.Resources>
 
+
+    <Grid>
+        <Grid x:Name="TournamentList" Margin="188,21,25,41" Background="white">
+            <ItemsControl  Name="Resources">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
+                            <TextBlock Text="{Binding Name}" Padding="10,10,10,10" HorizontalAlignment="Center" Margin="0,10,0,0" TextAlignment="Center" Background="Azure" Cursor="Hand" MinWidth="200" ></TextBlock>
+                            <Grid>
+                                <TextBlock Text=" Usuń"  Cursor="Hand" Width="200" TextAlignment="Center" Background="White" Margin="10,20,10,20" />
+                                </Grid>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>  
+
+
+        </Grid>
+        <TextBlock Text=" Usuń" Margin="37,65,763,349" Padding="20,20,20,20" Cursor="Hand" Background="#FFA8A4A4" Width="100" Height="70" FontSize="16" FontWeight="Bold" />
     </Grid>
 </Window>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,9 +21,47 @@ namespace SportCupManager
     /// </summary>
     public partial class MainWindow : Window
     {
+         List<Tournament> lists = new List<Tournament>();
         public MainWindow()
         {
             InitializeComponent();
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data";
+            String[] list = Directory.GetDirectories(path);
+            
+            
+            
+            for (int i = 0; i < list.Length; i++)
+            {
+                lists.Add(new Tournament(list[i]));
+            }
+
+            Resources.ItemsSource = lists;
+        }
+
+
+       
+    }
+
+    public class Tournament
+    {
+        public string Name { get; }
+        public string Path { get; }
+
+        public Tournament(string path)
+        {
+            Path = path;
+            Name = getNameFromPath();
+        }
+
+        public string getNameFromPath()
+        {
+            int index = Path.LastIndexOf("\\");
+            return Path.Substring(index+1);
+        }
+
+        public override string ToString()
+        {
+            return Name.ToString();
         }
     }
 }

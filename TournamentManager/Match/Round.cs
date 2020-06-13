@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using TournamentManager.TException;
 using TournamentManager.TPerson;
 using TournamentManager.TTeam;
+using Newtonsoft.Json;
 
 namespace TournamentManager
 {
@@ -73,6 +74,7 @@ namespace TournamentManager
         public class League
         {
             private List<Round> rounds;
+            [JsonProperty]
             public List<Round> Rounds
             {
                 get { return rounds; }
@@ -92,6 +94,7 @@ namespace TournamentManager
                         if (t[i] == t[j + i])
                             throw new DuplicateTeamException(t[i]);
                 this.referees = referees;
+                this.teams = t;
             }
 
             private void SortTeams()
@@ -122,10 +125,12 @@ namespace TournamentManager
                             }
                     }
             }
+
             public List<TTeam.ITeam> GetFinalTeams(int number)
             {
                 return teams.GetRange(0, number);
             }
+
             //this is for manual scheduling. Probably should make a flag to make it exclusive with 
             public void ScheduleMatch(TMatch.Match match, List<Referee> referees, Round round)
             {
@@ -169,6 +174,7 @@ namespace TournamentManager
                 }
                 round.AddMatch(match, referees);
             }
+
             //this is for automatic scheduling
             public void AutoSchedule(int[] startDate, int spaceBetweenMatches)
             {
@@ -176,7 +182,7 @@ namespace TournamentManager
                 int i = 1, j = 1, refNumber = 1;
                 if (teams[0] is VolleyballTeam)
                     refNumber = 3;
-                //rounds.Count/2 + 1 is the maximum number of matches played in a round
+                //rounds.Capacity/2 + 1 is the maximum number of matches played in a round
                 for (int index = 0; index < rounds.Capacity * (rounds.Capacity / 2 + 1); index++)
                 {
                     if (index % (rounds.Capacity / 2 + 1) == 0)
@@ -194,6 +200,7 @@ namespace TournamentManager
                     j = --j % rounds.Capacity;
                 }
             }
+
             //increment date changes date by a specified number of days
             private int[] IncrementDate(int[] date, int increment)
             {
