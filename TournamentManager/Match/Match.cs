@@ -257,7 +257,7 @@ namespace TournamentManager
 				int resultCheck = 0, scoreDiff = 0;
 				base.SetResult(stat, winner);
 				//split the strings into strings containing name of the teams and their scores
-				string[] tmp = stat.Split(new string[] {".", ",", ":"}, StringSplitOptions.RemoveEmptyEntries);
+				string[] tmp = stat.Split(new string[] {". ", ", ", ": "}, StringSplitOptions.RemoveEmptyEntries);
 				//string should split into 8 smaller string (2 for names of teams, 6 in total for scores in sets)
 				if (tmp.Length != 8)
 					throw new WrongStatFormatException();
@@ -286,10 +286,14 @@ namespace TournamentManager
                             {
 								if (TeamA.Name.Equals(tmp[0]) || TeamB.Name.Equals(tmp[0]))
                                 {
+									Console.WriteLine(TeamA.Name + " " + TeamB.Name);
 									throw new WrongNameInStatException(tmp[4]);
 								}
 								else
+                                {
+									ToString();
 									throw new WrongNameInStatException(tmp[0]);
+								}
                             }
 
 						}
