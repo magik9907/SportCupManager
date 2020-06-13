@@ -19,6 +19,7 @@ namespace TournamentManager
             SerializeObject(path , "tournament.json", t);
             SerializeObject(path , "referees.json", t.Referees);
             SerializeObject(path , "teams.json", t.Teams);
+            SerializeObject(path , "league.json", t.League);
 
         }
 

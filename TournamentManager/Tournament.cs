@@ -17,7 +17,7 @@ namespace TournamentManager
         /// <summary>
         /// Create league type from Team list
         /// </summary>
-        void SetLeague();
+        void SetAutoLeague();
 
         /// <summary>
         /// Creating playoff round 
@@ -66,6 +66,13 @@ namespace TournamentManager
         }
 
         /// <summary>
+        /// return league round
+        /// </summary>
+        TRound.League League { 
+            get; 
+        }
+
+        /// <summary>
         /// return list of referees
         /// </summary>
         List<TPerson.Referee> Referees
@@ -81,6 +88,7 @@ namespace TournamentManager
             get;
         }
     }
+    
     /// <summary>
     /// Main class of TournamentManager
     /// It can create league and playoff, add teams and referees to tournament
@@ -178,10 +186,11 @@ namespace TournamentManager
             teams.Remove(team);
         }
 
-        public void SetLeague()
+        public void SetAutoLeague()
         {
             CheckNumberOfTeams(teams);
             league = new TRound.League(teams, referees);
+            league.AutoSchedule(new int[]{ 1,1,2019},1);
         }
 
         public void SetPlayOff(List<TTeam.ITeam> teams)
@@ -215,6 +224,7 @@ namespace TournamentManager
                 return Enum.GetName(typeof(TEnum.TournamentDyscypline),dyscypline);
             }
         }
+
         [JsonIgnore]
         public string Name
         {
@@ -223,6 +233,16 @@ namespace TournamentManager
                 return name;
             }
         }
+        
+        [JsonIgnore]
+        public TRound.League League
+        {
+            get
+            {
+                return league;
+            }
+        }
+
 
         /// <summary>
         /// check if object is defined
