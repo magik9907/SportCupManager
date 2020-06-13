@@ -190,10 +190,10 @@ namespace TournamentManager
                     for (int index2 = 0; index2 < rounds.Capacity/2 + 1; index2 ++)
                     {
                         if (i != j)
-                            rounds[index].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)), referees.GetRange(index2 * refNumber, refNumber));
+                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)), referees.GetRange(index2 * refNumber, refNumber));
                         else
                             if (teams.Capacity != rounds.Capacity)
-                                rounds[index].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees.GetRange(referees.Count - refNumber, refNumber));
+                                tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees.GetRange(referees.Count - refNumber, refNumber));
                         i = ++i % rounds.Capacity;
                         j = --j % rounds.Capacity;
                     }
