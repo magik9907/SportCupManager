@@ -87,7 +87,7 @@ namespace TournamentManager
             t.AddTeam(new TTeam.TugOfWarTeam("66"));
              */
             t.SetAutoLeague(new int[] { 1, 1, 1 }, 1);
-            t.SetPlayOff(new int[] { 1, 1, 1 });
+            // t.SetPlayOff(new int[] { 1, 1, 1 });
             Save.Tournament(t);
         }
     }

@@ -7,27 +7,46 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="900" Background="#FF939090">
     <Window.Resources>
-      
+
     </Window.Resources>
 
 
     <Grid>
-        <Grid x:Name="TournamentList" Margin="188,21,25,41" Background="white">
-            <ItemsControl  Name="Resources">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
-                            <TextBlock Text="{Binding Name}" Padding="10,10,10,10" HorizontalAlignment="Center" Margin="0,10,0,0" TextAlignment="Center" Background="Azure" Cursor="Hand" MinWidth="200" ></TextBlock>
-                            <Grid>
-                                <TextBlock Text=" Usuń"  Cursor="Hand" Width="200" TextAlignment="Center" Background="White" Margin="10,20,10,20" />
-                                </Grid>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>  
+        <ScrollViewer Margin="188,21,10,10">
+            <Grid x:Name="MainGrid" ScrollViewer.CanContentScroll="True" Background="white">
+                <Grid x:Name="TournamentCreateGrid">
+                    <Label Content="Tworzenie Turnieju" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
+                    <TextBox Name="Create_TournamentName" HorizontalAlignment="Left" Margin="10,60,0,0" Text="Nazwa" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
+                    <ComboBox Name="Create_DyscyplineComboBox" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" Width="189" FontSize="18">
+                        <ComboBoxItem Content="Volleyball" IsSelected="True"></ComboBoxItem>
+                        <ComboBoxItem Content="Tug Of War"></ComboBoxItem>
+                        <ComboBoxItem Content="Dodgeball"></ComboBoxItem>
+                    </ComboBox>
+                    <Button Content="Stwórz turniej" HorizontalAlignment="Left" Margin="538,409,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentCreateButton_Click"/>
+                </Grid>
+                <Grid x:Name="TournamentLoadGrid" Visibility="Collapsed" >
+                    <ItemsControl  Name="Resources">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
+                                    <TextBlock Text="{Binding Name}" Padding="10,10,10,10" HorizontalAlignment="Center" Margin="0,10,0,0" TextAlignment="Center" Background="Azure" Cursor="Hand" MinWidth="200" ></TextBlock>
+                                    <Grid>
+                                        <TextBlock Text=" Usuń"  Cursor="Hand" Width="200" TextAlignment="Center" Background="White" Margin="10,20,10,20" />
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+        <ScrollViewer Margin="10,21,717,10">
+            <Grid ScrollViewer.CanContentScroll="True">
+                <Label Content="Turniej" Margin="0,10,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                <Button Name="Tournament_Create" Content="Stwórz" HorizontalAlignment="Center" Margin="0,49,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="Tournament_Create_Click"/>
+                <Button Name="Tournament_Load" Content="Wczytaj" HorizontalAlignment="Center" VerticalAlignment="Top" Height="50" Width="102" FontSize="16" Margin="0,105,0,0" Click="Tournament_Load_Click"/>
+            </Grid>
+        </ScrollViewer>
 
-
-        </Grid>
-        <TextBlock Text=" Usuń" Margin="37,65,763,349" Padding="20,20,20,20" Cursor="Hand" Background="#FFA8A4A4" Width="100" Height="70" FontSize="16" FontWeight="Bold" />
     </Grid>
 </Window>
