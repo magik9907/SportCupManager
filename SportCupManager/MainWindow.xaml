@@ -5,13 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SportCupManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="900" Background="#FF939090">
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        Title="MainWindow" Height="auto" Width="auto" Background="#FF939090">
     <Window.Resources>
 
     </Window.Resources>
 
 
-    <Grid>
+    <Grid Height="500" Width="900">
         <ScrollViewer Margin="188,21,10,10">
             <Grid x:Name="MainGrid" ScrollViewer.CanContentScroll="True" Background="white">
                 <Grid x:Name="TournamentCreateGrid">
@@ -22,7 +24,7 @@
                         <ComboBoxItem Content="Tug Of War"></ComboBoxItem>
                         <ComboBoxItem Content="Dodgeball"></ComboBoxItem>
                     </ComboBox>
-                    <Button Content="Stwórz turniej" HorizontalAlignment="Left" Margin="538,409,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentCreateButton_Click"/>
+                    <Button Content="Stwórz turniej" HorizontalAlignment="Left" Margin="538,425,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentCreateButton_Click"/>
                 </Grid>
                 <Grid x:Name="TournamentLoadGrid" Visibility="Collapsed" >
                     <ItemsControl  Name="Resources">
