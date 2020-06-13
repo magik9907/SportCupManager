@@ -27,7 +27,7 @@ namespace TournamentManager
                     throw new NotEnoughtTeamsNumber(t.Count);
                 //this part checks whether or not there are any duplicate teams on the list
                 for (int i = 0; i < t.Count; i++)
-                    for (int j = 1; j + i < t.Count; j++)
+                    for (int j = i; j + i < t.Count; j++)
                         if (t[i] == t[j + i])
                             throw new DuplicateTeamException(t[i]);
                 rounds.Add(new Round("semi-finals", startDate));
