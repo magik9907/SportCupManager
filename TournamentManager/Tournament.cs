@@ -15,15 +15,17 @@ namespace TournamentManager
     public interface ITournament
     {
         /// <summary>
-        /// Create league type from Team list
-        /// </summary>
-        void SetAutoLeague();
+         /// Create league type from Team list
+         /// </summary>
+         /// <param name="date">start date of first round</param>
+         /// <param name="space">space between rounds</param>
+        void SetAutoLeague(int[] date, int space);
 
         /// <summary>
         /// Creating playoff round 
         /// </summary>
         /// <param name="teams">list of teams allow to play in competition</param>
-        void SetPlayOff(List<TTeam.ITeam> teams);
+        void SetPlayOff( int[] date);
 
         /// <summary>
         /// adding referee to the tournament
@@ -87,6 +89,11 @@ namespace TournamentManager
         {
             get;
         }
+
+        /// <summary>
+        /// return playoff round object
+        /// </summary>
+        TRound.PlayOff PlayOff { get;  }
     }
     
     /// <summary>
@@ -186,17 +193,27 @@ namespace TournamentManager
             teams.Remove(team);
         }
 
-        public void SetAutoLeague()
+        public void SetAutoLeague(int[] date, int space)
         {
             CheckNumberOfTeams(teams);
             league = new TRound.League(teams, referees);
-            league.AutoSchedule(new int[]{ 1,1,2019},1);
+            league.AutoSchedule(date,space);
         }
 
-        public void SetPlayOff(List<TTeam.ITeam> teams)
+        public void SetPlayOff(int[] date)
         {
-            CheckNumberOfTeams(teams);
-            playoff = new TRound.PlayOff(teams, Referees,new int[3] { 23, 3, 2019 });
+            TTeam.ITeam t1 = new TTeam.VolleyballTeam("111111");
+            TTeam.ITeam t2 = new TTeam.VolleyballTeam("1111");
+            TTeam.ITeam t3 = new TTeam.VolleyballTeam("22");
+            TTeam.ITeam t4 = new TTeam.VolleyballTeam("66");
+
+            List<TTeam.ITeam> teams = new List<TTeam.ITeam>() {t1,t2,t3,t4 };
+
+            //List<TTeam.ITeam> teams = CheckNumberOfTeams(teams);
+            playoff = new TRound.PlayOff(teams, Referees,date);
+            playoff.SetResult("33:22", t1);
+            playoff.SetResult("33:22", t3);
+            playoff.SetResult("33:22", t1);
         }
         
         [JsonIgnore]
@@ -241,6 +258,12 @@ namespace TournamentManager
             {
                 return league;
             }
+        }
+        [JsonIgnore]
+        public TRound.PlayOff PlayOff { 
+            get { 
+                return playoff; 
+            }  
         }
 
 
