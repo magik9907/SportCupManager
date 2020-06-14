@@ -47,18 +47,20 @@ namespace SportCupManager
         private void Tournament_Load_Click(object sender, RoutedEventArgs e)
         {
             CollapseAllGrids();
-            TournamentLoadGrid.Visibility = Visibility.Visible;
+            lists.Clear();
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data";
             String[] list = Directory.GetDirectories(path);
 
             for (int i = 0; i < list.Length; i++)
             {
                 lists.Add(new Tournament(list[i]));
+                Trace.Write("\n" + list[i]);
             }
-
-            Trace.Write("\n\n" + list + "\n\n");
+            Trace.Write("\n\n");
 
             Resources.ItemsSource = lists;
+            Resources.Items.Refresh();
+            TournamentLoadGrid.Visibility = Visibility.Visible;
         }
 
         private void TournamentCreateButton_Click(object sender, RoutedEventArgs e)
@@ -75,6 +77,13 @@ namespace SportCupManager
 
             ITournament t = new TournamentManager.Tournament(name, (int)dyscypline);
             Save.Tournament(t);
+            Tournament_Load_Click(sender, e);
+        }
+
+        private void TournamentDelete_Click(object sender, RoutedEventArgs e)
+        {
+            string path = (string)((Button)sender).Tag;
+            Directory.Delete(path, true);
             Tournament_Load_Click(sender, e);
         }
     }
