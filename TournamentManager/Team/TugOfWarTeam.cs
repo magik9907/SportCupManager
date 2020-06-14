@@ -13,7 +13,7 @@ namespace TournamentManager
             public float SumWinTime { get; set; }
             public float SumLossTime { get; set; }
 
-            public TugOfWarTeam(string name) : base(name)
+            public TugOfWarTeam(string name,int id) : base(name,id)
             {
                 this.Name = name;
                 this.AvWinTime = 0;

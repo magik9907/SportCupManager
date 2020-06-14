@@ -68,7 +68,7 @@ namespace TournamentManager
                 if (teams[0] is VolleyballTeam)
                     refNumber = 3;
                 for (int i = 0; i < teams.Count / 2; i++)
-                    rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i * refNumber, refNumber)), referees.GetRange(i * refNumber, refNumber));
+                    rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i * refNumber, refNumber)));
             }
             public void SetResult(string stat, TTeam.ITeam winner)
             {
@@ -222,7 +222,7 @@ namespace TournamentManager
                     if (!(flagA || flagB) || !(flagAnB || (flagA && flagB)))
                         throw new ImpossibleScheduleException();
                 }
-                round.AddMatch(match, referees);
+                round.AddMatch(match);
             }
 
             //this is for automatic scheduling
@@ -240,11 +240,11 @@ namespace TournamentManager
                     for (int index2 = 0; index2 < rounds.Capacity/2 + 1; index2++)
                     {
                         if (i != j)
-                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)), referees.GetRange(index2 * refNumber, refNumber));
+                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)));
                         else
                         {
                             if (teams.Capacity != rounds.Capacity)
-                                tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees.GetRange(referees.Count - refNumber, refNumber));
+                                tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)));
                         }
                         i = (i+1) % rounds.Capacity;
                         j = ((j-1) + rounds.Capacity) % rounds.Capacity;
@@ -358,9 +358,8 @@ namespace TournamentManager
                 get { return roundName; }
             }
 
-            public void AddMatch(TMatch.Match match, List<Referee> referees)
+            public void AddMatch(TMatch.Match match)
             {
-                match.SetReferees(referees);
                 //this checks whether or not one of the teams specified are already playing someone this round
                 for (int i = 0; i < listMatches.Count; i++)
                 {

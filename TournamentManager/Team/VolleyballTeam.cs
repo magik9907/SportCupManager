@@ -11,7 +11,7 @@ namespace TournamentManager
             public int Points { get; set; }
             public int ScoreDiff { get; set; }
 
-            public VolleyballTeam(string name) : base(name)
+            public VolleyballTeam(string name, int id) : base(name,id)
             {
                 this.Name = name;
                 this.Points = 0;

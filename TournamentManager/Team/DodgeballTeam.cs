@@ -12,7 +12,7 @@ namespace TournamentManager
             public int PlayersEliminated { get; set; }
             public int SumOfPlayersLeft { get; set; }
 
-            public DodgeballTeam(string name) : base(name)
+            public DodgeballTeam(string name,int id) : base(name,id)
             {
                 this.Name = name;
                 this.PlayersEliminated = 0;

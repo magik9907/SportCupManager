@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TournamentManager.TRound;
 using TournamentManager.TTeam;
-
+using Newtonsoft.Json;
 
 namespace TournamentManager
 {	
@@ -16,9 +16,16 @@ namespace TournamentManager
 			private TTeam.ITeam teamA;
 			private TTeam.ITeam teamB;
 			private TTeam.ITeam winner = null;
+			[JsonConverter(typeof(TeamIdConverter))]
 			public TTeam.ITeam TeamA { get { return teamA; } }
+
+			[JsonConverter(typeof(TeamIdConverter))]
 			public TTeam.ITeam TeamB { get { return teamB; } }
+
+			[JsonConverter(typeof(TeamIdConverter))]
 			public TTeam.ITeam Winner { get { return winner; } }
+			[JsonProperty]
+			[JsonConverter(typeof(RefereeIdConverter))]
 			private TPerson.Referee RefA;
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
@@ -238,6 +245,8 @@ namespace TournamentManager
 
 		public class VolleyballMatch : Match
 		{
+			[JsonProperty]
+			[JsonConverter(typeof(RefereeIdConverter))]
 			private List<TPerson.Referee> assistantReferees = new List<TPerson.Referee>(2);
 			//the score means points gained by team in each set
 			private int[] scoreTeamA = new int[3] {0, 0, 0};
@@ -248,7 +257,7 @@ namespace TournamentManager
 			}
 			public override void SetReferees(List<TPerson.Referee> r)
 			{
-				base.SetReferees(r);
+				
 				assistantReferees.AddRange( r.GetRange(1, 2));
 			}
             //the expected format is "team1.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). team2.Name:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"

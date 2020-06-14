@@ -195,25 +195,17 @@ namespace TournamentManager
 
         public void SetAutoLeague(int[] date, int space)
         {
-            CheckNumberOfTeams(teams);
+            CheckNumberOfTeams(teams, 5);
             league = new TRound.League(teams, referees);
             league.AutoSchedule(date,space);
         }
 
         public void SetPlayOff(int[] date)
         {
-            TTeam.ITeam t1 = new TTeam.VolleyballTeam("111111");
-            TTeam.ITeam t2 = new TTeam.VolleyballTeam("1111");
-            TTeam.ITeam t3 = new TTeam.VolleyballTeam("22");
-            TTeam.ITeam t4 = new TTeam.VolleyballTeam("66");
 
-            List<TTeam.ITeam> teams = new List<TTeam.ITeam>() {t1,t2,t3,t4 };
-
-            //List<TTeam.ITeam> teams = CheckNumberOfTeams(teams);
+            List<TTeam.ITeam> teams = league.GetFinalTeams(4);
+            CheckNumberOfTeams(league.GetFinalTeams(4), 4);
             playoff = new TRound.PlayOff(teams, Referees,date);
-            playoff.SetResult(t1.Name + ": 21, 21, 0. " + t4.Name + ": 0, 0, 0", t1);
-            playoff.SetResult(t2.Name + ": 21, 21, 0. " + t3.Name + ": 0, 0, 0", t2);
-            playoff.SetResult(t1.Name + ": 21, 21, 0. " + t2.Name + ": 0, 0, 0", t1);
         }
         
         [JsonIgnore]
@@ -282,13 +274,14 @@ namespace TournamentManager
         }
 
         /// <summary>
-        /// check if number of teams is greather than 1
+        /// check if number of teams is equal or greather to param "limit"
         /// </summary>
         /// <param name="ts">list of teams</param>
-        private void CheckNumberOfTeams(List<TTeam.ITeam> ts)
+        /// <param name="limit"> minimal number of teams to play</param>
+        private void CheckNumberOfTeams(List<TTeam.ITeam> ts, int limit)
         {
-            if (teams.Count < 2)
-                throw new TException.NotEnoughtTeamsNumber(teams.Count);
+            if (ts.Count < limit)
+                throw new TException.NotEnoughtTeamsNumber(ts.Count);
         }
 
         /// <summary>
