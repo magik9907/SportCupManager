@@ -24,10 +24,13 @@ namespace SportCupManager
     /// </summary>
     public partial class MainWindow : Window
     {
-         List<Tournament> lists = new List<Tournament>();
+        List<TournamentTemporary> lists = new List<TournamentTemporary>();
+        Tournament CurrentTournament;
         public MainWindow()
         {
             InitializeComponent();
+            MenuTournament_Load_Click(new object(), new RoutedEventArgs());
+            TournamentLoad_Click(new object(), new RoutedEventArgs());
         }
 
         private void CollapseAllGrids()
@@ -38,13 +41,13 @@ namespace SportCupManager
             }
         }
 
-        private void Tournament_Create_Click(object sender, RoutedEventArgs e)
+        private void MenuTournament_Create_Click(object sender, RoutedEventArgs e)
         {
             CollapseAllGrids();
             TournamentCreateGrid.Visibility = Visibility.Visible;
         }
 
-        private void Tournament_Load_Click(object sender, RoutedEventArgs e)
+        private void MenuTournament_Load_Click(object sender, RoutedEventArgs e)
         {
             CollapseAllGrids();
             lists.Clear();
@@ -53,7 +56,7 @@ namespace SportCupManager
 
             for (int i = 0; i < list.Length; i++)
             {
-                lists.Add(new Tournament(list[i]));
+                lists.Add(new TournamentTemporary(list[i]));
                 Trace.Write("\n" + list[i]);
             }
             Trace.Write("\n\n");
@@ -75,25 +78,45 @@ namespace SportCupManager
                 default: dyscypline = TournamentDyscypline.volleyball; break;
             }
 
-            ITournament t = new TournamentManager.Tournament(name, (int)dyscypline);
+            ITournament t = new Tournament(name, (int)dyscypline);
             Save.Tournament(t);
-            Tournament_Load_Click(sender, e);
+            MenuTournament_Load_Click(sender, e);
         }
 
         private void TournamentDelete_Click(object sender, RoutedEventArgs e)
         {
             string path = (string)((Button)sender).Tag;
             Directory.Delete(path, true);
-            Tournament_Load_Click(sender, e);
+            MenuTournament_Load_Click(sender, e);
+        }
+
+        private void TournamentLoad_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+                CurrentlyLoaded.Content = "Wczytany turniej: " + (string)button.Tag;
+            else
+                CurrentlyLoaded.Content = "Nie wczytano turnieju!";
+        }
+
+        private void MenuTeam_Create_Click(object sender, RoutedEventArgs e)
+        {
+            CollapseAllGrids();
+            TeamCreateGrid.Visibility = Visibility.Visible;
+        }
+
+        private void MenuTeam_Edit_Click(object sender, RoutedEventArgs e)
+        {
+            CollapseAllGrids();
+            TeamCreateGrid.Visibility = Visibility.Visible;
         }
     }
 
-    public class Tournament
+    public class TournamentTemporary
     {
         public string Name { get; }
         public string Path { get; }
 
-        public Tournament(string path)
+        public TournamentTemporary(string path)
         {
             Path = path;
             Name = getNameFromPath();
