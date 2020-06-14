@@ -211,9 +211,9 @@ namespace TournamentManager
 
             //List<TTeam.ITeam> teams = CheckNumberOfTeams(teams);
             playoff = new TRound.PlayOff(teams, Referees,date);
-            playoff.SetResult("33:22", t1);
-            playoff.SetResult("33:22", t3);
-            playoff.SetResult("33:22", t1);
+            playoff.SetResult(t1.Name + ": 21, 21, 0. " + t4.Name + ": 0, 0, 0", t1);
+            playoff.SetResult(t2.Name + ": 21, 21, 0. " + t3.Name + ": 0, 0, 0", t2);
+            playoff.SetResult(t1.Name + ": 21, 21, 0. " + t2.Name + ": 0, 0, 0", t1);
         }
         
         [JsonIgnore]

@@ -89,7 +89,11 @@ namespace TournamentManager
             t.AddTeam(new TTeam.TugOfWarTeam("66"));
              */
             t.SetAutoLeague(new int[] { 1, 1, 1 }, 1);
-            // t.SetPlayOff(new int[] { 1, 1, 1 });
+            for (int i = 0; i < t.League.Teams.Count; i++)
+                for (int j = t.League.Teams.Count - 1; j > i; j--)
+                    t.League.SetResult(t.League.Teams[i], t.League.Teams[j], t.League.Teams[i].Name + ": 21, 21, 0. " + t.League.Teams[j].Name + ": 0, 0, 0");
+            t.SetPlayOff(new int[] { 1, 1, 1 });
+            Console.WriteLine(t.PlayOff.GetWinner());
             Save.Tournament(t);
         }
     }

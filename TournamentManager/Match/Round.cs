@@ -50,11 +50,13 @@ namespace TournamentManager
                 }
                 this.referees = referees;
                 GenerateRound(t, "semi-finals");
-                
             }
             public TTeam.ITeam GetWinner()
             {
-                return rounds[1].ListMatches[0].Winner;
+                if(rounds.Count == 2)
+                    if(rounds[1].IsFinished())
+                        return rounds[1].ListMatches[0].Winner;
+                return null;
             }
             private void GenerateRound(List<TTeam.ITeam> teams, string name)
             {
@@ -74,7 +76,8 @@ namespace TournamentManager
                     rounds[0].SetResult(stat, winner);
                 else
                 {
-                    GenerateRound(new List<TTeam.ITeam> { rounds[0].ListMatches[0].Winner, rounds[0].ListMatches[1].Winner }, "final");
+                    if(GetWinner() == null)
+                        GenerateRound(new List<TTeam.ITeam> { rounds[0].ListMatches[0].Winner, rounds[0].ListMatches[1].Winner }, "final");
                     if (!rounds[1].IsFinished())
                         rounds[1].SetResult(stat, winner);
                     else
@@ -401,6 +404,8 @@ namespace TournamentManager
             //check whether or not all of the matches in this round have been completed
             public Boolean IsFinished()
             {
+                if (listMatches.Count == 0)
+                    return false;
                 for (int i = 0; i < listMatches.Count; i++)
                 {
                     if (!listMatches[i].WasPlayed())
