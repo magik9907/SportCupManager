@@ -6,15 +6,9 @@ namespace TournamentManager
 {
     namespace TPerson
     {
-        public interface IRefereeId
-        {
-            int Id
-            {
-                get;
-            }
-        }
+        
 
-        public class Referee : Person, IRefereeId
+        public class Referee : Person
         {
             [JsonProperty("name")]
             private string name;

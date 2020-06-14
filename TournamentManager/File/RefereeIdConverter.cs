@@ -13,7 +13,7 @@ namespace TournamentManager
 
             foreach (var x in value)
             {
-                id.Add(((TPerson.IRefereeId)x).Id);
+                id.Add((x).Id);
             }
             serializer.Serialize(writer, id);
         }
@@ -27,7 +27,7 @@ namespace TournamentManager
             else
             {
 
-                TPerson.IRefereeId t = (TPerson.IRefereeId)value;
+                TPerson.Referee t = (TPerson.Referee)value;
 
                 writer.WriteValue(t.Id);
             }
@@ -40,7 +40,7 @@ namespace TournamentManager
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(TPerson.IRefereeId);
+            return objectType == typeof(TPerson.Referee);
         }
     }
 }
