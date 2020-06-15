@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
-        Title="MainWindow" Height="auto" Width="auto" Background="#FF939090">
+        Title="Tournament Manager" Height="auto" Width="auto" Background="#FF939090">
     <Window.Resources>
 
     </Window.Resources>

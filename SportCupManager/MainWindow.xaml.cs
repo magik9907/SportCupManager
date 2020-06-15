@@ -41,6 +41,7 @@ namespace SportCupManager
             {
                 grid.Visibility = Visibility.Collapsed;
             }
+            SetNotification("");
         }
 
         private void SetNotification(string message)
@@ -67,9 +68,10 @@ namespace SportCupManager
             for (int i = 0; i < list.Length; i++)
             {
                 lists.Add(new TournamentTemporary(list[i]));
-                Trace.Write("\n" + list[i]);
             }
-            Trace.Write("\n\n");
+
+            if (lists.Count <= 0)
+                SetNotification("Brak Turniejów!");
 
             Resources.ItemsSource = lists;
             Resources.Items.Refresh();
@@ -129,6 +131,12 @@ namespace SportCupManager
         {
             string path = (string)((Button)sender).Tag;
             Directory.Delete(path, true);
+            TournamentTemporary tour = new TournamentTemporary(path);
+            if (tour.getNameFromPath() == CurrentTournament.Name)
+            {
+                CurrentTournament = null;
+                TournamentLoad_Click(null, e);
+            }
             MenuTournament_Load_Click(sender, e);
         }
 
@@ -177,6 +185,7 @@ namespace SportCupManager
             ITeam team = CurrentTournament.FindTeam(name);
             CurrentTournament.RemoveTeam(team);
             Save.Tournament(CurrentTournament);
+            MenuTeam_Edit_Click(sender, e);
         }
     }
 
