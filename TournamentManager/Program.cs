@@ -7,7 +7,7 @@ namespace TournamentManager
     {
         static void Main(string[] args)
         {
-            ITournament t = new Tournament("volley", (int)TEnum.TournamentDyscypline.volleyball);
+            ITournament t = new Tournament("volley", TEnum.TournamentDyscypline.volleyball);
             int i = 1;
             t.AddReferee(new TPerson.Referee("a", "a", 1, i));
             i++;
@@ -54,7 +54,7 @@ namespace TournamentManager
 
 
             /*
-            ITournament t = new Tournament("dodge", (int)TEnum.TournamentDyscypline.dodgeball);
+            ITournament t = new Tournament("dodge", TEnum.TournamentDyscypline.dodgeball);
 
             int i =1;
 
@@ -101,7 +101,7 @@ namespace TournamentManager
             */
             /*
              
-            ITournament t = new Tournament("tugofwar", (int)TEnum.TournamentDyscypline.tugofwar);
+            ITournament t = new Tournament("tugofwar", TEnum.TournamentDyscypline.tugofwar);
             int i = 1;
             t.AddReferee(new TPerson.Referee("a", "a", 1,i));
             i++;
@@ -151,6 +151,11 @@ namespace TournamentManager
             t.SetPlayOff(new int[] { 1, 1, 1 });
             Console.WriteLine(t.PlayOff.GetWinner());
             Save.Tournament(t);
+            ITournament newT ;
+            newT = Read.Tournament( "volley");
+            Console.WriteLine(newT.Name);
+            Console.WriteLine(newT.Dyscypline);
+            
         }
     }
 }

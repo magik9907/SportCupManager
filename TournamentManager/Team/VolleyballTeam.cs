@@ -13,9 +13,13 @@ namespace TournamentManager
 
             public VolleyballTeam(string name, int id) : base(name,id)
             {
-                this.Name = name;
                 this.Points = 0;
                 this.ScoreDiff = 0;
+            }
+
+            public VolleyballTeam(string name, int id, List<TPerson.Player> players) : this(name, id)
+            {
+                this.listPlayers.AddRange(players);
             }
 
             public static bool operator <(VolleyballTeam a, VolleyballTeam b)
