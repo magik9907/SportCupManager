@@ -7,13 +7,14 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
-        Title="MainWindow" Height="auto" Width="auto" Background="#FF939090">
+        Title="Tournament Manager" Height="auto" Width="auto" Background="#FF939090">
     <Window.Resources>
 
     </Window.Resources>
 
 
     <Grid Height="500" Width="900">
+        <Label Name="NotificationLabel" Content="" FontSize="24" HorizontalAlignment="Right" Width="550" Margin="0,0,10,0" VerticalAlignment="Top" BorderThickness="0,0,0,0" FontWeight="Bold" HorizontalContentAlignment="Right"/>
         <ScrollViewer Margin="188,40,10,10">
             <Grid x:Name="MainGrid" ScrollViewer.CanContentScroll="True" Background="white">
                 <Grid x:Name="TournamentCreateGrid" Visibility="Collapsed">
@@ -40,15 +41,43 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
-                <Grid x:Name="TeamCreateGrid" Visibility="Collapsed">
+                <Grid x:Name="TeamCreateGrid">
                     <Label Content="Tworzenie Drużyny" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
                     <TextBox Name="Create_TeamName" HorizontalAlignment="Left" Margin="10,60,0,0" Text="Nazwa" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
-                    <Button Content="Stwórz Drużynę" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentCreateButton_Click"/>
+                    <Button Content="Stwórz Drużynę" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TeamCreateButton_Click"/>
                 </Grid>
-                <Grid x:Name="TeamEditGrid">
+                <Grid x:Name="TeamListGrid" Visibility="Collapsed">
+                    <ItemsControl  Name="TeamsList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
+                                    <Label FontSize="25" Margin="10, 0, 0, 0" Content="{Binding Name}"/>
+                                    <Button Content="Edytuj" Margin="0, 10, 500, 10" Height="25" Width="100" />
+                                    <Button Content="Usuń" Margin="110, -35, 390, 10" Height="25" Width="100" Tag="{Binding Name}" Click="TeamDelete_Click" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+                <Grid x:Name="TeamEditGrid" Visibility="Collapsed">
                     <Label Content="Edytowanie Drużyny" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
-                    <TextBox Name="Edit_TeamName" HorizontalAlignment="Left" Margin="10,60,0,0" Text="Nazwa" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
-                    <Button Content="Edytuj Drużynę" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentCreateButton_Click"/>
+                    <TextBox Name="Edit_TeamName" HorizontalAlignment="Left" Margin="10,60,0,0" Text="Nazwa drużyny" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
+                    <TextBox Name="PlayerFirstName" HorizontalAlignment="Left" Margin="10,150,0,0" Text="Imię" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
+                    <TextBox Name="PlayerSurName" HorizontalAlignment="Left" Margin="10,181,0,0" Text="Nazwisko" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
+                    <TextBox Name="PlayerAge" HorizontalAlignment="Left" Margin="10,0,0,0" Text="Wiek" TextWrapping="Wrap" VerticalAlignment="Center" Width="189" FontSize="18"/>
+                    <TextBox Name="PlayerNumber" HorizontalAlignment="Left" Margin="10,243,0,0" Text="Numer" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
+                    <Button Content="Edytuj Drużynę" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentEditButton_Click"/>
+                    <Label Content="Dodaj Zawodnika" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" FontSize="22"/>
+                    <Button Content="Stwórz Zawodnika" HorizontalAlignment="Left" Margin="10,274,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="154" Click="PlayerCreateButton_Click"/>
+                    <Label Content="Lista Zawodników" HorizontalAlignment="Center" Margin="0,111,0,0" VerticalAlignment="Top" FontSize="22"/>
+                    <ListView Margin="218,150,218,126" Name="PlayersListView">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
                 </Grid>
             </Grid>
         </ScrollViewer>
