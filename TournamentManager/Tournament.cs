@@ -181,6 +181,15 @@ namespace TournamentManager
             teams.Add(team);
         }
 
+        public TTeam.Team FindTeam(string name)
+        {
+            foreach (TTeam.Team team in Teams)
+            {
+                if (team.Name == name) return team;
+            }
+            return null;
+        }
+
         public void RemoveReferee(TPerson.Referee referee)
         {
             IsObjectNotDefined(referee, "Referee");

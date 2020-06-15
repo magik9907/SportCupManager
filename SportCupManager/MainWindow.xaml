@@ -53,7 +53,7 @@
                                 <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
                                     <Label FontSize="25" Margin="10, 0, 0, 0" Content="{Binding Name}"/>
                                     <Button Content="Edytuj" Margin="0, 10, 500, 10" Height="25" Width="100" />
-                                    <Button Content="Usuń" Margin="110, -35, 390, 10" Height="25" Width="100" Tag="{Binding Path}" Click="TeamDelete_Click" />
+                                    <Button Content="Usuń" Margin="110, -35, 390, 10" Height="25" Width="100" Tag="{Binding Name}" Click="TeamDelete_Click" />
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

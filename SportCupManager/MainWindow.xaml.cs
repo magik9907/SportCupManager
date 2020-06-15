@@ -170,6 +170,14 @@ namespace SportCupManager
             Save.Tournament(CurrentTournament);
             MenuTeam_Edit_Click(sender, e);
         }
+
+        private void TeamDelete_Click(object sender, RoutedEventArgs e)
+        {
+            string name = (string)((Button)sender).Tag;
+            ITeam team = CurrentTournament.FindTeam(name);
+            CurrentTournament.RemoveTeam(team);
+            Save.Tournament(CurrentTournament);
+        }
     }
 
     public class TournamentTemporary
