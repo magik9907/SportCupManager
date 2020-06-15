@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using TournamentManager;
 using TournamentManager.TEnum;
+using TournamentManager.TPerson;
+using TournamentManager.TTeam;
 
 namespace SportCupManager
 {
@@ -35,11 +37,19 @@ namespace SportCupManager
 
         private void CollapseAllGrids()
         {
-            foreach (Grid grid in MainGrid.Children)
+            foreach (UIElement grid in MainGrid.Children)
             {
                 grid.Visibility = Visibility.Collapsed;
             }
         }
+
+        private void SetNotification(string message)
+        {
+            NotificationLabel.Content = message;
+            NotificationLabel.Visibility = Visibility.Visible;
+        }
+
+        /* MENU BUTTONS */
 
         private void MenuTournament_Create_Click(object sender, RoutedEventArgs e)
         {
@@ -65,6 +75,38 @@ namespace SportCupManager
             Resources.Items.Refresh();
             TournamentLoadGrid.Visibility = Visibility.Visible;
         }
+
+        private void MenuTeam_Create_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentTournament == null)
+            {
+                SetNotification("Nie wybrano turnieju!");
+                return;
+            }
+            CollapseAllGrids();
+            TeamCreateGrid.Visibility = Visibility.Visible;
+        }
+
+        private void MenuTeam_Edit_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentTournament == null)
+            {
+                SetNotification("Nie wybrano turnieju!");
+                return;
+            }
+            CollapseAllGrids();
+            TeamListGrid.Visibility = Visibility.Visible;
+
+            if (CurrentTournament.Teams.Count > 0)
+                TeamsList.ItemsSource = CurrentTournament.Teams;
+            else
+                SetNotification("Brak drużyn!");
+            TeamsList.Items.Refresh();
+
+            //PlayersListView.ItemsSource = CurrentTournament.Teams;
+        }
+
+        /* SUBMIT BUTTONS */
 
         private void TournamentCreateButton_Click(object sender, RoutedEventArgs e)
         {
@@ -93,21 +135,40 @@ namespace SportCupManager
         private void TournamentLoad_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button)
+            {
                 CurrentlyLoaded.Content = "Wczytany turniej: " + (string)button.Tag;
+                CurrentTournament = new Tournament((string)button.Tag, 1);
+            }
             else
-                CurrentlyLoaded.Content = "Nie wczytano turnieju!";
+                CurrentlyLoaded.Content = "";
         }
 
-        private void MenuTeam_Create_Click(object sender, RoutedEventArgs e)
+        private void PlayerCreateButton_Click(object sender, RoutedEventArgs e)
         {
-            CollapseAllGrids();
-            TeamCreateGrid.Visibility = Visibility.Visible;
+            Player player = new Player(PlayerFirstName.Text, PlayerSurName.Text, Convert.ToByte(PlayerAge.Text), Convert.ToByte(PlayerNumber.Text));
         }
 
-        private void MenuTeam_Edit_Click(object sender, RoutedEventArgs e)
+        private void TournamentEditButton_Click(object sender, RoutedEventArgs e)
         {
-            CollapseAllGrids();
-            TeamCreateGrid.Visibility = Visibility.Visible;
+            throw new NotImplementedException();
+        }
+
+        private void TeamCreateButton_Click(object sender, RoutedEventArgs e)
+        {
+            string name = Create_TeamName.Text;
+            ITeam team;
+            switch(CurrentTournament.Dyscypline)
+            {
+                case "volleyball": team = new VolleyballTeam(name, 1); break;
+                case "tugofwar": team = new TugOfWarTeam(name, 2); break;
+                case "dodgeball": team = new DodgeballTeam(name, 3); break;
+                default: team = null; break;
+            }
+
+            CurrentTournament.AddTeam(team);
+            SetNotification("Pomyślnie dodano drużynę");
+            Save.Tournament(CurrentTournament);
+            MenuTeam_Edit_Click(sender, e);
         }
     }
 
