@@ -108,6 +108,21 @@ namespace SportCupManager
             //PlayersListView.ItemsSource = CurrentTournament.Teams;
         }
 
+        /* SUBMENU */
+
+        private void TeamEdit_Click(object sender, RoutedEventArgs e)
+        {
+            CollapseAllGrids();
+            TeamEditGrid.Visibility = Visibility.Visible;
+            Team team = CurrentTournament.FindTeam((string)((Button)sender).Tag);
+
+            Edit_TeamName.Text = team.Name;
+            PlayersListView.ItemsSource = team.listPlayers;
+
+            PlayerCreateButton.Tag = (string)((Button)sender).Tag;
+            TeamEditButton.Tag = (string)((Button)sender).Tag;
+        }
+
         /* SUBMIT BUTTONS */
 
         private void TournamentCreateButton_Click(object sender, RoutedEventArgs e)
@@ -153,7 +168,22 @@ namespace SportCupManager
 
         private void PlayerCreateButton_Click(object sender, RoutedEventArgs e)
         {
-            Player player = new Player(PlayerFirstName.Text, PlayerSurName.Text, Convert.ToByte(PlayerAge.Text), Convert.ToByte(PlayerNumber.Text));
+            try
+            {
+                Player player = new Player(PlayerFirstName.Text, PlayerSurName.Text, Convert.ToByte(PlayerAge.Text), Convert.ToByte(PlayerNumber.Text));
+                Team team = CurrentTournament.FindTeam((string)((Button)sender).Tag);
+                team.AddPlayer(player);
+                PlayersListView.Items.Refresh();
+                Save.Tournament(CurrentTournament);
+            }
+            catch (FormatException)
+            {
+                SetNotification("Wiek i numer muszą być liczbą!");
+            }
+            catch (OverflowException)
+            {
+                SetNotification("Wiek i numer nie mogą być tak duże!");
+            }
         }
 
         private void TournamentEditButton_Click(object sender, RoutedEventArgs e)
@@ -164,7 +194,7 @@ namespace SportCupManager
         private void TeamCreateButton_Click(object sender, RoutedEventArgs e)
         {
             string name = Create_TeamName.Text;
-            ITeam team;
+            Team team;
             switch(CurrentTournament.Dyscypline)
             {
                 case "volleyball": team = new VolleyballTeam(name, 1); break;
@@ -182,8 +212,16 @@ namespace SportCupManager
         private void TeamDelete_Click(object sender, RoutedEventArgs e)
         {
             string name = (string)((Button)sender).Tag;
-            ITeam team = CurrentTournament.FindTeam(name);
+            Team team = CurrentTournament.FindTeam(name);
             CurrentTournament.RemoveTeam(team);
+            Save.Tournament(CurrentTournament);
+            MenuTeam_Edit_Click(sender, e);
+        }
+
+        private void TeamEditButton_Click(object sender, RoutedEventArgs e)
+        {
+            Team team = CurrentTournament.FindTeam((string)((Button)sender).Tag);
+            team.Name = Edit_TeamName.Text;
             Save.Tournament(CurrentTournament);
             MenuTeam_Edit_Click(sender, e);
         }

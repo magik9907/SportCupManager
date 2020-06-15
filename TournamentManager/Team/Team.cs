@@ -16,7 +16,7 @@ namespace TournamentManager
             
             public string Name { get; set; }
             [JsonProperty]
-            protected List<TPerson.Player> listPlayers = new List<TPerson.Player>();
+            public List<TPerson.Player> listPlayers = new List<TPerson.Player>();
             public int MatchesPlayed { get; set; }
             public int MatchesWon { get; set; }
 

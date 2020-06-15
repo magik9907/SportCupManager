@@ -8,7 +8,7 @@ namespace TournamentManager
     {
         public class Player : Person
         {
-            private Byte Number { get; set; }
+            public Byte Number { get; set; }
 
             public Player(string firstName, string lastName, Byte age, Byte number) : base(firstName, lastName, age)
             {
