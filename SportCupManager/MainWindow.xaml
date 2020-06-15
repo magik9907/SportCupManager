@@ -70,16 +70,18 @@
                     <Label Content="Dodaj Zawodnika" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" FontSize="22"/>
                     <Button Name="PlayerCreateButton" Content="Stwórz Zawodnika" HorizontalAlignment="Left" Margin="10,274,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="154" Click="PlayerCreateButton_Click"/>
                     <Label Content="Lista Zawodników" HorizontalAlignment="Center" Margin="0,111,0,0" VerticalAlignment="Top" FontSize="22"/>
-                    <ListView Margin="218,150,218,126" Name="PlayersListView">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Firstname}" Header="Firstname" Width="65"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Lastname}" Header="Lastname" Width="65"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Age}" Header="Age" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="Number" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <ScrollViewer>
+                        <ListView Margin="218,150,218,126" Name="PlayersListView">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Firstname}" Header="Firstname" Width="65"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Lastname}" Header="Lastname" Width="65"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Age}" Header="Age" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="Number" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </ScrollViewer>
                 </Grid>
             </Grid>
         </ScrollViewer>

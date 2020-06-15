@@ -137,7 +137,7 @@ namespace SportCupManager
                 default: dyscypline = TournamentDyscypline.volleyball; break;
             }
 
-            ITournament t = new Tournament(name, (int)dyscypline);
+            ITournament t = new Tournament(name, dyscypline);
             Save.Tournament(t);
             MenuTournament_Load_Click(sender, e);
         }
@@ -160,7 +160,7 @@ namespace SportCupManager
             if (sender is Button button)
             {
                 CurrentlyLoaded.Content = "Wczytany turniej: " + (string)button.Tag;
-                CurrentTournament = new Tournament((string)button.Tag, 1);
+                CurrentTournament = new Tournament((string)button.Tag, TournamentDyscypline.volleyball);
             }
             else
                 CurrentlyLoaded.Content = "";
@@ -197,9 +197,9 @@ namespace SportCupManager
             Team team;
             switch(CurrentTournament.Dyscypline)
             {
-                case "volleyball": team = new VolleyballTeam(name, 1); break;
-                case "tugofwar": team = new TugOfWarTeam(name, 2); break;
-                case "dodgeball": team = new DodgeballTeam(name, 3); break;
+                case TournamentDyscypline.volleyball: team = new VolleyballTeam(name, 1); break;
+                case TournamentDyscypline.tugofwar: team = new TugOfWarTeam(name, 2); break;
+                case TournamentDyscypline.dodgeball: team = new DodgeballTeam(name, 3); break;
                 default: team = null; break;
             }
 
