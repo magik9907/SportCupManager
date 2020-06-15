@@ -14,7 +14,7 @@ namespace TournamentManager
                 throw new TException.TournamentMustBeDefine();
             }
 
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + t.Name;
+            var path = Path(t.Name);
 
             var name = t.Name;
 
@@ -29,8 +29,8 @@ namespace TournamentManager
         public static void Referees(List<TPerson.Referee> r = null, string name = null)
         {
             IsNameAndObject(name, r, "TPerson.Referee");
-            
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+
+            var path = Path(name);
 
             SerializeObject(path, "referees.json", r);
         }
@@ -38,8 +38,8 @@ namespace TournamentManager
         public static void Teams(List<TTeam.ITeam> t = null, string name = null)
         {
             IsNameAndObject(name, t, "TTeam.ITeam");
-            
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+
+            var path = Path(name);
 
             SerializeObject(path, "teams.json", t);
         }
@@ -47,8 +47,8 @@ namespace TournamentManager
         public static void League(TRound.League l = null, string name = null)
         {
             IsNameAndObject(name, l, "TRound.League");
-            
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+
+            var path = Path(name);
 
             SerializeObject(path, "league.json", l);
         }
@@ -56,11 +56,17 @@ namespace TournamentManager
         public static void PlayOff(TRound.PlayOff p = null, string name = null)
         {
             IsNameAndObject(name, p, "TRound.PlayOff");
-            
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+
+            var path = Path(name); 
 
             SerializeObject(path, "playoff.json", p);
         }
+
+        private static string Path(string name)
+        {
+           return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+        }
+
 
         private static void SerializeObject(string path, string fileName, Object obj)
         {
