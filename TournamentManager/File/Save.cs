@@ -17,13 +17,49 @@ namespace TournamentManager
             var path = Path(t.Name);
 
             var name = t.Name;
+            try
+            {
+                SerializeObject(path, "tournament.json", t);
 
-            SerializeObject(path, "tournament.json", t);
-            Referees(t.Referees, name);
-            Teams(t.Teams, name);
-            League(t.League, name);
-            PlayOff(t.PlayOff, name);
+                try
+                {
+                    Referees(t.Referees, name);
+                }
+                catch (Exception e)
+                {
 
+                }
+                try
+                {
+                    Teams(t.Teams, name);
+                }
+                catch (Exception e) 
+                {
+                
+                }
+
+                try
+                {
+                    League(t.League, name);
+                }catch(Exception e)
+                {
+
+                }
+                try
+                {
+
+
+                    PlayOff(t.PlayOff, name);
+                }catch(Exception e)
+                {
+
+                }
+                
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         public static void Referees(List<TPerson.Referee> r = null, string name = null)
