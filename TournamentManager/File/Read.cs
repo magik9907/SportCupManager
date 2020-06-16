@@ -23,20 +23,16 @@ public class Read
                 t.AddReferee(x.Value);
             }
 
-            /*
-             * 
-             * 
-            * https://stackoverflow.com/questions/30384599/deserialize-json-array-of-dictionaries-in-c-sharp
-     * maybe help ( I will do it
-     * 
-     * 
+        
   
             Dictionary<int, TTeam.ITeam> teamDic = Team(path,enumType);
-            foreach (var x in refDic)
+            foreach (var x in teamDic)
             {
-                t.AddReferee(x.Value);
+                t.AddTeam(x.Value);
             }
-    */
+
+            
+
 
             return t;
         }
@@ -57,18 +53,13 @@ public class Read
         }
 
 
-        /*
         public static Dictionary<int, TTeam.ITeam> Team(string path, TEnum.TournamentDyscypline type)
         {
             var str = File.ReadAllText(path + "\\teams.json");
-            List<dynamic> teamDesc;
-            
-            
-                teamDesc = JsonConvert.DeserializeObject<dynamic>(str, new JsonSerializerSettings()
-                {
-                    CheckAdditionalContent = true,
-                    
-                }); ;
+            List<TeamTempl> teamDesc;
+
+
+            teamDesc = JsonConvert.DeserializeObject<List<TeamTempl>>(str );
             
             List<TTeam.ITeam> team = new List<TTeam.ITeam>();
             Dictionary<int, TTeam.ITeam> teamDic = new Dictionary<int, TTeam.ITeam>();
@@ -77,7 +68,7 @@ public class Read
                 case TEnum.TournamentDyscypline.volleyball:
                     for (int i = 0; i < teamDesc.Count; i++)
                     {
-                        teamDic.Add(int.Parse(teamDesc[i]["Id"]), new TTeam.VolleyballTeam(teamDesc[i]["Name"], int.Parse(teamDesc[i]["Id"]), Players(teamDesc[i]["listPLayers"])));
+                        teamDic.Add(teamDesc[i].Id, new TTeam.VolleyballTeam(teamDesc[i].Name,teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
                     }
                     break;
 
@@ -86,24 +77,42 @@ public class Read
             }
             return teamDic;
         }
-
-        public static List<TPerson.Player> Players(string json)
+        
+        private static List<TPerson.Player> Players(List<TeamTempl.Player> playerDesc)
         {
-            List<Dictionary<string, string>> playerDesc = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(json);
+            
             List<TPerson.Player> players = new List<TPerson.Player>();
             
                     for (int i = 0; i < playerDesc.Count; i++)
                     {
-                        players.Add( new TPerson.Player(playerDesc[i]["Firstname"], playerDesc[i]["Lastname"], byte.Parse(playerDesc[i]["Age"]), byte.Parse(playerDesc[i]["Number"])));
+                        players.Add( new TPerson.Player(playerDesc[i].Firstname, playerDesc[i].Lastname, playerDesc[i].Age, playerDesc[i].Number));
                     }
             return players;
         }
         
-        */
 
         private static string Path(string name)
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+        }
+
+        private class TeamTempl
+        {
+            public List<Player> listPlayers;
+            public int Points;
+            public int ScoreDiff;
+            public int Id;
+            public string Name;
+            public int MatchesPlayed;
+            public int MatchesWon;
+
+            public class Player
+            {
+                public byte Number;
+                public byte Age;
+                public string Firstname;
+                public string Lastname;
+            }
         }
     }
 }
