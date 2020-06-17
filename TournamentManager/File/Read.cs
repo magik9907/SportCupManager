@@ -88,20 +88,6 @@ namespace TournamentManager
                     }
                     break;
 
-                case TEnum.TournamentDyscypline.dodgeball:
-                    for (int i = 0; i < teamDesc.Count; i++)
-                    {
-                        teamDic.Add(teamDesc[i].Id, new TTeam.DodgeballTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
-                    }
-                    break;
-
-                case TEnum.TournamentDyscypline.tugofwar:
-                    for (int i = 0; i < teamDesc.Count; i++)
-                    {
-                        teamDic.Add(teamDesc[i].Id, new TTeam.TugOfWarTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
-                    }
-                    break;
-
                 default:
                     throw new TException.TournamentDyscyplineNotIdentify();
             }

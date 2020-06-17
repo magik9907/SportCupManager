@@ -19,6 +19,8 @@ namespace TournamentManager
             [JsonProperty("Rounds")]
             private List<Round> rounds = new List<Round>(2);
             private List<TPerson.Referee> referees;
+            public List<Round> Rounds
+            { get { return rounds; } }
             public PlayOff(List<TTeam.ITeam> t, List<TPerson.Referee> referees, int[] startDate)
             {
                 //semis and finals will be generated on two consecutive days

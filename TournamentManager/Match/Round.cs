@@ -19,6 +19,12 @@ namespace TournamentManager
             private List<TMatch.Match> listMatches = new List<TMatch.Match>();
             private int[] date = new int[3];
             private string roundName;
+            public int[] Date
+            { get { return date; } }
+            public string RoundName
+            {
+                get { return roundName; }
+            }
             public List<TMatch.Match> ListMatches
             {
                 get { return listMatches; }
@@ -26,29 +32,33 @@ namespace TournamentManager
             public Round(string name, int[] date)
             {
                 if (date.Length != 3)
-                    throw new WrongDateFormatException();
+                    throw new WrongDateFormatException(date);
                 if (date[1] > 12 || date[1] <= 0)
-                    throw new WrongMonthException();
+                    throw new WrongMonthException(date);
                 if (date[0] > MaxDays(date) || date[0] <= 0)
-                    throw new WrongDayException();
+                    throw new WrongDayException(date);
                 this.date = date;
                 roundName = name;
             }
-
-            public string RoundName
+            public Round(Round round)
             {
-                get { return roundName; }
+                this.date = round.date;
+                this.listMatches = round.listMatches;
+                this.roundName = round.roundName;
             }
-
+            public Round CreateCopy()
+            {
+                return new Round(this);
+            }
             public void AddMatch(TMatch.Match match)
             {
                 //this checks whether or not one of the teams specified are already playing someone this round
                 for (int i = 0; i < listMatches.Count; i++)
                 {
-                    if (listMatches[i].isPlaying(match.TeamA))
-                        throw new AlreadyPlayingInRoundException(match, match.TeamA);
-                    if (listMatches[i].isPlaying(match.TeamB))
-                        throw new AlreadyPlayingInRoundException(match, match.TeamB);
+                    if (listMatches[i].IsPlaying(match.TeamA))
+                        throw new AlreadyPlayingInRoundException(CreateCopy(), match, match.TeamA);
+                    if (listMatches[i].IsPlaying(match.TeamB))
+                        throw new AlreadyPlayingInRoundException(CreateCopy(), match, match.TeamB);
                 }
                 listMatches.Add(match);
             }
@@ -58,10 +68,10 @@ namespace TournamentManager
             {
                 for (int i = 0; i < listMatches.Count; i++)
                 {
-                    if (listMatches[i].isPlaying(team))
+                    if (listMatches[i].IsPlaying(team))
                         return listMatches[i];
                 }
-                throw new TeamNotPlayingException(team);
+                throw new TeamNotPlayingException(CreateCopy(), team);
             }
 
             //check whether or not a team has played in this round
@@ -70,7 +80,7 @@ namespace TournamentManager
                 Boolean flag = false;
                 for (int i = 0; i < listMatches.Count; i++)
                 {
-                    flag = flag || listMatches[i].isPlaying(team);
+                    flag = flag || listMatches[i].IsPlaying(team);
                 }
                 return flag;
             }
@@ -78,7 +88,7 @@ namespace TournamentManager
             public Boolean IsScheduled(TTeam.ITeam team1, TTeam.ITeam team2)
             {
                 for (int i = 0; i < listMatches.Count; i++)
-                    if (listMatches[i].isPlaying(team1) && listMatches[i].isPlaying(team2))
+                    if (listMatches[i].IsPlaying(team1) && listMatches[i].IsPlaying(team2))
                         return true;
                 return false;
             }
