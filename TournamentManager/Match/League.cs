@@ -21,6 +21,7 @@ namespace TournamentManager
             public List<Round> Rounds
             {
                 get { return rounds; }
+                set { rounds = value; }
             }
             [JsonIgnore]
             public List<TTeam.ITeam> Teams
@@ -29,9 +30,20 @@ namespace TournamentManager
                 {
                     return teams; 
                 }
+                set
+                {
+                    teams = value;
+                }
             }
             private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
             private List<TPerson.Referee> referees = new List<TPerson.Referee>();
+            public List<TPerson.Referee> Referees
+            {
+                set
+                {
+                    referees = value;
+                }
+            }
             //generate league object 
             //is used to read from file in Read class
             //DON'T REMOVE!!!

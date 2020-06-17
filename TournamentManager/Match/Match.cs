@@ -89,6 +89,7 @@ namespace TournamentManager
 
 		public class TugOfWarMatch : Match
 		{
+			[JsonProperty]
 			private float matchLength = 0;
 			//constructor uses a constructor of its superclass
 			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
@@ -185,7 +186,9 @@ namespace TournamentManager
 			[JsonConverter(typeof(RefereeIdConverter))]
 			private List<TPerson.Referee> assistantReferees = new List<TPerson.Referee>(2);
 			//the score means points gained by team in each set
+			[JsonProperty]
 			private int[] scoreTeamA = new int[3] {0, 0, 0};
+			[JsonProperty]
 			private int[] scoreTeamB = new int[3] {0, 0, 0};
 			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r)
 			{
