@@ -18,6 +18,12 @@ using TournamentManager;
 using TournamentManager.TEnum;
 using TournamentManager.TPerson;
 using TournamentManager.TTeam;
+<<<<<<< HEAD
+using TournamentManager.TMatch;
+using TournamentManager.TRound;
+using System.Text.RegularExpressions;
+=======
+>>>>>>> 0031a025a9dfd3bf6e5f776963b446a198b6fb67
 
 namespace SportCupManager
 {
@@ -108,6 +114,33 @@ namespace SportCupManager
             //PlayersListView.ItemsSource = CurrentTournament.Teams;
         }
 
+        private void MenuMatch_Create_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentTournament == null)
+            {
+                SetNotification("Nie wybrano turnieju!");
+                return;
+            }
+            CollapseAllGrids();
+            MatchCreateGrid.Visibility = Visibility.Visible;
+        }
+
+        private void MenuMatch_List_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentTournament == null)
+            {
+                SetNotification("Nie wybrano turnieju!");
+                return;
+            }
+            CollapseAllGrids();
+            RoundListGrid.Visibility = Visibility.Visible;
+            if (CurrentTournament.League.Rounds.Count > 1)
+                RoundList.ItemsSource = CurrentTournament.League.Rounds;
+            else
+                SetNotification("Brak rund!");
+            RoundList.Items.Refresh();
+        }
+
         /* SUBMENU */
 
         private void TeamEdit_Click(object sender, RoutedEventArgs e)
@@ -188,7 +221,16 @@ namespace SportCupManager
 
         private void TournamentEditButton_Click(object sender, RoutedEventArgs e)
         {
+<<<<<<< HEAD
+            string name = (string)((Button)sender).Tag;
+            string changedName = Edit_TournamentName.Text;
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\";
+            if(path + name != path + changedName)
+                Directory.Move(path + name, path + changedName);
+            MenuTournament_Load_Click(sender, e);
+=======
             throw new NotImplementedException();
+>>>>>>> 0031a025a9dfd3bf6e5f776963b446a198b6fb67
         }
 
         private void TeamCreateButton_Click(object sender, RoutedEventArgs e)
@@ -225,6 +267,74 @@ namespace SportCupManager
             Save.Tournament(CurrentTournament);
             MenuTeam_Edit_Click(sender, e);
         }
+<<<<<<< HEAD
+
+        private void RefereeCreateButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ITournament tour = Read.Tournament((string)((Button)sender).Tag);
+                int id = tour.Referees.Count + 1;
+                Referee referee = new Referee(RefereeFirstName.Text, RefereeSurName.Text, Convert.ToByte(RefereeAge.Text), id);
+                tour.AddReferee(referee);
+                RefereesListView.Items.Refresh();
+                Save.Tournament(tour);
+            }
+            catch (FormatException)
+            {
+                SetNotification("Wiek musi być liczbą!");
+            }
+            catch (OverflowException)
+            {
+                SetNotification("Wiek nie może być tak duży!");
+            }
+        }
+
+        private void MatchCreateButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(CurrentTournament.Teams.Count < 5)
+            {
+                SetNotification("Za mało drużyn w turnieju!");
+                return;
+            }
+            
+            if(CurrentTournament.Dyscypline == TournamentDyscypline.volleyball)
+            {
+                if (CurrentTournament.Referees.Count < 3 * (CurrentTournament.Teams.Count / 2))
+                {
+                    SetNotification("Brak sędziów w turnieju!");
+                    return;
+                }
+            }
+            else
+            {
+                if (CurrentTournament.Referees.Count < (CurrentTournament.Teams.Count / 2))
+                {
+                    SetNotification("Brak sędziów w turnieju!");
+                    return;
+                }
+            }
+            
+
+            DateTime date = Date.SelectedDate.Value;
+            int[] formattedDate = { date.Day, date.Month, date.Year };
+            int space;
+            try
+            {
+                space = Int32.Parse(SpaceBetweenMatches.Text);
+            }
+            catch(FormatException)
+            {
+                SetNotification("Dni między meczami musi być liczbą!");
+                return;
+            }
+
+            CurrentTournament.SetAutoLeague(formattedDate, space);
+            Save.Tournament(CurrentTournament);
+            MenuMatch_List_Click(sender, e);
+        }
+=======
+>>>>>>> 0031a025a9dfd3bf6e5f776963b446a198b6fb67
     }
 
     public class TournamentTemporary
