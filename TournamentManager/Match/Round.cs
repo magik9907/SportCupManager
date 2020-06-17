@@ -16,7 +16,7 @@ namespace TournamentManager
     {
         public class Round
         {
-            private List<TMatch.Match> listMatches = new List<TMatch.Match>();
+            public List<TMatch.Match> listMatches = new List<TMatch.Match>();
             private int[] date = new int[3];
             private string roundName;
             public List<TMatch.Match> ListMatches

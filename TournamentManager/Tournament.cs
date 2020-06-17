@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using TournamentManager.TException;
 
 /// <summary>
 ///     main name space 
@@ -178,7 +179,6 @@ namespace TournamentManager
                 TDException("tournament dyscypline");
             this.name = name;
             this.dyscypline = dyscypline;
-
         }
 
         public void AddReferee(TPerson.Referee referee = null)
