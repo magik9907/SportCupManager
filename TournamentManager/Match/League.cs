@@ -123,7 +123,7 @@ namespace TournamentManager
                          * 2. Are they already playing against someone else in that round (checked by round)
                          */
                         if (rounds[j].IsScheduled(match.TeamA, match.TeamB))
-                            throw new AlreadyPlayingInLeagueException(CreateCopy(), match);
+                            throw new AlreadyPlayingInLeagueException( match);
                         if (!match.isPlaying(teams[i]) && rounds[j] != round)
                         {
                             if (rounds[j].IsScheduled(teams[i], match.TeamA))
@@ -141,7 +141,7 @@ namespace TournamentManager
                         }
                     }
                     if (!(flagA || flagB) || !(flagAnB || (flagA && flagB)))
-                        throw new ImpossibleScheduleException(CreateCopy());
+                        throw new ImpossibleScheduleException();
                 }
                 round.AddMatch(match);
             }
