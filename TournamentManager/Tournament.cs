@@ -87,6 +87,7 @@ namespace TournamentManager
         TRound.League League
         {
             get;
+            set;
         }
 
         /// <summary>
@@ -108,7 +109,10 @@ namespace TournamentManager
         /// <summary>
         /// return playoff round object
         /// </summary>
-        TRound.PlayOff PlayOff { get; }
+        TRound.PlayOff PlayOff { 
+            get;
+            set;
+        }
     }
 
     /// <summary>
@@ -282,6 +286,11 @@ namespace TournamentManager
             {
                 return league;
             }
+
+            set
+            {
+                league = value;
+            }
         }
         [JsonIgnore]
         public TRound.PlayOff PlayOff
@@ -289,6 +298,10 @@ namespace TournamentManager
             get
             {
                 return playoff;
+            }
+            set
+            {
+                playoff = value;
             }
         }
 

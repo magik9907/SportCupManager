@@ -22,12 +22,17 @@ namespace TournamentManager
             {
                 get { return rounds; }
             }
+            [JsonIgnore]
             public List<TTeam.ITeam> Teams
             {
                 get { return teams; }
             }
             private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
             private List<TPerson.Referee> referees = new List<TPerson.Referee>();
+            //generate league object 
+            //is used to read from file in Read class
+            //DON'T REMOVE!!!
+            public League() { }
             public League(List<TTeam.ITeam> t, List<TPerson.Referee> referees)
             {
                 int refsRequired = 1;

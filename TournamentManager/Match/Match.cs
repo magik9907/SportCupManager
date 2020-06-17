@@ -18,16 +18,23 @@ namespace TournamentManager
 			private TTeam.ITeam teamB;
 			private TTeam.ITeam winner = null;
 			[JsonConverter(typeof(TeamIdConverter))]
-			public TTeam.ITeam TeamA { get { return teamA; } }
+			public TTeam.ITeam TeamA { get { return teamA; } set { teamA = value; } }
 
 			[JsonConverter(typeof(TeamIdConverter))]
-			public TTeam.ITeam TeamB { get { return teamB; } }
+			public TTeam.ITeam TeamB { get { return teamB; } set { teamB = value; } }
 
 			[JsonConverter(typeof(TeamIdConverter))]
-			public TTeam.ITeam Winner { get { return winner; } }
+			public TTeam.ITeam Winner { get { return winner; } set { winner = value; } }
 			[JsonProperty]
 			[JsonConverter(typeof(RefereeIdConverter))]
-			private TPerson.Referee RefA;
+			private TPerson.Referee RefA ;
+
+			public TPerson.Referee Referee { set
+                {
+					RefA = value;
+                } 
+			}
+
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
 				if (a == b)
@@ -159,6 +166,10 @@ namespace TournamentManager
 			{
 				SetReferees(r);
 			}
+			private List<TPerson.Referee> AssistantReferees
+            {
+				set { assistantReferees = value; }
+            }
 			public override void SetReferees(List<TPerson.Referee> r)
 			{
 				

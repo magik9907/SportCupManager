@@ -3,39 +3,55 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
+using TournamentManager.TRound;
+using System.Runtime.Serialization;
 
 namespace TournamentManager
 {
 
-public class Read
+    public class Read
     {
-        public static ITournament Tournament( string name )
+        public static ITournament Tournament(string name)
         {
             var path = Path(name);
             var str = File.ReadAllText(path + "\\tournament.json");
-        
+
             Dictionary<string, string> tourDesc = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
-            TEnum.TournamentDyscypline enumType = (TEnum.TournamentDyscypline) int.Parse(tourDesc["Dyscypline"]);
+            TEnum.TournamentDyscypline enumType = (TEnum.TournamentDyscypline)int.Parse(tourDesc["Dyscypline"]);
             ITournament t = new Tournament(tourDesc["Name"], enumType);
+
+
             Dictionary<int, TPerson.Referee> refDic = Referee(path);
-            foreach(var x in refDic)
+            foreach (var x in refDic)
             {
                 t.AddReferee(x.Value);
             }
 
-        
-  
-            Dictionary<int, TTeam.ITeam> teamDic = Team(path,enumType);
+
+            Dictionary<int, TTeam.ITeam> teamDic = Team(path, enumType);
             foreach (var x in teamDic)
             {
                 t.AddTeam(x.Value);
             }
 
-            
+            t.League = League(path, refDic, teamDic);
 
 
             return t;
         }
+
+
+        public static TRound.League League(string path, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams)
+        {
+            TRound.League l = new TRound.League();
+
+            var json = (JsonConvert.DeserializeObject<Dictionary<string, List<RoundTempl>>>(File.ReadAllText(path + "\\league.json")))["Rounds"];
+
+
+
+            return l;
+        }
+       
 
         public static Dictionary<int, TPerson.Referee> Referee(string path)
         {
@@ -132,11 +148,17 @@ public class Read
         private class RoundTempl
         {
             public string RoundName;
-            public List<Match> matches;
+            public List<MatchTempl> ListMatches;
             
         }
-        private class Match
+        private class MatchTempl
         {
+            public int[] assistantReferees;
+
+            public int TeamA;
+            public int TeamB;
+            public int Winner;
+            public int RefA;
 
 
         }

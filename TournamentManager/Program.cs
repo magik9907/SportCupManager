@@ -10,9 +10,11 @@ namespace TournamentManager
             TTeam.ITeam te;
             ITournament t = null;
             int i;
-            var input = Console.ReadKey();
-            switch (input.Key) {
-            case ConsoleKey.Q:
+           // var input = Console.ReadKey();
+            //    switch (input.Key) {
+            switch (ConsoleKey.Q)
+            {
+                case ConsoleKey.Q:
             t = new Tournament("volley", TEnum.TournamentDyscypline.volleyball);
              i = 1;
             t.AddReferee(new TPerson.Referee("a", "a", 1, i));
