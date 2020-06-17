@@ -18,16 +18,21 @@ namespace TournamentManager
 			private TTeam.ITeam teamB;
 			private TTeam.ITeam winner = null;
 			[JsonConverter(typeof(TeamIdConverter))]
-			public TTeam.ITeam TeamA { get { return teamA; } }
+			public TTeam.ITeam TeamA { get { return teamA; } set { teamA = value; } }
 
 			[JsonConverter(typeof(TeamIdConverter))]
-			public TTeam.ITeam TeamB { get { return teamB; } }
+			public TTeam.ITeam TeamB { get { return teamB; } set { teamB = value; } }
 
 			[JsonConverter(typeof(TeamIdConverter))]
-			public TTeam.ITeam Winner { get { return winner; } }
+			public TTeam.ITeam Winner { get { return winner; } set { winner = value; } }
 			[JsonProperty]
 			[JsonConverter(typeof(RefereeIdConverter))]
 			private TPerson.Referee RefA;
+			public TPerson.Referee Referee { set
+                {
+					RefA = value;
+                } 
+			}
 			public Match(Match match)
             {
 				this.teamA = match.teamA;
@@ -84,6 +89,7 @@ namespace TournamentManager
 
 		public class TugOfWarMatch : Match
 		{
+			[JsonProperty]
 			private float matchLength = 0;
 			//constructor uses a constructor of its superclass
 			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
@@ -180,12 +186,18 @@ namespace TournamentManager
 			[JsonConverter(typeof(RefereeIdConverter))]
 			private List<TPerson.Referee> assistantReferees = new List<TPerson.Referee>(2);
 			//the score means points gained by team in each set
+			[JsonProperty]
 			private int[] scoreTeamA = new int[3] {0, 0, 0};
+			[JsonProperty]
 			private int[] scoreTeamB = new int[3] {0, 0, 0};
 			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r)
 			{
 				SetReferees(r);
 			}
+			private List<TPerson.Referee> AssistantReferees
+            {
+				set { assistantReferees = value; }
+            }
 			public VolleyballMatch(VolleyballMatch match) : base(match)
 			{
 				this.scoreTeamA = match.scoreTeamA;
