@@ -68,10 +68,7 @@ namespace TournamentManager
         /// <summary>
         /// return tournament mame;
         /// </summary>
-        string Name
-        {
-            get;
-        }
+        string Name { get; set; }
 
         /// <summary>
         /// return enum dyscypline of tournament
@@ -273,6 +270,7 @@ namespace TournamentManager
             {
                 return name;
             }
+            set { }
         }
 
         [JsonIgnore]

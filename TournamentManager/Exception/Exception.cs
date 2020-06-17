@@ -349,7 +349,7 @@ namespace TournamentManager
         //Exception if third set was played in spite of a team winning in two sets
         public class ThirdSetException : Exception
         {
-            private ITeam winner;
+            private TTeam.ITeam winner;
             public ThirdSetException(TTeam.ITeam winner)
             {
                 this.winner = winner;

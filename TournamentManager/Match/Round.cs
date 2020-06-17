@@ -40,7 +40,7 @@ namespace TournamentManager
                 get { return roundName; }
             }
 
-            public void AddMatch(TMatch.Match match)
+            public void AddMatch(TMatch.Match match, List<Referee> referees)
             {
                 //this checks whether or not one of the teams specified are already playing someone this round
                 for (int i = 0; i < listMatches.Count; i++)

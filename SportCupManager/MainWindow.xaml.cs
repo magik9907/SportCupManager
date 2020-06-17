@@ -27,7 +27,7 @@ namespace SportCupManager
     public partial class MainWindow : Window
     {
         List<TournamentTemporary> lists = new List<TournamentTemporary>();
-        Tournament CurrentTournament;
+        ITournament CurrentTournament;
         public MainWindow()
         {
             InitializeComponent();
@@ -119,8 +119,19 @@ namespace SportCupManager
             Edit_TeamName.Text = team.Name;
             PlayersListView.ItemsSource = team.listPlayers;
 
-            PlayerCreateButton.Tag = (string)((Button)sender).Tag;
-            TeamEditButton.Tag = (string)((Button)sender).Tag;
+            PlayerCreateButton.Tag = team.Name;
+            TeamEditButton.Tag = team.Name;
+        }
+
+        private void TournamentEdit_Click(object sender, RoutedEventArgs e)
+        {
+            CollapseAllGrids();
+            TournamentEditGrid.Visibility = Visibility.Visible;
+            TournamentNotification.Content = "";
+
+            Edit_TournamentName.Text = (string)((Button)sender).Tag;
+
+            TournamentEditButton.Tag = (string)((Button)sender).Tag;
         }
 
         /* SUBMIT BUTTONS */
@@ -128,6 +139,12 @@ namespace SportCupManager
         private void TournamentCreateButton_Click(object sender, RoutedEventArgs e)
         {
             string name = Create_TournamentName.Text;
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+            if(!Directory.Exists(path))
+            {
+                SetNotification("Ta nazwa turnieju jest już zajęta!");
+                return;
+            }
             TournamentDyscypline dyscypline;
             switch(Create_DyscyplineComboBox.Text)
             {
@@ -147,7 +164,7 @@ namespace SportCupManager
             string path = (string)((Button)sender).Tag;
             Directory.Delete(path, true);
             TournamentTemporary tour = new TournamentTemporary(path);
-            if (tour.getNameFromPath() == CurrentTournament.Name)
+            if (CurrentTournament != null && tour.getNameFromPath() == CurrentTournament.Name)
             {
                 CurrentTournament = null;
                 TournamentLoad_Click(null, e);
@@ -159,8 +176,9 @@ namespace SportCupManager
         {
             if (sender is Button button)
             {
-                CurrentlyLoaded.Content = "Wczytany turniej: " + (string)button.Tag;
-                CurrentTournament = new Tournament((string)button.Tag, TournamentDyscypline.volleyball);
+                CurrentTournament = Read.Tournament((string)button.Tag);
+                CurrentlyLoaded.Content = "Wczytany turniej: " + CurrentTournament.Name + "(" + CurrentTournament.Dyscypline + ")";
+                
             }
             else
                 CurrentlyLoaded.Content = "";
@@ -188,18 +206,21 @@ namespace SportCupManager
 
         private void TournamentEditButton_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            string name = (string)((Button)sender).Tag;
+            ITournament tour = Read.Tournament(name);
+            tour.Name = Edit_TeamName.Text;
         }
 
         private void TeamCreateButton_Click(object sender, RoutedEventArgs e)
         {
             string name = Create_TeamName.Text;
-            Team team;
+            int id = CurrentTournament.Teams.Count + 1;
+            ITeam team;
             switch(CurrentTournament.Dyscypline)
             {
-                case TournamentDyscypline.volleyball: team = new VolleyballTeam(name, 1); break;
-                case TournamentDyscypline.tugofwar: team = new TugOfWarTeam(name, 2); break;
-                case TournamentDyscypline.dodgeball: team = new DodgeballTeam(name, 3); break;
+                case TournamentDyscypline.volleyball: team = new VolleyballTeam(name, id); break;
+                case TournamentDyscypline.tugofwar: team = new TugOfWarTeam(name, id); break;
+                case TournamentDyscypline.dodgeball: team = new DodgeballTeam(name, id); break;
                 default: team = null; break;
             }
 
