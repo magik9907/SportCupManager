@@ -79,6 +79,61 @@ namespace TournamentManager
             }
         }
 
+        public abstract class ObjectCreationException : Exception
+        { }
+
+        public abstract class MatchRuntimeException : Exception
+        {
+            protected TMatch.Match match;
+            public MatchRuntimeException(TMatch.Match match)
+            {
+                this.match = match;
+            }
+            public TMatch.Match RecreateMatch()
+            {
+                return match;
+            }
+        }
+
+        public abstract class RoundRuntimeException : Exception
+        {
+            protected TRound.Round round;
+            public RoundRuntimeException(TRound.Round round)
+            {
+                this.round = round;
+            }
+            public TRound.Round RecreateRound()
+            {
+                return round;
+            }
+        }
+
+        public abstract class DateException : ObjectCreationException
+        {
+            protected int[] date;
+            public DateException(int[] date)
+            {
+                this.date = date;
+            }
+        }
+
+        public abstract class LeagueRuntimeException : Exception
+        {
+            protected TRound.League league;
+            public LeagueRuntimeException(TRound.League league)
+            {
+                this.league = league;
+            }
+            public TRound.League RecreateLeague()
+            {
+                return league;
+            }
+        }
+
+        public abstract class PlayOffRuntimeException : Exception
+        { }
+
+
         public class AlreadyFinishedException : Exception
         {
             private TTeam.ITeam winner;
@@ -96,7 +151,7 @@ namespace TournamentManager
         }
 
         //Exception if the number of referees is not enough to hold all of the games at once
-        public class NotEnoughRefereesException : Exception
+        public class NotEnoughRefereesException : ObjectCreationException
         {
             int refsRequired, refsNumber;
             public NotEnoughRefereesException(int refsNumber, int refsRequired)
@@ -111,8 +166,10 @@ namespace TournamentManager
         }
 
         //Exception if the schedule is impossible
-        public class ImpossibleScheduleException : Exception
+        public class ImpossibleScheduleException : LeagueRuntimeException
         {
+            public ImpossibleScheduleException(TRound.League league) : base(league)
+            { }
             public override string Message
             {
                 get
@@ -123,13 +180,14 @@ namespace TournamentManager
         }
 
         //Exception if the teams have already a match scheduled in the league
-        public class AlreadyPlayingInLeagueException : Exception
+        public class AlreadyPlayingInLeagueException : LeagueRuntimeException
         {
             private TMatch.Match match;
-            public AlreadyPlayingInLeagueException(TMatch.Match match)
+            public AlreadyPlayingInLeagueException(TRound.League league, TMatch.Match match) : base(league)
             {
                 this.match = match;
             }
+
             public override string Message
             {
                 get
@@ -140,7 +198,7 @@ namespace TournamentManager
         }
 
         //Exception if there were two exactly same teams in the team list
-        public class DuplicateTeamException : Exception
+        public class DuplicateTeamException : ObjectCreationException
         {
             private TTeam.ITeam team;
             public DuplicateTeamException(TTeam.ITeam team)
@@ -151,16 +209,16 @@ namespace TournamentManager
             {
                 get
                 {
-                    return "Team " + team.Name + " is already playing in the league";
+                    return "Team " + team.Name + " has been registered twice";
                 }
             }
         }
 
         //Exception if team is not playing in the round
-        public class TeamNotPlayingException : Exception
+        public class TeamNotPlayingException : RoundRuntimeException
         {
             private TTeam.ITeam team;
-            public TeamNotPlayingException(TTeam.ITeam team)
+            public TeamNotPlayingException(TRound.Round round, TTeam.ITeam team) : base(round)
             {
                 this.team = team;
             }
@@ -174,11 +232,11 @@ namespace TournamentManager
         }
 
         //Exception if team has already a match scheduled in this round
-        public class AlreadyPlayingInRoundException : Exception
+        public class AlreadyPlayingInRoundException : RoundRuntimeException
         {
             private TMatch.Match match;
             private TTeam.ITeam team;
-            public AlreadyPlayingInRoundException(TMatch.Match match, TTeam.ITeam team)
+            public AlreadyPlayingInRoundException(TRound.Round round, TMatch.Match match, TTeam.ITeam team) : base(round)
             {
                 this.match = match;
                 this.team = team;
@@ -196,49 +254,60 @@ namespace TournamentManager
         }
 
         //Exception if day doesn't fit in number of days in a specified month
-        public class WrongDayException : Exception
+        public class WrongDayException : DateException
         {
+            public WrongDayException(int[] date) : base(date)
+            { }
             public override string Message
             {
                 get
                 {
-                    return "Day number is out of expected range";
+                    return "Day number: " + date[0] + " is out of expected range";
                 }
             }
         }
 
         //Exception if month sent doesn't match number of months
-        public class WrongMonthException : Exception
+        public class WrongMonthException : DateException
         {
+            public WrongMonthException(int[] date) : base(date)
+            { }
             public override string Message
             {
                 get
                 {
-                    return "Month number is out of expected range";
+                    return "Month number: " + date[1] + " is out of expected range";
                 }
             }
         }
 
         //Exception if the table didn't have exactly 3 fields (for day, month and year)
-        public class WrongDateFormatException : Exception
+        public class WrongDateFormatException : DateException
         {
+            public WrongDateFormatException(int[] date) : base(date)
+            { }
             public override string Message
             {
                 get
                 {
-                    return "Date is in the wrong format";
+                    string tmp = "Date";
+                    for (int i = 0; i < date.Length; i++)
+                    {
+                        if (i == 0)
+                            tmp += tmp[0];
+                        else
+                            tmp += "/" + date[i];
+                    }
+                    return tmp + " is not in a supported format";
                 }
             }
         }
 
-        public abstract class MatchCreationException : Exception
-        { }
-
         //Exception if user wanted to set result of a match that was already played
-        public class MatchAlreadyPlayedException : MatchCreationException
+        public class MatchAlreadyPlayedException : MatchRuntimeException
         {
             TTeam.ITeam winner;
-            public MatchAlreadyPlayedException(TTeam.ITeam winner)
+            public MatchAlreadyPlayedException(TMatch.Match match,  TTeam.ITeam winner) : base(match)
             {
                 this.winner = winner;
             }
@@ -249,7 +318,7 @@ namespace TournamentManager
         }
 
         //Excpetion if teamA and teamB are the same team
-        public class IncorrectOpponentException : MatchCreationException
+        public class IncorrectOpponentException : ObjectCreationException
         {
             public override string Message
             {
@@ -261,8 +330,10 @@ namespace TournamentManager
         }
 
         //Exception if team set as winner is not playing in the match
-        public class WinnerIsNotPlayingException : Exception
+        public class WinnerIsNotPlayingException : MatchRuntimeException
         {
+            public WinnerIsNotPlayingException(TMatch.Match match) : base (match)
+            { }
             public override string Message
             {
                 get
@@ -273,8 +344,10 @@ namespace TournamentManager
         }
 
         //Exception if match length is not a number
-        public class NotNumberMatchLengthException : Exception
+        public class NotNumberMatchLengthException : MatchRuntimeException
         {
+            public NotNumberMatchLengthException(TMatch.Match match) : base(match)
+            { }
             public override string Message
             {
                 get
@@ -285,8 +358,10 @@ namespace TournamentManager
         }
 
         //Exception if match length is negative
-        public class NegativeMatchLengthException : Exception
+        public class NegativeMatchLengthException : MatchRuntimeException
         {
+            public NegativeMatchLengthException(TMatch.Match match) : base(match)
+            { }
             public override string Message
             {
                 get
@@ -297,8 +372,10 @@ namespace TournamentManager
         }
 
         //exception if number of players was not a whole number
-        public class NotIntPlayersException : Exception
+        public class NotIntPlayersException : MatchRuntimeException
         {
+            public NotIntPlayersException(TMatch.Match match) : base(match)
+            { }
             public override string Message
             {
                 get
@@ -309,8 +386,10 @@ namespace TournamentManager
         }
 
         //exception if number of players was negative
-        public class NegativePlayersNumberException : Exception
+        public class NegativePlayersNumberException : MatchRuntimeException
         {
+            public NegativePlayersNumberException(TMatch.Match match) : base(match)
+            { }
             public override string Message
             {
                 get
@@ -321,8 +400,10 @@ namespace TournamentManager
         }
 
         //Exception if number of players left was higher than players allowed on the field
-        public class TooHighPlayersLeftException : Exception
+        public class TooHighPlayersLeftException : MatchRuntimeException
         {
+            public TooHighPlayersLeftException(TMatch.Match match) : base(match)
+            { }
             public override string Message
             {
                 get
@@ -333,10 +414,10 @@ namespace TournamentManager
         }
 
         //Excpetion if name of a team passed to SetResult is not a name of any of the playing teams
-        public class WrongNameInStatException : Exception
+        public class WrongNameInStatException : MatchRuntimeException
         {
             private string name;
-            public WrongNameInStatException(string name)
+            public WrongNameInStatException(TMatch.Match match, string name) : base(match)
             {
                 this.name = name;
             }
@@ -347,10 +428,10 @@ namespace TournamentManager
         }
 
         //Exception if third set was played in spite of a team winning in two sets
-        public class ThirdSetException : Exception
+        public class ThirdSetException : MatchRuntimeException
         {
-            private ITeam winner;
-            public ThirdSetException(TTeam.ITeam winner)
+            private TTeam.ITeam winner;
+            public ThirdSetException(TMatch.Match match, TTeam.ITeam winner) : base(match)
             {
                 this.winner = winner;
             }
@@ -364,11 +445,11 @@ namespace TournamentManager
         }
 
         //Exception if set was played but no team has won
-        public class NoSetWinnerException : Exception
+        public class NoSetWinnerException : MatchRuntimeException
         {
             private int set;
             private int scoreRequired;
-            public NoSetWinnerException(int set)
+            public NoSetWinnerException(TMatch.Match match, int set) : base(match)
             {
                 this.set = set;
                 if (set != 3)
@@ -386,8 +467,10 @@ namespace TournamentManager
         }
 
         //Exception if score was not an integer value
-        public class NonIntScoreException : Exception
+        public class NonIntScoreException : MatchRuntimeException
         {
+            public NonIntScoreException(TMatch.Match match) : base(match)
+            { }
             public override string Message
             {
                 get
@@ -398,8 +481,10 @@ namespace TournamentManager
         }
 
         //Exception if score was negative
-        public class NegativeScoreException : Exception
+        public class NegativeScoreException : MatchRuntimeException
         {
+            public NegativeScoreException(TMatch.Match match) : base(match)
+            { }
             public override string Message
             {
                 get
@@ -410,8 +495,10 @@ namespace TournamentManager
         }
 
         //Exception if a score entered was over the maximum points in a set
-        public class TooHighScoreException : Exception
+        public class TooHighScoreException : MatchRuntimeException
         {
+            public TooHighScoreException(TMatch.Match match) : base(match)
+            { }
             public override string Message
             {
                 get
@@ -422,8 +509,10 @@ namespace TournamentManager
         }
 
         //Exception if string stat got separated into a different amount of strings than expected
-        public class WrongStatFormatException : Exception
+        public class WrongStatFormatException : MatchRuntimeException
         {
+            public WrongStatFormatException(TMatch.Match match) : base(match)
+            { }
             public override string Message
             {
                 get
@@ -434,10 +523,10 @@ namespace TournamentManager
         }
 
         //Exception if the team that was set as winner lost based on the points from stats
-        public class WrongWinnerException : Exception
+        public class WrongWinnerException : MatchRuntimeException
         {
             private TTeam.ITeam supposedWinner;
-            public WrongWinnerException(TTeam.ITeam winner)
+            public WrongWinnerException(TMatch.Match match, TTeam.ITeam winner) : base(match)
             {
                 supposedWinner = winner;
             }

@@ -28,6 +28,17 @@ namespace TournamentManager
 			[JsonProperty]
 			[JsonConverter(typeof(RefereeIdConverter))]
 			private TPerson.Referee RefA;
+			public Match(Match match)
+            {
+				this.teamA = match.teamA;
+				this.teamB = match.teamB;
+				this.winner = match.winner;
+				this.RefA = match.RefA;
+            }
+			public virtual Match CreateCopy()
+			{
+				return null;
+			}
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
 				if (a == b)
@@ -42,15 +53,15 @@ namespace TournamentManager
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
 				if (Winner != null)
-					throw new MatchAlreadyPlayedException(winner);
+					throw new MatchAlreadyPlayedException(CreateCopy(), winner);
 				if (winner == TeamA || winner == TeamB)
 					this.winner = winner;
 				else
-					throw new WinnerIsNotPlayingException();
+					throw new WinnerIsNotPlayingException(CreateCopy());
 			}
 			public virtual string GetStat() { return null; }
 			//It's just a basic try, can be changed if needed
-			public Boolean isPlaying(TTeam.ITeam team)
+			public Boolean IsPlaying(TTeam.ITeam team)
             {
 				return team == TeamA || team == TeamB;
             }
@@ -76,6 +87,14 @@ namespace TournamentManager
 			private float matchLength = 0;
 			//constructor uses a constructor of its superclass
 			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
+			public TugOfWarMatch(TugOfWarMatch match) : base(match)
+			{
+				this.matchLength = match.matchLength;
+			}
+			public override Match CreateCopy()
+			{
+				return new TugOfWarMatch(this);
+			}
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
@@ -87,13 +106,13 @@ namespace TournamentManager
 					if (matchLength < 0)
                     {
 						matchLength = 0;
-						throw new NegativeMatchLengthException();
+						throw new NegativeMatchLengthException(CreateCopy());
 					}
 				}
 				//float.parse throws FormatException if stat can't be converted
 				catch (FormatException)
 				{
-					throw new NotNumberMatchLengthException();
+					throw new NotNumberMatchLengthException(CreateCopy());
 				}
 				winner.SetMatchResult(true, stat);
 				if (winner == TeamA)
@@ -113,6 +132,14 @@ namespace TournamentManager
 			//we might need to change that name
 			private int winnerPlayersLeft = 0;
 			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
+			public DodgeballMatch(DodgeballMatch match) : base(match)
+			{
+				this.winnerPlayersLeft = match.winnerPlayersLeft;
+			}
+			public override Match CreateCopy()
+			{
+				return new DodgeballMatch(this);
+			}
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				base.SetResult(stat, winner);
@@ -123,17 +150,17 @@ namespace TournamentManager
 					if(winnerPlayersLeft <= 0)
 					{
 						winnerPlayersLeft = 0;
-						throw new NegativePlayersNumberException();
+						throw new NegativePlayersNumberException(CreateCopy());
 					}
 					if(winnerPlayersLeft > 6)
 					{
 						winnerPlayersLeft = 0;
-						throw new TooHighPlayersLeftException();
+						throw new TooHighPlayersLeftException(CreateCopy());
 					}
 				}
 				catch (FormatException)
 				{
-					throw new NotIntPlayersException();
+					throw new NotIntPlayersException(CreateCopy());
 				}
 				winner.SetMatchResult(true, stat);
 				if (winner == TeamA)
@@ -159,6 +186,15 @@ namespace TournamentManager
 			{
 				SetReferees(r);
 			}
+			public VolleyballMatch(VolleyballMatch match) : base(match)
+			{
+				this.scoreTeamA = match.scoreTeamA;
+				this.scoreTeamB = match.scoreTeamB;
+			}
+			public override Match CreateCopy()
+			{
+				return new VolleyballMatch(this);
+			}
 			public override void SetReferees(List<TPerson.Referee> r)
 			{
 				
@@ -173,7 +209,7 @@ namespace TournamentManager
 				string[] tmp = stat.Split(new string[] {". ", ", ", ": "}, StringSplitOptions.RemoveEmptyEntries);
 				//string should split into 8 smaller string (2 for names of teams, 6 in total for scores in sets)
 				if (tmp.Length != 8)
-					throw new WrongStatFormatException();
+					throw new WrongStatFormatException(CreateCopy());
 				for(int i = 0; i < 3; i++)
                 {
 					int scoreRequired;
@@ -200,12 +236,12 @@ namespace TournamentManager
 								if (TeamA.Name.Equals(tmp[0]) || TeamB.Name.Equals(tmp[0]))
                                 {
 									Console.WriteLine(TeamA.Name + " " + TeamB.Name);
-									throw new WrongNameInStatException(tmp[4]);
+									throw new WrongNameInStatException(CreateCopy(), tmp[4]);
 								}
 								else
                                 {
 									ToString();
-									throw new WrongNameInStatException(tmp[0]);
+									throw new WrongNameInStatException(CreateCopy(), tmp[0]);
 								}
                             }
 
@@ -220,7 +256,7 @@ namespace TournamentManager
 								scoreTeamA[j] = 0;
 								scoreTeamB[j] = 0;
 							}
-							throw new NegativeScoreException();
+							throw new NegativeScoreException(CreateCopy());
 						}
 						if (scoreTeamA[i] > scoreRequired || scoreTeamB[i] > scoreRequired)
 						{
@@ -229,12 +265,12 @@ namespace TournamentManager
 								scoreTeamA[j] = 0;
 								scoreTeamB[j] = 0;
 							}
-							throw new TooHighScoreException();
+							throw new TooHighScoreException(CreateCopy());
 						}
 					}
 					catch (FormatException)
 					{
-						throw new NonIntScoreException();
+						throw new NonIntScoreException(CreateCopy());
 					}
 					//Checking whether the score makes sense and reflects the winner
 					//if a team has won in 2 sets third one should end 0:0
@@ -248,7 +284,7 @@ namespace TournamentManager
 									scoreTeamA[j] = 0;
 									scoreTeamB[j] = 0;
 								}
-								throw new ThirdSetException(TeamA);
+								throw new ThirdSetException(CreateCopy(), TeamA);
 							}
 							else
 							{
@@ -257,14 +293,14 @@ namespace TournamentManager
 									scoreTeamA[j] = 0;
 									scoreTeamB[j] = 0;
 								}
-								throw new ThirdSetException(TeamB);
+								throw new ThirdSetException(CreateCopy(), TeamB);
 							}
 					}
 					//Checking if exactly one team has reached the required points
 					else
                     {
 						if (scoreTeamA[i] == scoreTeamB[i] || (scoreTeamA[i] < scoreRequired && scoreTeamB[i] < scoreRequired))
-							throw new NoSetWinnerException(i + 1);
+							throw new NoSetWinnerException(CreateCopy(), i + 1);
 						if (scoreTeamA[i] == scoreRequired)
 							resultCheck++;
 						if (scoreTeamB[i] == scoreRequired)
@@ -279,7 +315,7 @@ namespace TournamentManager
 						scoreTeamA[j] = 0;
 						scoreTeamB[j] = 0;
 					}
-					throw new WrongWinnerException(winner);
+					throw new WrongWinnerException(CreateCopy(), winner);
 				}
 				if (winner == TeamA)
                 {
