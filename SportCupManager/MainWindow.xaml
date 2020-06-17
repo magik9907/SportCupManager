@@ -25,7 +25,7 @@
                         <ComboBoxItem Content="Tug Of War"></ComboBoxItem>
                         <ComboBoxItem Content="Dodgeball"></ComboBoxItem>
                     </ComboBox>
-                    <Button Content="Stwórz turniej" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentCreateButton_Click"/>
+                    <Button Content="Stwórz turniej" HorizontalAlignment="Left" Margin="538,425,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentCreateButton_Click"/>
                 </Grid>
                 <Grid x:Name="TournamentLoadGrid" Visibility="Collapsed">
                     <ItemsControl  Name="Resources">
@@ -34,7 +34,7 @@
                                 <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
                                     <Label FontSize="25" Margin="10, 0, 0, 0" Content="{Binding Name}"/>
                                     <Button Content="Wczytaj" Margin="0, 10, 500, 10" Height="25" Width="100" Tag="{Binding Name}" Click="TournamentLoad_Click"/>
-                                    <Button Content="Edytuj" Margin="110, -35, 390, 10" Height="25" Width="100" Tag="{Binding Name}" Click="TournamentEdit_Click"/>
+                                    <Button Content="Edytuj" Margin="110, -35, 390, 10" Height="25" Width="100" />
                                     <Button Content="Usuń" Margin="220, -35, 280, 10" Height="25" Width="100" Tag="{Binding Path}" Click="TournamentDelete_Click" />
                                 </StackPanel>
                             </DataTemplate>
@@ -79,7 +79,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
-                <Grid x:Name="TeamEditGrid" Visibility="Collapsed">
+                <Grid x:Name="TeamEditGrid">
                     <Label Content="Edytowanie Drużyny" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
                     <TextBox Name="Edit_TeamName" HorizontalAlignment="Left" Margin="10,60,0,0" Text="Nazwa drużyny" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
                     <TextBox Name="PlayerFirstName" HorizontalAlignment="Left" Margin="10,150,0,0" Text="Imię" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
@@ -90,16 +90,18 @@
                     <Label Content="Dodaj Zawodnika" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" FontSize="22"/>
                     <Button Name="PlayerCreateButton" Content="Stwórz Zawodnika" HorizontalAlignment="Left" Margin="10,274,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="154" Click="PlayerCreateButton_Click"/>
                     <Label Content="Lista Zawodników" HorizontalAlignment="Center" Margin="0,111,0,0" VerticalAlignment="Top" FontSize="22"/>
-                    <ListView Margin="218,150,218,126" Name="PlayersListView">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Firstname}" Header="Firstname" Width="65"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Lastname}" Header="Lastname" Width="65"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Age}" Header="Age" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="Number" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <ScrollViewer>
+                        <ListView Margin="218,150,218,126" Name="PlayersListView">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Firstname}" Header="Firstname" Width="65"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Lastname}" Header="Lastname" Width="65"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Age}" Header="Age" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="Number" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </ScrollViewer>
                 </Grid>
                 <Grid x:Name="MatchCreateGrid">
                     <DatePicker Name="Date" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Height="29" Width="139" FontSize="14"/>
@@ -128,13 +130,13 @@
                 <Button Name="Tournament_Load" Content="Wczytaj" HorizontalAlignment="Center" VerticalAlignment="Top" Height="50" Width="102" FontSize="16" Margin="0,105,0,0" Click="MenuTournament_Load_Click"/>
                 <Label Content="Drużyny" Margin="0,160,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
                 <Button Name="Team_Create" Content="Stwórz" HorizontalAlignment="Center" Margin="0,207,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuTeam_Create_Click"/>
-                <Button Name="Team_Edit" Content="Edytuj" HorizontalAlignment="Center" Margin="0,263,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuTeam_Edit_Click"/>
-                <Label Content="Mecze" Margin="0,319,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
+            <Button Name="Team_Edit" Content="Edytuj" HorizontalAlignment="Center" Margin="0,263,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuTeam_Edit_Click"/>
+            <Label Content="Mecze" Margin="0,319,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
                 <Button Name="Match_Create" Content="Stwórz" HorizontalAlignment="Center" Margin="0,366,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuMatch_Create_Click"/>
                 <Button x:Name="Match_List" Content="Lista" HorizontalAlignment="Center" Margin="0,422,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuMatch_List_Click"/>
-            </Grid>
+        </Grid>
         </ScrollViewer>
-        <Label Name="CurrentlyLoaded" Content="" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="790" Height="40" FontSize="22"/>
+        <Label Name="CurrentlyLoaded" Content="" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="325" Height="40" FontSize="22"/>
 
     </Grid>
 </Window>

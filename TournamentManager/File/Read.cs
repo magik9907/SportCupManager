@@ -72,20 +72,6 @@ public class Read
                     }
                     break;
 
-                case TEnum.TournamentDyscypline.dodgeball:
-                    for (int i = 0; i < teamDesc.Count; i++)
-                    {
-                        teamDic.Add(teamDesc[i].Id, new TTeam.DodgeballTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
-                    }
-                    break;
-
-                case TEnum.TournamentDyscypline.tugofwar:
-                    for (int i = 0; i < teamDesc.Count; i++)
-                    {
-                        teamDic.Add(teamDesc[i].Id, new TTeam.TugOfWarTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
-                    }
-                    break;
-
                 default:
                     throw new TException.TournamentDyscyplineNotIdentify();
             }
@@ -127,18 +113,6 @@ public class Read
                 public string Firstname;
                 public string Lastname;
             }
-        }
-
-        private class RoundTempl
-        {
-            public string RoundName;
-            public List<Match> matches;
-            
-        }
-        private class Match
-        {
-
-
         }
     }
 }

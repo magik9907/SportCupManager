@@ -24,7 +24,10 @@ namespace TournamentManager
             }
             public List<TTeam.ITeam> Teams
             {
-                get { return teams; }
+                get 
+                {
+                    return teams; 
+                }
             }
             private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
             private List<TPerson.Referee> referees = new List<TPerson.Referee>();
@@ -59,7 +62,7 @@ namespace TournamentManager
             {
                 return new League(this);
             }
-            private void SortTeams()
+            public void SortTeams()
             {
                 for (int i = 0; i < teams.Count; i++)
                     for (int j = 0; j < teams.Count - 1; j++)
@@ -103,7 +106,7 @@ namespace TournamentManager
             }
 
             //this is for manual scheduling. Probably should make a flag to make it exclusive with 
-            public void ScheduleMatch(TMatch.Match match, List<Referee> referees, Round round)
+            public void ScheduleMatch(TMatch.Match match, int[] date)
             {
                 for (int i = 0; i < teams.Count; i++)
                 {
@@ -123,8 +126,8 @@ namespace TournamentManager
                          * 2. Are they already playing against someone else in that round (checked by round)
                          */
                         if (rounds[j].IsScheduled(match.TeamA, match.TeamB))
-                            throw new AlreadyPlayingInLeagueException( match);
-                        if (!match.isPlaying(teams[i]) && rounds[j] != round)
+                            throw new AlreadyPlayingInLeagueException(CreateCopy(), match);
+                        if (!match.IsPlaying(teams[i]) && rounds[j].Date != date)
                         {
                             if (rounds[j].IsScheduled(teams[i], match.TeamA))
                                 flagA = true;
@@ -141,11 +144,32 @@ namespace TournamentManager
                         }
                     }
                     if (!(flagA || flagB) || !(flagAnB || (flagA && flagB)))
-                        throw new ImpossibleScheduleException();
+                        throw new ImpossibleScheduleException(CreateCopy());
                 }
-                round.AddMatch(match, referees);
+                for (int i  = 0; i < rounds.Count; i++)
+                    if(rounds[i].Date == date)
+                    {
+                        try
+                        {
+                            rounds[i].AddMatch(match);
+                        }
+                        catch(RoundRuntimeException e)
+                        {
+                            rounds.Add(e.RecreateRound());
+                            throw new ImpossibleScheduleException(CreateCopy());
+                        }
+                    }
+                try
+                {
+                    Round tmp = new Round("round played on " + date[0] + "/" + date[1] + "/" + date[2], date);
+                    tmp.AddMatch(match);
+                    rounds.Add(tmp);
+                }
+                catch(DateException)
+                {
+                    throw new ImpossibleScheduleException(CreateCopy());
+                }
             }
-
             //this is for automatic scheduling
             public void AutoSchedule(int[] startDate, int spaceBetweenMatches)
             {
@@ -161,11 +185,11 @@ namespace TournamentManager
                     for (int index2 = 0; index2 < rounds.Capacity / 2 + 1; index2++)
                     {
                         if (i != j)
-                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)), referees);
+                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)));
                         else
                         {
                             if (teams.Count != rounds.Capacity)
-                                tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees);
+                                tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)));
                         }
                         i = (i + 1) % rounds.Capacity;
                         j = ((j - 1) + rounds.Capacity) % rounds.Capacity;
@@ -189,6 +213,20 @@ namespace TournamentManager
                     }
                 }
                 return date;
+            }
+
+            public bool IsFinished()
+            {
+                if(rounds.Count == rounds.Capacity)
+                {
+                    for (int i = 0; i < rounds.Count; i++)
+                    {
+                        if (!rounds[i].IsFinished())
+                            return false;
+                    }
+                    return true;
+                }
+                return false;
             }
         }
     }

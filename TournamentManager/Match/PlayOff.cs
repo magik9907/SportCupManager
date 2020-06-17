@@ -19,6 +19,8 @@ namespace TournamentManager
             [JsonProperty("Rounds")]
             private List<Round> rounds = new List<Round>(2);
             private List<TPerson.Referee> referees;
+            public List<Round> Rounds
+            { get { return rounds; } }
             public PlayOff(List<TTeam.ITeam> t, List<TPerson.Referee> referees, int[] startDate)
             {
                 //semis and finals will be generated on two consecutive days
@@ -68,7 +70,7 @@ namespace TournamentManager
                 if (teams[0] is VolleyballTeam)
                     refNumber = 3;
                 for (int i = 0; i < teams.Count / 2; i++)
-                    rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i * refNumber, refNumber)), referees);
+                    rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i * refNumber, refNumber)));
             }
             public void SetResult(string stat, TTeam.ITeam winner)
             {

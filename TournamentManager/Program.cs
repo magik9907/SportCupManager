@@ -7,14 +7,8 @@ namespace TournamentManager
     {
         static void Main(string[] args)
         {
-            TTeam.ITeam te;
-            ITournament t = null;
-            int i;
-            var input = Console.ReadKey();
-            switch (input.Key) {
-            case ConsoleKey.Q:
-            t = new Tournament("volley", TEnum.TournamentDyscypline.volleyball);
-             i = 1;
+            ITournament t = new Tournament("volley", TEnum.TournamentDyscypline.volleyball);
+            int i = 1;
             t.AddReferee(new TPerson.Referee("a", "a", 1, i));
             i++;
             t.AddReferee(new TPerson.Referee("b", "b", 1, i));
@@ -56,13 +50,13 @@ namespace TournamentManager
             t.AddTeam(new TTeam.VolleyballTeam("55",i));
             i++;
             t.AddTeam(new TTeam.VolleyballTeam("66",i));
-                    break;
 
-                case ConsoleKey.W:
 
-                    t = new Tournament("dodge", TEnum.TournamentDyscypline.dodgeball);
 
-             i =1;
+            /*
+            ITournament t = new Tournament("dodge", TEnum.TournamentDyscypline.dodgeball);
+
+            int i =1;
 
             
             t.AddReferee(new TPerson.Referee("a", "a", 1,i));
@@ -85,7 +79,7 @@ namespace TournamentManager
             i++;
             t.AddReferee(new TPerson.Referee("j", "k", 1,i));
             i = 1;
-             te = new TTeam.DodgeballTeam("11",i);
+            TTeam.ITeam te = new TTeam.DodgeballTeam("11",i);
             
             te.AddPlayer(new TPerson.Player("1", "1", 1, 1));
             te.AddPlayer(new TPerson.Player("2", "2", 1, 1));
@@ -104,11 +98,11 @@ namespace TournamentManager
             t.AddTeam(new TTeam.DodgeballTeam("55",i));
             i++;
             t.AddTeam(new TTeam.DodgeballTeam("66",i));
-                    break;
-
-                case ConsoleKey.E:
-                    t = new Tournament("tugofwar", TEnum.TournamentDyscypline.tugofwar);
-             i = 1;
+            */
+            /*
+             
+            ITournament t = new Tournament("tugofwar", TEnum.TournamentDyscypline.tugofwar);
+            int i = 1;
             t.AddReferee(new TPerson.Referee("a", "a", 1,i));
             i++;
             t.AddReferee(new TPerson.Referee("b", "b", 1,i));
@@ -129,7 +123,8 @@ namespace TournamentManager
             i++;
             t.AddReferee(new TPerson.Referee("j", "k", 1,i));
             i = 1;
-             te = new TTeam.TugOfWarTeam("11",i);
+            
+            TTeam.ITeam te = new TTeam.TugOfWarTeam("11",i);
             
             te.AddPlayer(new TPerson.Player("1", "1", 1, 1));
             te.AddPlayer(new TPerson.Player("2", "2", 1, 1));
@@ -148,11 +143,7 @@ namespace TournamentManager
             t.AddTeam(new TTeam.TugOfWarTeam("55",i));
             i++;
             t.AddTeam(new TTeam.TugOfWarTeam("66",i));
-
-                    break;
-
-            }
-
+             */
             t.SetAutoLeague(new int[] { 1, 1, 1 }, 1);
             for ( i = 0; i < t.League.Teams.Count; i++)
                 for (int j = t.League.Teams.Count - 1; j > i; j--)

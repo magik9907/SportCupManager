@@ -18,9 +18,12 @@ using TournamentManager;
 using TournamentManager.TEnum;
 using TournamentManager.TPerson;
 using TournamentManager.TTeam;
+<<<<<<< HEAD
 using TournamentManager.TMatch;
 using TournamentManager.TRound;
 using System.Text.RegularExpressions;
+=======
+>>>>>>> 0031a025a9dfd3bf6e5f776963b446a198b6fb67
 
 namespace SportCupManager
 {
@@ -30,7 +33,7 @@ namespace SportCupManager
     public partial class MainWindow : Window
     {
         List<TournamentTemporary> lists = new List<TournamentTemporary>();
-        ITournament CurrentTournament;
+        Tournament CurrentTournament;
         public MainWindow()
         {
             InitializeComponent();
@@ -107,6 +110,8 @@ namespace SportCupManager
             else
                 SetNotification("Brak drużyn!");
             TeamsList.Items.Refresh();
+
+            //PlayersListView.ItemsSource = CurrentTournament.Teams;
         }
 
         private void MenuMatch_Create_Click(object sender, RoutedEventArgs e)
@@ -147,22 +152,8 @@ namespace SportCupManager
             Edit_TeamName.Text = team.Name;
             PlayersListView.ItemsSource = team.listPlayers;
 
-            PlayerCreateButton.Tag = team.Name;
-            TeamEditButton.Tag = team.Name;
-        }
-
-        private void TournamentEdit_Click(object sender, RoutedEventArgs e)
-        {
-            CollapseAllGrids();
-            TournamentEditGrid.Visibility = Visibility.Visible;
-            string name = (string)((Button)sender).Tag;
-
-            Edit_TournamentName.Text = name;
-            TournamentEditButton.Tag = name;
-            RefereeCreateButton.Tag = name;
-
-            ITournament tour = Read.Tournament(name);
-            RefereesListView.ItemsSource = tour.Referees;
+            PlayerCreateButton.Tag = (string)((Button)sender).Tag;
+            TeamEditButton.Tag = (string)((Button)sender).Tag;
         }
 
         /* SUBMIT BUTTONS */
@@ -170,12 +161,6 @@ namespace SportCupManager
         private void TournamentCreateButton_Click(object sender, RoutedEventArgs e)
         {
             string name = Create_TournamentName.Text;
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
-            if(!Directory.Exists(path))
-            {
-                SetNotification("Ta nazwa turnieju jest już zajęta!");
-                return;
-            }
             TournamentDyscypline dyscypline;
             switch(Create_DyscyplineComboBox.Text)
             {
@@ -195,7 +180,7 @@ namespace SportCupManager
             string path = (string)((Button)sender).Tag;
             Directory.Delete(path, true);
             TournamentTemporary tour = new TournamentTemporary(path);
-            if (CurrentTournament != null && tour.getNameFromPath() == CurrentTournament.Name)
+            if (tour.getNameFromPath() == CurrentTournament.Name)
             {
                 CurrentTournament = null;
                 TournamentLoad_Click(null, e);
@@ -207,9 +192,8 @@ namespace SportCupManager
         {
             if (sender is Button button)
             {
-                CurrentTournament = Read.Tournament((string)button.Tag);
-                CurrentlyLoaded.Content = "Wczytany turniej: " + CurrentTournament.Name + "(" + CurrentTournament.Dyscypline + ")";
-                
+                CurrentlyLoaded.Content = "Wczytany turniej: " + (string)button.Tag;
+                CurrentTournament = new Tournament((string)button.Tag, TournamentDyscypline.volleyball);
             }
             else
                 CurrentlyLoaded.Content = "";
@@ -237,24 +221,27 @@ namespace SportCupManager
 
         private void TournamentEditButton_Click(object sender, RoutedEventArgs e)
         {
+<<<<<<< HEAD
             string name = (string)((Button)sender).Tag;
             string changedName = Edit_TournamentName.Text;
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\";
             if(path + name != path + changedName)
                 Directory.Move(path + name, path + changedName);
             MenuTournament_Load_Click(sender, e);
+=======
+            throw new NotImplementedException();
+>>>>>>> 0031a025a9dfd3bf6e5f776963b446a198b6fb67
         }
 
         private void TeamCreateButton_Click(object sender, RoutedEventArgs e)
         {
             string name = Create_TeamName.Text;
-            int id = CurrentTournament.Teams.Count + 1;
-            ITeam team;
+            Team team;
             switch(CurrentTournament.Dyscypline)
             {
-                case TournamentDyscypline.volleyball: team = new VolleyballTeam(name, id); break;
-                case TournamentDyscypline.tugofwar: team = new TugOfWarTeam(name, id); break;
-                case TournamentDyscypline.dodgeball: team = new DodgeballTeam(name, id); break;
+                case TournamentDyscypline.volleyball: team = new VolleyballTeam(name, 1); break;
+                case TournamentDyscypline.tugofwar: team = new TugOfWarTeam(name, 2); break;
+                case TournamentDyscypline.dodgeball: team = new DodgeballTeam(name, 3); break;
                 default: team = null; break;
             }
 
@@ -280,6 +267,7 @@ namespace SportCupManager
             Save.Tournament(CurrentTournament);
             MenuTeam_Edit_Click(sender, e);
         }
+<<<<<<< HEAD
 
         private void RefereeCreateButton_Click(object sender, RoutedEventArgs e)
         {
@@ -345,6 +333,8 @@ namespace SportCupManager
             Save.Tournament(CurrentTournament);
             MenuMatch_List_Click(sender, e);
         }
+=======
+>>>>>>> 0031a025a9dfd3bf6e5f776963b446a198b6fb67
     }
 
     public class TournamentTemporary
