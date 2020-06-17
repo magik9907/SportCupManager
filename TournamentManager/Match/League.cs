@@ -12,7 +12,7 @@ using TournamentManager.TMatch;
 
 namespace TournamentManager
 {
-   namespace TRound
+    namespace TRound
     {
         public class League
         {
@@ -49,7 +49,16 @@ namespace TournamentManager
                     this.referees = referees;
                 this.teams = t;
             }
-
+            public League(League copy)
+            {
+                this.teams = copy.teams;
+                this.rounds = copy.rounds;
+                this.referees = copy.referees;
+            }
+            public League CreateCopy()
+            {
+                return new League(this);
+            }
             private void SortTeams()
             {
                 for (int i = 0; i < teams.Count; i++)
@@ -114,7 +123,7 @@ namespace TournamentManager
                          * 2. Are they already playing against someone else in that round (checked by round)
                          */
                         if (rounds[j].IsScheduled(match.TeamA, match.TeamB))
-                            throw new AlreadyPlayingInLeagueException(match);
+                            throw new AlreadyPlayingInLeagueException( match);
                         if (!match.isPlaying(teams[i]) && rounds[j] != round)
                         {
                             if (rounds[j].IsScheduled(teams[i], match.TeamA))
@@ -134,7 +143,7 @@ namespace TournamentManager
                     if (!(flagA || flagB) || !(flagAnB || (flagA && flagB)))
                         throw new ImpossibleScheduleException();
                 }
-                round.AddMatch(match, referees);
+                round.AddMatch(match);
             }
 
             //this is for automatic scheduling
@@ -152,11 +161,11 @@ namespace TournamentManager
                     for (int index2 = 0; index2 < rounds.Capacity / 2 + 1; index2++)
                     {
                         if (i != j)
-                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)), referees.GetRange(index2 * refNumber, refNumber));
+                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)));
                         else
                         {
-                            if (teams.Capacity != rounds.Capacity)
-                                tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees.GetRange(referees.Count - refNumber, refNumber));
+                            if (teams.Count != rounds.Capacity)
+                                tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)));
                         }
                         i = (i + 1) % rounds.Capacity;
                         j = ((j - 1) + rounds.Capacity) % rounds.Capacity;
