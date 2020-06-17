@@ -79,7 +79,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
-                <Grid x:Name="TeamEditGrid">
+                <Grid x:Name="TeamEditGrid" Visibility="Collapsed">
                     <Label Content="Edytowanie Drużyny" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
                     <TextBox Name="Edit_TeamName" HorizontalAlignment="Left" Margin="10,60,0,0" Text="Nazwa drużyny" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
                     <TextBox Name="PlayerFirstName" HorizontalAlignment="Left" Margin="10,150,0,0" Text="Imię" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
@@ -103,7 +103,7 @@
                         </ListView>
                     </ScrollViewer>
                 </Grid>
-                <Grid x:Name="MatchCreateGrid">
+                <Grid x:Name="MatchCreateGrid" Visibility="Collapsed">
                     <DatePicker Name="Date" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Height="29" Width="139" FontSize="14"/>
                     <Label Content="Tworzenie Meczy" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
                     <TextBox x:Name="SpaceBetweenMatches" Text="Dni między meczami" HorizontalAlignment="Left" Margin="10,101,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
@@ -114,8 +114,19 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
-                                    <Label FontSize="25" Margin="10, 0, 0, 0" Content="{Binding RoundName}"/>
-                                    <Button Content="Mecze" Margin="0, 10, 500, 10" Height="25" Width="100" Click="TeamEdit_Click" />
+                                    <Label FontSize="25" Margin="10, 0, 0, 0" Content="{Binding RoundName}" />
+                                    <Button Content="Podgląd" Margin="0, 10, 500, 10" Height="25" Width="100" Click="MatchPreview_Click" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+                <Grid x:Name="MatchPreviewGrid">
+                    <ItemsControl  Name="MatchList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
+                                    <Label FontSize="25" Margin="10, 0, 0, 0" Content="{Binding Name}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

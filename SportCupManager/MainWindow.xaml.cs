@@ -18,12 +18,9 @@ using TournamentManager;
 using TournamentManager.TEnum;
 using TournamentManager.TPerson;
 using TournamentManager.TTeam;
-<<<<<<< HEAD
 using TournamentManager.TMatch;
 using TournamentManager.TRound;
 using System.Text.RegularExpressions;
-=======
->>>>>>> 0031a025a9dfd3bf6e5f776963b446a198b6fb67
 
 namespace SportCupManager
 {
@@ -221,16 +218,12 @@ namespace SportCupManager
 
         private void TournamentEditButton_Click(object sender, RoutedEventArgs e)
         {
-<<<<<<< HEAD
             string name = (string)((Button)sender).Tag;
             string changedName = Edit_TournamentName.Text;
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\";
             if(path + name != path + changedName)
                 Directory.Move(path + name, path + changedName);
             MenuTournament_Load_Click(sender, e);
-=======
-            throw new NotImplementedException();
->>>>>>> 0031a025a9dfd3bf6e5f776963b446a198b6fb67
         }
 
         private void TeamCreateButton_Click(object sender, RoutedEventArgs e)
@@ -267,7 +260,6 @@ namespace SportCupManager
             Save.Tournament(CurrentTournament);
             MenuTeam_Edit_Click(sender, e);
         }
-<<<<<<< HEAD
 
         private void RefereeCreateButton_Click(object sender, RoutedEventArgs e)
         {
@@ -333,8 +325,11 @@ namespace SportCupManager
             Save.Tournament(CurrentTournament);
             MenuMatch_List_Click(sender, e);
         }
-=======
->>>>>>> 0031a025a9dfd3bf6e5f776963b446a198b6fb67
+
+        private void MatchPreview_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 
     public class TournamentTemporary
