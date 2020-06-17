@@ -16,7 +16,7 @@ namespace TournamentManager
     {
         public class PlayOff
         {
-            [JsonProperty]
+            [JsonProperty("Rounds")]
             private List<Round> rounds = new List<Round>(2);
             private List<TPerson.Referee> referees;
             public List<Round> Rounds
