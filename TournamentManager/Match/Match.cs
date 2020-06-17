@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TournamentManager.TException;
 using TournamentManager.TRound;
 using TournamentManager.TTeam;
 
@@ -62,43 +63,6 @@ namespace TournamentManager
 						return new TMatch.VolleyballMatch(team1, team2, refs);
 			}
 		}
-		//Exception if user wanted to set result of a match that was already played
-		public class MatchAlreadyPlayedException : Exception
-        {
-			TTeam.ITeam winner;
-			public MatchAlreadyPlayedException(TTeam.ITeam winner)
-            {
-				this.winner = winner;
-            }
-			public override string Message
-            {
-                get { return "The match was already played. Team " + winner.Name + " has won the match"; }
-            }
-        }
-
-		//Excpetion if teamA and teamB are the same team
-		public class IncorrectOpponentException : Exception
-        {
-			public override string Message
-            {
-                get
-                {
-					return "A team cannot play against itself!";
-                }
-            }
-        }
-
-		//Exception if team set as winner is not playing in the match
-		public class WinnerIsNotPlayingException : Exception
-        {
-            public override string Message
-            {
-                get 
-				{
-					return "Team you want to set as a winner is not playing!";
-				}
-            }
-        }
 
 		public class TugOfWarMatch : Match
 		{
@@ -134,30 +98,6 @@ namespace TournamentManager
 			public override string GetStat()
 			{
 				return matchLength.ToString();
-			}
-		}
-
-		//Exception if match length is not a number
-		public class NotNumberMatchLengthException : Exception
-		{
-			public override string Message
-			{
-				get
-				{
-					return "Match length is supposed to be a number!";
-				}
-			}
-		}
-
-		//Exception if match length is negative
-		public class NegativeMatchLengthException : Exception
-		{
-			public override string Message
-			{
-				get
-				{
-					return "Match length is supposed to not be negative!";
-				}
 			}
 		}
 
@@ -197,42 +137,6 @@ namespace TournamentManager
 			public override string GetStat()
 			{
 				return winnerPlayersLeft.ToString();
-			}
-		}
-
-		//exception if number of players was not a whole number
-		public class NotIntPlayersException : Exception
-		{
-			public override string Message
-			{
-				get
-				{
-					return "Number of players should be a whole number!";
-				}
-			}
-		}
-
-		//exception if number of players was negative
-		public class NegativePlayersNumberException : Exception
-		{
-			public override string Message
-			{
-				get
-				{
-					return "Number of players should be positive!";
-				}
-			}
-		}
-
-		//Exception if number of players left was higher than players allowed on the field
-		public class TooHighPlayersLeftException : Exception
-		{
-			public override string Message
-			{
-				get
-				{
-					return "Team can't have more players left than it started the game with (6)";
-				}
 			}
 		}
 
@@ -400,124 +304,6 @@ namespace TournamentManager
 				}
 				return stat;
             }
-		}
-
-		//Excpetion if name of a team passed to SetResult is not a name of any of the playing teams
-		public class WrongNameInStatException: Exception
-        {
-			private string name;
-			public WrongNameInStatException(string name)
-            {
-				this.name = name;
-            }
-            public override string Message
-            {
-                get { return name + " is not one of the teams playing in the match"; }
-            }
-        }
-
-		//Exception if third set was played in spite of a team winning in two sets
-		public class ThirdSetException : Exception
-		{
-			private ITeam winner;
-			public ThirdSetException(TTeam.ITeam winner)
-			{
-				this.winner = winner;
-			}
-			public override string Message
-			{
-				get
-				{
-					return winner + " has won the match in two sets, third set should not be played";
-				}
-			}
-		}
-
-		//Exception if set was played but no team has won
-		public class NoSetWinnerException : Exception
-        {
-			private int set;
-			private int scoreRequired;
-			public NoSetWinnerException(int set)
-			{
-				this.set = set;
-				if (set != 3)
-					scoreRequired = 21;
-				else
-					scoreRequired = 15;
-			}
-			public override string Message
-			{
-				get
-				{
-					return "No team has won the set number " + set + " since no team has reached " + scoreRequired + " points while also having the lead";
-				}
-			}
-		}
-
-		//Exception if score was not an integer value
-		public class NonIntScoreException : Exception
-        {
-			public override string Message
-			{
-				get
-				{
-					return "Score should be a whole number";
-				}
-			}
-		}
-
-		//Exception if score was negative
-		public class NegativeScoreException : Exception
-		{
-			public override string Message
-			{
-				get
-				{
-					return "Score should be a positive number";
-				}
-			}
-		}
-
-		//Exception if a score entered was over the maximum points in a set
-		public class TooHighScoreException : Exception
-		{
-			public override string Message
-			{
-				get
-				{
-					return "No team can have more than 21 points in the first two sets and 15 in the last";
-				}
-			}
-		}
-
-		//Exception if string stat got separated into a different amount of strings than expected
-		public class WrongStatFormatException : Exception
-		{
-			public override string Message
-			{
-				get
-				{
-					return "Format of string \"stat\" is incorrect!";
-				}
-			}
-		}
-
-		//Exception if the team that was set as winner lost based on the points from stats
-		public class WrongWinnerException : Exception
-		{
-			private TTeam.ITeam supposedWinner;
-			public WrongWinnerException(TTeam.ITeam winner)
-            {
-				supposedWinner = winner;
-            }
-			public override string Message
-			{
-				get
-				{
-					return "Team " + supposedWinner.Name + " was set as winner despite losing 2 or more sets";
-				}
-			}
 		}
 	}
 }
