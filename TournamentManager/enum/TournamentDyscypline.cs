@@ -11,9 +11,10 @@ namespace TournamentManager
         /// </summary>
         public enum TournamentDyscypline
         {
-            volleyball=1,
-            tugofwar=2,
-            dodgeball=3,
+            undifined = 0, //don't change the number of undifined
+            volleyball,
+            tugofwar,
+            dodgeball,
         }
     }
 }

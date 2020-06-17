@@ -6,16 +6,23 @@ namespace TournamentManager
 {
     namespace TTeam
     {
-        public abstract class Team : ITeam
+        public abstract class Team : ITeam, ITeamId
         {
+            private int idTeam;
+            
+            public int Id{
+                get { return idTeam; } 
+            }
+            
             public string Name { get; set; }
             [JsonProperty]
-            protected List<TPerson.Player> listPlayers = new List<TPerson.Player>();
+            public List<TPerson.Player> listPlayers = new List<TPerson.Player>();
             public int MatchesPlayed { get; set; }
             public int MatchesWon { get; set; }
 
-            public Team(string name)
+            public Team(string name, int id)
             {
+                idTeam = id;
                 if (string.IsNullOrEmpty(name))
                     throw new TException.TeamMissingNameException();
 

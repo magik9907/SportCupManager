@@ -6,14 +6,17 @@ namespace TournamentManager
 {
     namespace TPerson
     {
+        
+
         public class Referee : Person
         {
-            [JsonProperty("name")]
-            private string name;
-            public Referee(string name, string surname, byte age):base(name, surname,age)
+            private int idReferee;
+            public int Id { get { return idReferee; } }
+            public Referee(string name, string surname, byte age, int id):base(name, surname,age)
             {
-                this.name = name;
+                idReferee = id;
             }
+
         }
     }
 }

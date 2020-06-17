@@ -12,11 +12,15 @@ namespace TournamentManager
             public int PlayersEliminated { get; set; }
             public int SumOfPlayersLeft { get; set; }
 
-            public DodgeballTeam(string name) : base(name)
+            public DodgeballTeam(string name,int id) : base(name,id)
             {
-                this.Name = name;
                 this.PlayersEliminated = 0;
                 this.SumOfPlayersLeft = 0;
+            }
+
+            public DodgeballTeam(string name, int id, List<TPerson.Player> players) : this(name, id)
+            {
+                this.listPlayers.AddRange(players);
             }
 
             public static bool operator <(DodgeballTeam a, DodgeballTeam b)

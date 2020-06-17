@@ -15,23 +15,29 @@ namespace TournamentManager
     public interface ITournament
     {
         /// <summary>
-         /// Create league type from Team list
-         /// </summary>
-         /// <param name="date">start date of first round</param>
-         /// <param name="space">space between rounds</param>
+        /// Create league type from Team list
+        /// </summary>
+        /// <param name="date">start date of first round</param>
+        /// <param name="space">space between rounds</param>
         void SetAutoLeague(int[] date, int space);
 
         /// <summary>
         /// Creating playoff round 
         /// </summary>
         /// <param name="teams">list of teams allow to play in competition</param>
-        void SetPlayOff( int[] date);
+        void SetPlayOff(int[] date);
 
         /// <summary>
         /// adding referee to the tournament
         /// </summary>
         /// <param name="referee"> referee object to delete</param>
         void AddReferee(TPerson.Referee referee);
+
+        /// <summary>
+        /// adding referee to the tournament
+        /// </summary>
+        /// <param name="referee">list of referees object to delete</param>
+        void AddReferee(List<TPerson.Referee> referees);
 
         /// <summary>
         /// remove referee
@@ -45,6 +51,14 @@ namespace TournamentManager
         /// <param name="team">team object</param>
         void AddTeam(TTeam.ITeam team);
 
+        /// <summary>
+        /// find team using name
+        /// </summary>
+        /// <param name="name">name of team to find</param>
+        /// <returns></returns>
+        TTeam.Team FindTeam(string name);
+        
+        
         /// <summary>
         /// remove team from competition
         /// </summary>
@@ -60,9 +74,9 @@ namespace TournamentManager
         }
 
         /// <summary>
-        /// return dyscypline of tournament
+        /// return enum dyscypline of tournament
         /// </summary>
-        string Dyscypline
+        TEnum.TournamentDyscypline Dyscypline
         {
             get;
         }
@@ -70,8 +84,9 @@ namespace TournamentManager
         /// <summary>
         /// return league round
         /// </summary>
-        TRound.League League { 
-            get; 
+        TRound.League League
+        {
+            get;
         }
 
         /// <summary>
@@ -93,9 +108,9 @@ namespace TournamentManager
         /// <summary>
         /// return playoff round object
         /// </summary>
-        TRound.PlayOff PlayOff { get;  }
+        TRound.PlayOff PlayOff { get; }
     }
-    
+
     /// <summary>
     /// Main class of TournamentManager
     /// It can create league and playoff, add teams and referees to tournament
@@ -106,7 +121,7 @@ namespace TournamentManager
         /// <summary>
         /// contain tournament dyscipline id
         /// </summary>
-        private readonly int dyscypline;
+        private readonly TEnum.TournamentDyscypline dyscypline;
 
         [JsonProperty("Name")]
         /// <summary>
@@ -156,16 +171,16 @@ namespace TournamentManager
         /// </summary>
         /// <param name="name">name of tournament</param>
         /// <param name="dyscypline">tournament discipline</param>
-        public Tournament(string name, int dyscypline)
+        public Tournament(string name, TEnum.TournamentDyscypline dyscypline = 0)
         {
-            if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(Enum.GetName(typeof(TEnum.TournamentDyscypline), dyscypline) )) 
+            if (string.IsNullOrEmpty(name) && Enum.GetName(typeof(TEnum.TournamentDyscypline), dyscypline) == "undifined")
                 TNDException();
-            if (string.IsNullOrEmpty(name) )
+            if (string.IsNullOrEmpty(name))
                 TDException("tournament name");
-            if (Enum.IsDefined(typeof(TEnum.TournamentDyscypline), dyscypline) == false )
+            if (Enum.GetName(typeof(TEnum.TournamentDyscypline), dyscypline) == "undifined")
                 TDException("tournament dyscypline");
             this.name = name;
-            this.dyscypline = dyscypline;   
+            this.dyscypline = dyscypline;
 
         }
 
@@ -175,9 +190,15 @@ namespace TournamentManager
             referees.Add(referee);
         }
 
+        public void AddReferee(List<TPerson.Referee> referees = null)
+        {
+            IsObjectNotDefined(referees, "Referee");
+            this.referees.AddRange(referees);
+        }
+
         public void AddTeam(TTeam.ITeam team = null)
         {
-            IsObjectNotDefined(team,"ITeam");
+            IsObjectNotDefined(team, "ITeam");
             teams.Add(team);
         }
 
@@ -189,41 +210,44 @@ namespace TournamentManager
 
         public void RemoveTeam(TTeam.ITeam team)
         {
-            IsObjectNotDefined(team,"Iteam");
+            IsObjectNotDefined(team, "Iteam");
             teams.Remove(team);
         }
 
         public void SetAutoLeague(int[] date, int space)
         {
-            CheckNumberOfTeams(teams);
+            CheckNumberOfTeams(teams, 5);
             league = new TRound.League(teams, referees);
-            league.AutoSchedule(date,space);
+            league.AutoSchedule(date, space);
         }
 
         public void SetPlayOff(int[] date)
         {
-            TTeam.ITeam t1 = new TTeam.VolleyballTeam("111111");
-            TTeam.ITeam t2 = new TTeam.VolleyballTeam("1111");
-            TTeam.ITeam t3 = new TTeam.VolleyballTeam("22");
-            TTeam.ITeam t4 = new TTeam.VolleyballTeam("66");
 
-            List<TTeam.ITeam> teams = new List<TTeam.ITeam>() {t1,t2,t3,t4 };
-
-            //List<TTeam.ITeam> teams = CheckNumberOfTeams(teams);
-            playoff = new TRound.PlayOff(teams, Referees,date);
-            playoff.SetResult(t1.Name + ": 21, 21, 0. " + t4.Name + ": 0, 0, 0", t1);
-            playoff.SetResult(t2.Name + ": 21, 21, 0. " + t3.Name + ": 0, 0, 0", t2);
-            playoff.SetResult(t1.Name + ": 21, 21, 0. " + t2.Name + ": 0, 0, 0", t1);
+            List<TTeam.ITeam> teams = league.GetFinalTeams(4);
+            CheckNumberOfTeams(league.GetFinalTeams(4), 4);
+            playoff = new TRound.PlayOff(teams, Referees, date);
         }
-        
+
+        public TTeam.Team FindTeam(string name)
+        {
+            foreach (TTeam.Team team in Teams)
+            {
+                if (team.Name == name) return team;
+            }
+            return null;
+        }
+
+
         [JsonIgnore]
         public List<TPerson.Referee> Referees
         {
-            get{
+            get
+            {
                 return referees;
             }
         }
-        
+
         [JsonIgnore]
         public List<TTeam.ITeam> Teams
         {
@@ -234,11 +258,11 @@ namespace TournamentManager
         }
 
         [JsonIgnore]
-        public string Dyscypline
+        public TEnum.TournamentDyscypline Dyscypline
         {
             get
             {
-                return Enum.GetName(typeof(TEnum.TournamentDyscypline),dyscypline);
+                return dyscypline;
             }
         }
 
@@ -250,7 +274,7 @@ namespace TournamentManager
                 return name;
             }
         }
-        
+
         [JsonIgnore]
         public TRound.League League
         {
@@ -260,12 +284,21 @@ namespace TournamentManager
             }
         }
         [JsonIgnore]
-        public TRound.PlayOff PlayOff { 
-            get { 
-                return playoff; 
-            }  
+        public TRound.PlayOff PlayOff
+        {
+            get
+            {
+                return playoff;
+            }
         }
 
+        private void IsObjectNotDefined(List<Object> obj, string objType)
+        {
+            if (obj == null)
+            {
+                throw new TException.ObjectNotDefined(objType);
+            }
+        }
 
         /// <summary>
         /// check if object is defined
@@ -275,20 +308,21 @@ namespace TournamentManager
         /// 
         private void IsObjectNotDefined(Object obj, string objType)
         {
-            if(obj == null)
+            if (obj == null)
             {
                 throw new TException.ObjectNotDefined(objType);
             }
         }
 
         /// <summary>
-        /// check if number of teams is greather than 1
+        /// check if number of teams is equal or greather to param "limit"
         /// </summary>
         /// <param name="ts">list of teams</param>
-        private void CheckNumberOfTeams(List<TTeam.ITeam> ts)
+        /// <param name="limit"> minimal number of teams to play</param>
+        private void CheckNumberOfTeams(List<TTeam.ITeam> ts, int limit)
         {
-            if (teams.Count < 2)
-                throw new TException.NotEnoughtTeamsNumber(teams.Count);
+            if (ts.Count < limit)
+                throw new TException.NotEnoughtTeamsNumber(ts.Count);
         }
 
         /// <summary>
@@ -305,7 +339,7 @@ namespace TournamentManager
         /// </summary>
         private void TNDException()
         {
-            throw new TException.TournamentMustBeDefine(); 
+            throw new TException.TournamentMustBeDefine();
         }
     }
 

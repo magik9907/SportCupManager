@@ -13,13 +13,17 @@ namespace TournamentManager
             public float SumWinTime { get; set; }
             public float SumLossTime { get; set; }
 
-            public TugOfWarTeam(string name) : base(name)
+            public TugOfWarTeam(string name,int id) : base(name,id)
             {
-                this.Name = name;
                 this.AvWinTime = 0;
                 this.AvLossTime = 0;
                 this.SumWinTime = 0;
                 this.SumLossTime = 0;
+            }
+            
+            public TugOfWarTeam(string name, int id, List<TPerson.Player> players) : this(name, id)
+            {
+                this.listPlayers.AddRange(players);
             }
 
             public static bool operator <(TugOfWarTeam a, TugOfWarTeam b)

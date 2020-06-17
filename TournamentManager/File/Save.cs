@@ -9,24 +9,104 @@ namespace TournamentManager
     {
         public static void Tournament(ITournament t = null)
         {
-            if(t == null)
+            if (t == null)
             {
                 throw new TException.TournamentMustBeDefine();
             }
 
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + t.Name;
+            var path = Path(t.Name);
 
-            SerializeObject(path , "tournament.json", t);
-            SerializeObject(path , "referees.json", t.Referees);
-            SerializeObject(path , "teams.json", t.Teams);
-            SerializeObject(path , "league.json", t.League);
-            SerializeObject(path , "playoff.json", t.PlayOff);
+            var name = t.Name;
+            try
+            {
+                SerializeObject(path, "tournament.json", t);
 
+                try
+                {
+                    Referees(t.Referees, name);
+                }
+                catch (Exception e)
+                {
+
+                }
+                try
+                {
+                    Teams(t.Teams, name);
+                }
+                catch (Exception e) 
+                {
+                
+                }
+
+                try
+                {
+                    League(t.League, name);
+                }catch(Exception e)
+                {
+
+                }
+                try
+                {
+
+
+                    PlayOff(t.PlayOff, name);
+                }catch(Exception e)
+                {
+
+                }
+                
+            }
+            catch (Exception e)
+            {
+
+            }
         }
+
+        public static void Referees(List<TPerson.Referee> r = null, string name = null)
+        {
+            IsNameAndObject(name, r, "TPerson.Referee");
+
+            var path = Path(name);
+
+            SerializeObject(path, "referees.json", r);
+        }
+
+        public static void Teams(List<TTeam.ITeam> t = null, string name = null)
+        {
+            IsNameAndObject(name, t, "TTeam.ITeam");
+
+            var path = Path(name);
+
+            SerializeObject(path, "teams.json", t);
+        }
+
+        public static void League(TRound.League l = null, string name = null)
+        {
+            IsNameAndObject(name, l, "TRound.League");
+
+            var path = Path(name);
+
+            SerializeObject(path, "league.json", l);
+        }
+
+        public static void PlayOff(TRound.PlayOff p = null, string name = null)
+        {
+            IsNameAndObject(name, p, "TRound.PlayOff");
+
+            var path = Path(name); 
+
+            SerializeObject(path, "playoff.json", p);
+        }
+
+        private static string Path(string name)
+        {
+           return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+        }
+
 
         private static void SerializeObject(string path, string fileName, Object obj)
         {
-            SerializeObject(path,fileName,obj, new JsonSerializerSettings
+            SerializeObject(path, fileName, obj, new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented
             });
@@ -47,6 +127,27 @@ namespace TournamentManager
                 FileStream f = File.Create(path + "\\" + fileName);
                 f.Close();
             }
+        }
+
+        private static void IsNameAndObject(string name, object obj, string expObj)
+        {
+            if (name == null)
+            {
+                TournamentNameMustBeDefine();
+            }
+            if (obj == null)
+            {
+                ObjectIsNotDefine(expObj);
+            }
+        }
+
+        private static void ObjectIsNotDefine(string objName)
+        {
+            throw new TException.ObjectNotDefined(objName);
+        }
+        private static void TournamentNameMustBeDefine()
+        {
+            throw new TException.TournamentNameMustBeDefine();
         }
 
     }

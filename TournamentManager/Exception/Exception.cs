@@ -6,6 +6,22 @@ namespace TournamentManager
 {
     namespace TException
     {
+        public class TournamentDyscyplineNotIdentify : Exception
+        {
+            public TournamentDyscyplineNotIdentify() : base("unknown tournament dyscypline")
+            {
+
+            }
+        }
+
+        public class TournamentNameMustBeDefine : Exception
+        {
+            public TournamentNameMustBeDefine() : base("Tournament Name is not defined")
+            {
+
+            }
+        }
+
         /// <summary>
         /// custom exception when no data given
         /// </summary>
