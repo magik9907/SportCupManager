@@ -143,7 +143,7 @@ namespace TournamentManager
                     if (!(flagA || flagB) || !(flagAnB || (flagA && flagB)))
                         throw new ImpossibleScheduleException();
                 }
-                round.AddMatch(match);
+                round.AddMatch(match, referees);
             }
 
             //this is for automatic scheduling
@@ -161,11 +161,11 @@ namespace TournamentManager
                     for (int index2 = 0; index2 < rounds.Capacity / 2 + 1; index2++)
                     {
                         if (i != j)
-                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)));
+                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)), referees);
                         else
                         {
                             if (teams.Count != rounds.Capacity)
-                                tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)));
+                                tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[^1], referees.GetRange(referees.Count - refNumber, refNumber)), referees);
                         }
                         i = (i + 1) % rounds.Capacity;
                         j = ((j - 1) + rounds.Capacity) % rounds.Capacity;

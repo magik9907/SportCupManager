@@ -25,7 +25,7 @@
                         <ComboBoxItem Content="Tug Of War"></ComboBoxItem>
                         <ComboBoxItem Content="Dodgeball"></ComboBoxItem>
                     </ComboBox>
-                    <Button Content="Stwórz turniej" HorizontalAlignment="Left" Margin="538,425,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentCreateButton_Click"/>
+                    <Button Content="Stwórz turniej" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentCreateButton_Click"/>
                 </Grid>
                 <Grid x:Name="TournamentLoadGrid" Visibility="Collapsed">
                     <ItemsControl  Name="Resources">
@@ -34,7 +34,7 @@
                                 <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
                                     <Label FontSize="25" Margin="10, 0, 0, 0" Content="{Binding Name}"/>
                                     <Button Content="Wczytaj" Margin="0, 10, 500, 10" Height="25" Width="100" Tag="{Binding Name}" Click="TournamentLoad_Click"/>
-                                    <Button Content="Edytuj" Margin="110, -35, 390, 10" Height="25" Width="100" Click="TournamentEdit_Click"/>
+                                    <Button Content="Edytuj" Margin="110, -35, 390, 10" Height="25" Width="100" Tag="{Binding Name}" Click="TournamentEdit_Click"/>
                                     <Button Content="Usuń" Margin="220, -35, 280, 10" Height="25" Width="100" Tag="{Binding Path}" Click="TournamentDelete_Click" />
                                 </StackPanel>
                             </DataTemplate>
@@ -43,14 +43,23 @@
                 </Grid>
                 <Grid x:Name="TournamentEditGrid">
                     <Label Content="Edytowanie Turnieju" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
-                    <Label Name="TournamentNotification" Content="" HorizontalAlignment="Left" Margin="10,129,0,0" VerticalAlignment="Top" Width="189" Height="50"/>
                     <TextBox Name="Edit_TournamentName" HorizontalAlignment="Left" Margin="10,60,0,0" Text="Nazwa" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
-                    <ComboBox Name="Edit_DyscyplineComboBox" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" Width="189" FontSize="18">
-                        <ComboBoxItem Content="Volleyball" IsSelected="True"></ComboBoxItem>
-                        <ComboBoxItem Content="Tug Of War"></ComboBoxItem>
-                        <ComboBoxItem Content="Dodgeball"></ComboBoxItem>
-                    </ComboBox>
-                    <Button Name="TournamentEditButton" Content="Edytuj turniej" HorizontalAlignment="Left" Margin="538,425,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentEditButton_Click"/>
+                    <Button Name="TournamentEditButton" Content="Edytuj turniej" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="TournamentEditButton_Click"/>
+                    <TextBox Name="RefereeFirstName" HorizontalAlignment="Left" Margin="10,150,0,0" Text="Imię" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
+                    <TextBox Name="RefereeSurName" HorizontalAlignment="Left" Margin="10,181,0,0" Text="Nazwisko" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
+                    <TextBox Name="RefereeAge" HorizontalAlignment="Left" Margin="10,0,0,0" Text="Wiek" TextWrapping="Wrap" VerticalAlignment="Center" Width="189" FontSize="18"/>
+                    <ListView Margin="236,150,204,110" Name="RefereesListView">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Firstname}" Header="Firstname" Width="90"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Lastname}" Header="Lastname" Width="90"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Age}" Header="Age" Width="50" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Label Content="Dodaj Sędziego" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top" Height="39" Width="189" FontSize="22"/>
+                    <Label Content="Lista Sędziów" HorizontalAlignment="Left" Margin="257,106,0,0" VerticalAlignment="Top" Height="39" Width="211" FontSize="22"/>
+                    <Button Name="RefereeCreateButton" Content="Stwórz Sędziego" HorizontalAlignment="Left" Margin="10,247,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="154" Click="RefereeCreateButton_Click"/>
                 </Grid>
                 <Grid x:Name="TeamCreateGrid" Visibility="Collapsed">
                     <Label Content="Tworzenie Drużyny" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
@@ -102,7 +111,8 @@
                 <Label Content="Drużyny" Margin="0,160,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
                 <Button Name="Team_Create" Content="Stwórz" HorizontalAlignment="Center" Margin="0,207,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuTeam_Create_Click"/>
                 <Button Name="Team_Edit" Content="Edytuj" HorizontalAlignment="Center" Margin="0,263,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuTeam_Edit_Click"/>
-
+                <Label Content="Mecze" Margin="0,319,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                <Button Name="Match_Create" Content="Stwórz" HorizontalAlignment="Center" Margin="0,366,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuMatch_Create_Click"/>
             </Grid>
         </ScrollViewer>
         <Label Name="CurrentlyLoaded" Content="" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="790" Height="40" FontSize="22"/>

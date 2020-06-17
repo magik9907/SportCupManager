@@ -18,6 +18,8 @@ using TournamentManager;
 using TournamentManager.TEnum;
 using TournamentManager.TPerson;
 using TournamentManager.TTeam;
+using TournamentManager.TMatch;
+using System.Text.RegularExpressions;
 
 namespace SportCupManager
 {
@@ -104,8 +106,6 @@ namespace SportCupManager
             else
                 SetNotification("Brak drużyn!");
             TeamsList.Items.Refresh();
-
-            //PlayersListView.ItemsSource = CurrentTournament.Teams;
         }
 
         /* SUBMENU */
@@ -127,11 +127,14 @@ namespace SportCupManager
         {
             CollapseAllGrids();
             TournamentEditGrid.Visibility = Visibility.Visible;
-            TournamentNotification.Content = "";
+            string name = (string)((Button)sender).Tag;
 
-            Edit_TournamentName.Text = (string)((Button)sender).Tag;
+            Edit_TournamentName.Text = name;
+            TournamentEditButton.Tag = name;
+            RefereeCreateButton.Tag = name;
 
-            TournamentEditButton.Tag = (string)((Button)sender).Tag;
+            ITournament tour = Read.Tournament(name);
+            RefereesListView.ItemsSource = tour.Referees;
         }
 
         /* SUBMIT BUTTONS */
@@ -207,8 +210,10 @@ namespace SportCupManager
         private void TournamentEditButton_Click(object sender, RoutedEventArgs e)
         {
             string name = (string)((Button)sender).Tag;
-            ITournament tour = Read.Tournament(name);
-            tour.Name = Edit_TeamName.Text;
+            string changedName = Edit_TournamentName.Text;
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\";
+            Directory.Move(path + name, path + changedName);
+            MenuTournament_Load_Click(sender, e);
         }
 
         private void TeamCreateButton_Click(object sender, RoutedEventArgs e)
@@ -245,6 +250,32 @@ namespace SportCupManager
             team.Name = Edit_TeamName.Text;
             Save.Tournament(CurrentTournament);
             MenuTeam_Edit_Click(sender, e);
+        }
+
+        private void RefereeCreateButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ITournament tour = Read.Tournament((string)((Button)sender).Tag);
+                int id = tour.Referees.Count + 1;
+                Referee referee = new Referee(RefereeFirstName.Text, RefereeSurName.Text, Convert.ToByte(RefereeAge.Text), id);
+                tour.AddReferee(referee);
+                RefereesListView.Items.Refresh();
+                Save.Tournament(tour);
+            }
+            catch (FormatException)
+            {
+                SetNotification("Wiek musi być liczbą!");
+            }
+            catch (OverflowException)
+            {
+                SetNotification("Wiek nie może być tak duży!");
+            }
+        }
+
+        private void MenuMatch_Create_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 

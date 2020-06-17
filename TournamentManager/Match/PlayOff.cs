@@ -68,7 +68,7 @@ namespace TournamentManager
                 if (teams[0] is VolleyballTeam)
                     refNumber = 3;
                 for (int i = 0; i < teams.Count / 2; i++)
-                    rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i * refNumber, refNumber)));
+                    rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i * refNumber, refNumber)), referees);
             }
             public void SetResult(string stat, TTeam.ITeam winner)
             {
