@@ -73,6 +73,14 @@ namespace TournamentManager
             SerializeObject(path, "referees.json", r);
         }
 
+        public static void TournamentObject(ITournament t, string name = null)
+        {
+            IsNameAndObject(name, t, "Tournament");
+
+            var path = Path(name);
+            SerializeObject(path, "tournament.json", t);
+        }
+
         /// <summary>
         /// save teams to json file (teams.json)
         /// </summary>
@@ -121,7 +129,7 @@ namespace TournamentManager
         /// <returns>path as string</returns>
         private static string Path(string name)
         {
-           return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+            return (Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name).Replace(" ", "");
         }
 
         /// <summary>

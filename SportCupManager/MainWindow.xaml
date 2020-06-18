@@ -171,10 +171,27 @@
                     <Button Content="Wprowadź Dane" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="MatchDataSubmit_Click"/>
                     <Label Name="MatchIndexHidden" Tag="" Visibility="Collapsed" />
                 </Grid>
+                <Grid x:Name="PlayoffCreateGrid" Visibility="Collapsed">
+                    <DatePicker Name="DatePlayoff" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Height="29" Width="139" FontSize="14"/>
+                    <Label Content="Generowanie Fazy Pucharowej" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
+                    <Button Name="PlayoffCreateButton" Content="Generuj Finały" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="PlayoffCreateButton_Click"/>
+                </Grid>
+                <Grid x:Name="PlayoffListGrid" Visibility="Collapsed">
+                    <ItemsControl  Name="PlayoffList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
+                                    <Label FontSize="25" Margin="10, 0, 0, 0" Content="{Binding RoundName}" />
+                                    <Button Content="Podgląd" Margin="0, 10, 500, 10" Height="25" Width="100" Tag="{Binding RoundName}" Click="MatchPreview_Click" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
             </Grid>
         </ScrollViewer>
         <ScrollViewer Margin="10,40,717,10">
-            <Grid ScrollViewer.CanContentScroll="True" Height="496">
+            <Grid ScrollViewer.CanContentScroll="True" Height="657">
                 <Label Content="Turnieje" Margin="0,10,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
                 <Button Name="Tournament_Create" Content="Stwórz" HorizontalAlignment="Center" Margin="0,49,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuTournament_Create_Click"/>
                 <Button Name="Tournament_Load" Content="Wczytaj" HorizontalAlignment="Center" VerticalAlignment="Top" Height="50" Width="102" FontSize="16" Margin="0,105,0,0" Click="MenuTournament_Load_Click"/>
@@ -184,6 +201,9 @@
                 <Label Content="Mecze" Margin="0,319,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
                 <Button Name="Match_Create" Content="Stwórz" HorizontalAlignment="Center" Margin="0,366,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuMatch_Create_Click"/>
                 <Button x:Name="Match_List" Content="Lista" HorizontalAlignment="Center" Margin="0,422,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuMatch_List_Click"/>
+                <Label Content="Finały" Margin="0,478,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                <Button x:Name="Playoff_Create" Content="Generuj" HorizontalAlignment="Center" Margin="0,525,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuPlayoff_Create_Click"/>
+                <Button x:Name="Match_List_Copy" Content="Lista" HorizontalAlignment="Center" Margin="0,581,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuPlayoff_List_Click"/>
             </Grid>
         </ScrollViewer>
         <Label Name="CurrentlyLoaded" Content="" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="790" Height="40" FontSize="22"/>
