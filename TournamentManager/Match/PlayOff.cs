@@ -86,6 +86,13 @@ namespace TournamentManager
                         throw new AlreadyFinishedException(GetWinner());
                 }
             }
+            public void WithdrawTeam(TTeam.ITeam t)
+            {
+                if (rounds[0].GetMatch(t).Winner == t)
+                {
+
+                }
+            }
         }
     }
 }

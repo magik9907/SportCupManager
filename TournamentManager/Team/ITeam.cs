@@ -12,10 +12,11 @@ namespace TournamentManager
         public interface ITeam
         {
             string Name { get; set; }
-
+            bool DidWithdraw { get; }
             void AddPlayer(Player p);
             void RemovePlayer(Player p);
-            void SetMatchResult(bool result, string stat);
+            void Withdraw();
+            void SetMatchResult(bool result, bool wasPlayedBefore, bool wasWinner, string stat);
             //format stat for DodgeballTeam: "PlayersLeft"
             //format stat for VolleyballTeam: "Points, ScoreDiff"
             //format stat for TugOfWarTeam: "MatchTime"

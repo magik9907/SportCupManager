@@ -17,6 +17,7 @@ namespace TournamentManager
 			private TTeam.ITeam teamA;
 			private TTeam.ITeam teamB;
 			private TTeam.ITeam winner = null;
+			private bool isWalkover = false;
 			[JsonConverter(typeof(TeamIdConverter))]
 			public TTeam.ITeam TeamA { get { return teamA; } }
 
@@ -28,6 +29,7 @@ namespace TournamentManager
 			[JsonProperty]
 			[JsonConverter(typeof(RefereeIdConverter))]
 			private TPerson.Referee RefA;
+			public bool IsWalkover { get { return isWalkover; } }
 			public Match(Match match)
             {
 				this.teamA = match.teamA;
@@ -52,23 +54,21 @@ namespace TournamentManager
 			//those virtual methods will be defined in subclasses
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
-				if (Winner != null)
-					throw new MatchAlreadyPlayedException(CreateCopy(), winner);
-				if (winner == TeamA || winner == TeamB)
+				if (winner == TeamA || winner == TeamB || winner == null)
 					this.winner = winner;
 				else
 					throw new WinnerIsNotPlayingException(CreateCopy());
 			}
 			public virtual string GetStat() { return null; }
 			//It's just a basic try, can be changed if needed
-			public Boolean IsPlaying(TTeam.ITeam team)
+			public bool IsPlaying(TTeam.ITeam team)
             {
 				return team == TeamA || team == TeamB;
             }
 
-			public Boolean WasPlayed()
+			public bool WasPlayed()
             {
-				return Winner != null;
+				return Winner != null || IsWalkover;
             }
 			public static Match CreateMatch(TTeam.ITeam team1, TTeam.ITeam team2, List<TPerson.Referee> refs)
             {
@@ -79,6 +79,12 @@ namespace TournamentManager
 						return new TMatch.TugOfWarMatch(team1, team2, refs);
 					else
 						return new TMatch.VolleyballMatch(team1, team2, refs);
+			}
+			public virtual void Walkover(TTeam.ITeam absentee)
+            {
+				if (IsWalkover == true)
+					winner = null;
+				isWalkover = true;
 			}
 		}
 
@@ -98,7 +104,7 @@ namespace TournamentManager
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
-				base.SetResult(stat, winner);
+				float tmp = matchLength;
 				//a safety check just in case stat is not a number 
 				try
 				{
@@ -114,18 +120,32 @@ namespace TournamentManager
 				{
 					throw new NotNumberMatchLengthException(CreateCopy());
 				}
-				winner.SetMatchResult(true, stat);
+				winner.SetMatchResult(true, tmp != 0, tmp != 0 && this.Winner == winner, stat);
 				if (winner == TeamA)
-					TeamB.SetMatchResult(false, stat);
+					TeamB.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == winner, stat);
 				else
-					TeamA.SetMatchResult(false, stat);
+					TeamA.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == winner, stat);
+				base.SetResult(stat, winner);
 			}
 			//getStat returns time in seconds (with miliseconds)
 			public override string GetStat()
 			{
 				return matchLength.ToString();
 			}
-		}
+            public override void Walkover(ITeam absentee)
+            {
+				if (IsWalkover == false)
+				{
+					if (absentee == TeamA)
+						SetResult("5", TeamB);
+					else
+						SetResult("5", TeamA);
+				}
+				else
+					matchLength = 0;
+				base.Walkover(absentee);
+			}
+        }
 
 		public class DodgeballMatch : Match
 		{
@@ -142,7 +162,7 @@ namespace TournamentManager
 			}
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
-				base.SetResult(stat, winner);
+				int tmp = winnerPlayersLeft;
 				//if stat is not a number parse will throw format exception
 				try
 				{
@@ -162,15 +182,29 @@ namespace TournamentManager
 				{
 					throw new NotIntPlayersException(CreateCopy());
 				}
-				winner.SetMatchResult(true, stat);
+				winner.SetMatchResult(true, tmp != 0, tmp != 0 && this.Winner == winner, (winnerPlayersLeft - tmp).ToString());
 				if (winner == TeamA)
-					TeamB.SetMatchResult(false, (6 - winnerPlayersLeft).ToString());
+					TeamB.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == winner, (6 - winnerPlayersLeft).ToString());
 				else
-					TeamA.SetMatchResult(false, (6 - winnerPlayersLeft).ToString());
+					TeamA.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == winner, (6 - winnerPlayersLeft).ToString());
+				base.SetResult(stat, winner);
 			}
 			public override string GetStat()
 			{
 				return winnerPlayersLeft.ToString();
+			}
+			public override void Walkover(ITeam absentee)
+			{
+				if (IsWalkover == false)
+				{
+					if (absentee == TeamA)
+						SetResult("5", TeamB);
+					else
+						SetResult("5", TeamB);
+				}
+				else
+					winnerPlayersLeft = 0;
+				base.Walkover(absentee);
 			}
 		}
 
@@ -204,7 +238,9 @@ namespace TournamentManager
             public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				int resultCheck = 0, scoreDiff = 0;
-				base.SetResult(stat, winner);
+				int earlierResult = 0;
+				for (int i = 0; i < 3; i++)
+					earlierResult += scoreTeamA[i] - scoreTeamB[i];
 				//split the strings into strings containing name of the teams and their scores
 				string[] tmp = stat.Split(new string[] {". ", ", ", ": "}, StringSplitOptions.RemoveEmptyEntries);
 				//string should split into 8 smaller string (2 for names of teams, 6 in total for scores in sets)
@@ -319,14 +355,15 @@ namespace TournamentManager
 				}
 				if (winner == TeamA)
                 {
-					TeamA.SetMatchResult(true, (1+ Math.Abs(resultCheck)).ToString() + ", " + scoreDiff.ToString());
-					TeamB.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + (-scoreDiff).ToString());
+					TeamA.SetMatchResult(true, earlierResult != 0, earlierResult != 0 && this.Winner == winner, (1+ Math.Abs(resultCheck)).ToString() + ", " + (scoreDiff-earlierResult).ToString());
+					TeamB.SetMatchResult(false, earlierResult != 0, earlierResult != 0 && this.Winner == winner, (2 - Math.Abs(resultCheck)).ToString() + ", " + (earlierResult-scoreDiff).ToString());
 				}
 				else
                 {
-					TeamA.SetMatchResult(false, (2 - Math.Abs(resultCheck)).ToString() + ", " + scoreDiff.ToString());
-					TeamB.SetMatchResult(true, (1 + Math.Abs(resultCheck)).ToString() + ", " + (-scoreDiff).ToString());
+					TeamA.SetMatchResult(false, earlierResult != 0, earlierResult != 0 && this.Winner == winner, (2 - Math.Abs(resultCheck)).ToString() + ", " + (scoreDiff-earlierResult).ToString());
+					TeamB.SetMatchResult(true, earlierResult != 0, earlierResult != 0 && this.Winner == winner, (1 + Math.Abs(resultCheck)).ToString() + ", " + (earlierResult-scoreDiff).ToString());
 				}
+				base.SetResult(stat, winner);
 			}
 
 			public override string GetStat()
@@ -349,6 +386,20 @@ namespace TournamentManager
 				}
 				return stat;
             }
-		}
+
+            public override void Walkover(ITeam absentee)
+            {
+				if(IsWalkover == false)
+                {
+					if (TeamA == absentee)
+						SetResult(TeamB.Name + ": 21, 21, 0. " + absentee.Name + ": 0, 0, 0", TeamB);
+					if (TeamB == absentee)
+						SetResult(TeamA.Name + ": 21, 21, 0. " + absentee.Name + ": 0, 0, 0", TeamA);
+				}
+				else
+					scoreTeamB = scoreTeamA = new int[3]{ 0, 0, 0};
+				base.Walkover(absentee);
+			}
+        }
 	}
 }

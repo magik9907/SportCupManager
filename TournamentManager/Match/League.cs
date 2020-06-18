@@ -46,7 +46,7 @@ namespace TournamentManager
                     for (int j = 1; j + i < t.Count; j++)
                         if (t[i] == t[j + i])
                             throw new DuplicateTeamException(t[i]);
-                if (referees.Count < t.Count / 2 * refsRequired)
+                if (referees.Count < (t.Count / 2) * refsRequired)
                     throw new NotEnoughRefereesException(referees.Count, t.Count / 2 * refsRequired);
                 else
                     this.referees = referees;
@@ -113,6 +113,10 @@ namespace TournamentManager
                     Boolean flagA = false;
                     Boolean flagB = false;
                     Boolean flagAnB = false;
+                    if (rounds.Capacity >= rounds.Count + 1)
+                        flagAnB = true;
+                    if (rounds.Capacity - rounds.Count >= 2)
+                        flagA = true;
                     for (int j = 0; j < rounds.Count; j++)
                     {
                         /*
@@ -127,7 +131,7 @@ namespace TournamentManager
                          */
                         if (rounds[j].IsScheduled(match.TeamA, match.TeamB))
                             throw new AlreadyPlayingInLeagueException(CreateCopy(), match);
-                        if (!match.IsPlaying(teams[i]) && rounds[j].Date != date)
+                        if (!match.IsPlaying(teams[i]))
                         {
                             if (rounds[j].IsScheduled(teams[i], match.TeamA))
                                 flagA = true;
@@ -143,21 +147,22 @@ namespace TournamentManager
                                 flagB = true;
                         }
                     }
-                    if (!(flagA || flagB) || !(flagAnB || (flagA && flagB)))
+                    if (((!flagAnB && !(flagA && flagB)) || !(flagA || flagB)) && !match.IsPlaying(teams[i]))
                         throw new ImpossibleScheduleException(CreateCopy());
                 }
-                for (int i  = 0; i < rounds.Count; i++)
-                    if(rounds[i].Date == date)
+                for (int i = 0; i < rounds.Count; i++)
+                    if (rounds[i].Date[0] == date[0] && rounds[i].Date[1] == date[1] && rounds[i].Date[2] == date[2])
                     {
                         try
                         {
                             rounds[i].AddMatch(match);
                         }
-                        catch(RoundRuntimeException e)
+                        catch (RoundRuntimeException e)
                         {
                             rounds.Add(e.RecreateRound());
                             throw new ImpossibleScheduleException(CreateCopy());
                         }
+                        return;
                     }
                 try
                 {
@@ -165,7 +170,7 @@ namespace TournamentManager
                     tmp.AddMatch(match);
                     rounds.Add(tmp);
                 }
-                catch(DateException)
+                catch (DateException)
                 {
                     throw new ImpossibleScheduleException(CreateCopy());
                 }
@@ -185,7 +190,7 @@ namespace TournamentManager
                     for (int index2 = 0; index2 < rounds.Capacity / 2 + 1; index2++)
                     {
                         if (i != j)
-                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange(index2 * refNumber, refNumber)));
+                            tmp.AddMatch(TMatch.Match.CreateMatch(teams[i], teams[j], referees.GetRange((index2 - 1) * refNumber, refNumber)));
                         else
                         {
                             if (teams.Count != rounds.Capacity)
@@ -227,6 +232,15 @@ namespace TournamentManager
                     return true;
                 }
                 return false;
+            }
+            public void WithdrawTeam(TTeam.ITeam t)
+            {
+                if (teams.Count <= 4)
+                    throw new NotEnoughTeamsLeftNumber(CreateCopy(), t);
+                for (int i = 0; i < rounds.Count; i++)
+                    if(rounds[i].IsFinished() && rounds[i].IsPlaying(t))
+                            rounds[i].GetMatch(t).Walkover(t);
+                t.Withdraw();
             }
         }
     }
