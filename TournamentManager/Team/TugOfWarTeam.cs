@@ -59,23 +59,47 @@ namespace TournamentManager
                 return String.Compare(a.Name, b.Name) < 0;
             }
 
+            //string format "newTime, oldTime"
             public override void SetMatchResult(bool result, bool wasPlayedBefore, bool wasWinner, string stat)
             {
+                string[] tmp = stat.Split(new string[] { " - " }, StringSplitOptions.RemoveEmptyEntries);
                 if(!wasPlayedBefore)
                     this.MatchesPlayed++;
                 if (result)
                 {
-                    if(!wasWinner)
+                    if (!wasWinner)
+                    {
                         this.MatchesWon++;
-                    this.SumWinTime += float.Parse(stat);
+                        this.SumLossTime -= float.Parse(tmp[1]);
+                    }
+                    else
+                        this.SumWinTime -= float.Parse(tmp[1]);
+                    this.SumWinTime += float.Parse(tmp[0]);
                 }
                 else
                 {
                     if (wasWinner)
+                    {
                         this.MatchesWon--;
-                    this.SumLossTime += float.Parse(stat);
+                        this.SumWinTime -= float.Parse(tmp[1]);
+                    }
+                    else
+                        this.SumLossTime -= float.Parse(tmp[1]);
+                    this.SumLossTime += float.Parse(tmp[0]);
                 }
-                    
+                SetAverages();
+            }
+
+            private void SetAverages()
+            {
+                if (MatchesWon > 0)
+                    AvWinTime = SumWinTime / MatchesWon;
+                else
+                    AvWinTime = 0;
+                if (MatchesPlayed > MatchesWon)
+                    AvLossTime = SumLossTime / (MatchesPlayed - MatchesWon);
+                else
+                    AvLossTime = 0;
             }
 
             public override void Withdraw()

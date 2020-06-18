@@ -507,7 +507,7 @@ namespace TournamentManager
             {
                 get
                 {
-                    return winner + " has won the match in two sets, third set should not be played";
+                    return winner.Name + " has won the match in two sets, third set should not be played";
                 }
             }
         }
