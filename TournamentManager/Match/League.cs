@@ -17,13 +17,16 @@ namespace TournamentManager
         public class League
         {
             private List<Round> rounds;
-            
+            private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
+            private List<TPerson.Referee> referees = new List<TPerson.Referee>();
+
             [JsonProperty]
             public List<Round> Rounds
             {
                 get { return rounds; }
                 set { rounds = value; }
             }
+            
             [JsonIgnore]
             public List<TTeam.ITeam> Teams
             {
@@ -36,8 +39,7 @@ namespace TournamentManager
                     teams = value;
                 }
             }
-            private List<TTeam.ITeam> teams = new List<TTeam.ITeam>();
-            private List<TPerson.Referee> referees = new List<TPerson.Referee>();
+
             public List<TPerson.Referee> Referees
             {
                 set
@@ -45,10 +47,12 @@ namespace TournamentManager
                     referees = value;
                 }
             }
+
             //generate league object 
             //is used to read from file in Read class
             //DON'T REMOVE!!!
             public League() { }
+
             public League(List<TTeam.ITeam> t, List<TPerson.Referee> referees)
             {
                 int refsRequired = 1;
@@ -70,16 +74,19 @@ namespace TournamentManager
                     this.referees = referees;
                 this.teams = t;
             }
+
             public League(League copy)
             {
                 this.teams = copy.teams;
                 this.rounds = copy.rounds;
                 this.referees = copy.referees;
             }
+
             public League CreateCopy()
             {
                 return new League(this);
             }
+
             public void SortTeams()
             {
                 for (int i = 0; i < teams.Count; i++)
@@ -108,6 +115,7 @@ namespace TournamentManager
                             }
                     }
             }
+
             public void SetResult(string stat, TTeam.ITeam winner, TTeam.ITeam loser)
             {
                 for (int i = 0; i < rounds.Count; i++)
@@ -117,6 +125,7 @@ namespace TournamentManager
                         break;
                     }
             }
+
             public List<TTeam.ITeam> GetFinalTeams(int number)
             {
                 SortTeams();
@@ -193,6 +202,7 @@ namespace TournamentManager
                     throw new ImpossibleScheduleException(CreateCopy());
                 }
             }
+
             //this is for automatic scheduling
             public void AutoSchedule(int[] startDate, int spaceBetweenMatches)
             {
@@ -253,6 +263,7 @@ namespace TournamentManager
                 }
                 return false;
             }
+
             public void WithdrawTeam(TTeam.ITeam t)
             {
                 int teamsLeft = 0;

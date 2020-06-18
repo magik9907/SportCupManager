@@ -17,10 +17,11 @@ namespace TournamentManager
         public class Round
         {
             private List<TMatch.Match> listMatches = new List<TMatch.Match>();
-            
             private int[] date = new int[3];
             private string roundName;
+
             public int[] Date { get { return date; }  set { date = value; } }
+
             public string RoundName
             {
                 set
@@ -36,6 +37,7 @@ namespace TournamentManager
             {
                 get { return listMatches; }
             }
+
             public Round(string name, int[] date)
             {
                 if (date.Length != 3)
@@ -47,16 +49,19 @@ namespace TournamentManager
                 date.CopyTo(this.date, 0);
                 roundName = name;
             }
+
             public Round(Round round)
             {
                 this.date = round.date;
                 this.listMatches = round.listMatches;
                 this.roundName = round.roundName;
             }
+
             public Round CreateCopy()
             {
                 return new Round(this);
             }
+
             public void AddMatch(TMatch.Match match)
             {
                 //this checks whether or not one of the teams specified are already playing someone this round
@@ -91,6 +96,7 @@ namespace TournamentManager
                 }
                 return flag;
             }
+
             //check whether or not two teams are playing against each other
             public Boolean IsScheduled(TTeam.ITeam team1, TTeam.ITeam team2)
             {
@@ -99,6 +105,7 @@ namespace TournamentManager
                         return true;
                 return false;
             }
+
             //check whether or not all of the matches in this round have been completed
             public Boolean IsFinished()
             {
@@ -111,6 +118,7 @@ namespace TournamentManager
                 }
                 return true;
             }
+
             internal void SetResult(string stat, TTeam.ITeam winner)
             {
                 GetMatch(winner).SetResult(stat, winner);
