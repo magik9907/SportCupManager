@@ -155,7 +155,7 @@
                     <Label Name="DetailTeamBStatB" Content="Pprawy2" HorizontalAlignment="Left" Margin="469,210,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Right" FontSize="22"/>
                     <Label Name="DetailTeamBStatC" Content="Pprawy3" HorizontalAlignment="Left" Margin="469,244,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Right" FontSize="22"/>
                 </Grid>
-                <Grid x:Name="MatchEditDataGrid">
+                <Grid x:Name="MatchEditDataGrid" Visibility="Collapsed">
                     <Label Content="Wprowadzanie Danych" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
                     <ComboBox Name="WinnerBox" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="189" FontSize="18">
                         <ComboBoxItem Name="ChooseTeamA" Content="" IsSelected="True"></ComboBoxItem>

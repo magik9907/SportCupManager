@@ -222,6 +222,12 @@ namespace SportCupManager
                     DetailResultB.Foreground = Brushes.Red;
                 }
             }
+            else
+            {
+                DetailResultA.Content = "";
+                DetailResultB.Content = "";
+            }
+
             string[] statsA = match.TeamA.GetStats().Split(", ");
             string[] statsB = match.TeamB.GetStats().Split(", ");
 
@@ -254,12 +260,17 @@ namespace SportCupManager
         }
         private void MatchEditData_Click(object sender, RoutedEventArgs e)
         {
-            CollapseAllGrids();
-            MatchEditDataGrid.Visibility = Visibility.Visible;
-
             int index = (int)((Button)sender).Tag;
             Round currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
             TournamentManager.TMatch.Match match = currentRound.ListMatches[index];
+            if (match.WasPlayed())
+            {
+                MenuMatch_List_Click(sender, e);
+                return;
+            }
+
+            CollapseAllGrids();
+            MatchEditDataGrid.Visibility = Visibility.Visible;
 
             MatchIndexHidden.Content = index;
 
@@ -472,34 +483,61 @@ namespace SportCupManager
 
         private void MatchDataSubmit_Click(object sender, RoutedEventArgs e)
         {
-            Round currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
-            TournamentManager.TMatch.Match match = currentRound.ListMatches[(int)MatchIndexHidden.Content];
-            ITeam winner = (WinnerBox.Text == match.TeamA.Name) ? match.TeamA : match.TeamB;
-            string stats;
-            if (match is VolleyballMatch)
+            try
             {
-                stats = match.TeamA.Name + ": " + Stat1.Text + ", " + Stat2.Text + ", " + Stat3.Text + ". " + match.TeamB.Name + ": " + Stat4.Text + ", " + Stat5.Text + ", " + Stat6.Text;
-                match.SetResult(stats, winner);
+                Round currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
+                TournamentManager.TMatch.Match match = currentRound.ListMatches[(int)MatchIndexHidden.Content];
+                ITeam winner = (WinnerBox.Text == match.TeamA.Name) ? match.TeamA : match.TeamB;
+                string stats;
+                if (match is VolleyballMatch)
+                {
+                    stats = match.TeamA.Name + ": " + Stat1.Text + ", " + Stat2.Text + ", " + Stat3.Text + ". " + match.TeamB.Name + ": " + Stat4.Text + ", " + Stat5.Text + ", " + Stat6.Text;
+                    match.SetResult(stats, winner);
+                }
+                else if (match is TugOfWarMatch)
+                {
+                    stats = Stat1.Text;
+                    match.SetResult(stats, winner);
+                }
+                else if (match is DodgeballMatch)
+                {
+                    stats = Stat1.Text;
+                    match.SetResult(stats, winner);
+                }
+
+                if (WalkoverCheckbox.IsChecked.Value && winner == match.TeamA)
+                {
+                    match.Walkover(match.TeamB);
+                }
+                else if (WalkoverCheckbox.IsChecked.Value && winner == match.TeamB)
+                {
+                    match.Walkover(match.TeamA);
+                }
+
+                Save.League(CurrentTournament.League, CurrentTournament.Name);
             }
-            else if (match is TugOfWarMatch)
+            catch (NotIntPlayersException)
             {
-                stats = Stat1.Text;
-                match.SetResult(stats, winner);
+                SetNotification("Musisz podać poprawną ilość graczy!");
             }
-            else if (match is DodgeballMatch)
+            catch (NonIntScoreException)
             {
-                stats = Stat1.Text;
-                match.SetResult(stats, winner);
+                SetNotification("Musisz podać poprawny wynik!");
+            }
+            catch (TooHighScoreException)
+            {
+                SetNotification("Wynik seta jest zbyt duży!");
+            }
+            catch (ThirdSetException)
+            {
+                SetNotification("Niepoprawnie podane sety!");
+            }
+            catch (NoSetWinnerException)
+            {
+                SetNotification("Niepoprawnie podane sety!");
             }
 
-            if(WalkoverCheckbox.IsChecked.Value && winner == match.TeamA)
-            {
-                match.Walkover(match.TeamB);
-            }
-            else if(WalkoverCheckbox.IsChecked.Value && winner == match.TeamB)
-            {
-                match.Walkover(match.TeamA);
-            }
+            MenuMatch_List_Click(sender, e);
         }
     }
 
