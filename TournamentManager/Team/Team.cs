@@ -51,7 +51,10 @@ namespace TournamentManager
                 MatchesWon = 0;
             }
 
-            public abstract string GetStats();
+            public virtual string GetStats()
+            {
+                return null;
+            }
 
             public override string ToString()
             {
