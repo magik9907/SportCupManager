@@ -41,14 +41,14 @@ namespace TournamentManagerTest
         public void ConstructorTestOneNull_String()
         {
             Assert.ThrowsException<TournamentManager.TException.TournamentDataException>(
-                () => new TournamentManager.Tournament(null, (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball)
+                () => new TournamentManager.Tournament(null, TournamentManager.TEnum.TournamentDyscypline.dodgeball)
             );
         }
 
         [TestMethod]
         public void ConstructorTestDataVerify()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", TournamentManager.TEnum.TournamentDyscypline.dodgeball);
 
             Assert.AreEqual("name",t.Name);
             Assert.IsTrue(Enum.IsDefined(typeof(TournamentManager.TEnum.TournamentDyscypline),t.Dyscypline));
@@ -58,7 +58,7 @@ namespace TournamentManagerTest
         [TestMethod]
         public void TestRemoveRefereeNoDefined()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TPerson.Referee refA = (TournamentManager.TPerson.Referee)CreatePerson("Referee","imei","nazwisko",5);
             try
             {
@@ -86,7 +86,7 @@ namespace TournamentManagerTest
         [TestMethod]
         public void TestAddReferee()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TPerson.Referee refA = (TournamentManager.TPerson.Referee)CreatePerson("Referee", "imei", "nazwisko", 5);
             try
             {
@@ -105,22 +105,9 @@ namespace TournamentManagerTest
         }
 
         [TestMethod]
-        public void TestAddRefereeNoDefined()
-        {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
-            TournamentManager.TPerson.Referee refA =(TournamentManager.TPerson.Referee) CreatePerson("Referee", "imei", "nazwisko", 5);
-
-            Assert.ThrowsException<TournamentManager.TException.ObjectNotDefined>(
-                () =>
-                {
-                    t.AddReferee(null);
-                });
-        }
-
-        [TestMethod]
         public void TestRemoveTeam()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall","name");
             try
             {
@@ -143,7 +130,7 @@ namespace TournamentManagerTest
         [TestMethod]
         public void TestAddTeam()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name",   TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall", "name");
             try
             {
@@ -164,7 +151,7 @@ namespace TournamentManagerTest
         [TestMethod]
         public void TestAddTeamNoDefined()
         {
-            TournamentManager.Tournament t = new TournamentManager.Tournament("name", (int)TournamentManager.TEnum.TournamentDyscypline.dodgeball);
+            TournamentManager.Tournament t = new TournamentManager.Tournament("name", TournamentManager.TEnum.TournamentDyscypline.dodgeball);
             TournamentManager.TTeam.ITeam teamA = CreateTeam("DodgeBall", "name");
 
             Assert.ThrowsException<TournamentManager.TException.ObjectNotDefined>(
@@ -179,11 +166,11 @@ namespace TournamentManagerTest
             switch (type)
             {
                 case "DodgeBall":
-                    return (TournamentManager.TTeam.ITeam)new TournamentManager.TTeam.DodgeballTeam(name);
+                    return (TournamentManager.TTeam.ITeam)new TournamentManager.TTeam.DodgeballTeam(name,1);
                 case "TugOfWar":
-                    return (TournamentManager.TTeam.ITeam)new TournamentManager.TTeam.TugOfWarTeam(name);
+                    return (TournamentManager.TTeam.ITeam)new TournamentManager.TTeam.TugOfWarTeam(name,1);
                 case "Voleyball":
-                    return (TournamentManager.TTeam.ITeam)new TournamentManager.TTeam.VolleyballTeam(name);
+                    return (TournamentManager.TTeam.ITeam)new TournamentManager.TTeam.VolleyballTeam(name,1);
                 default: return null;
             }
         }
@@ -198,7 +185,7 @@ namespace TournamentManagerTest
             switch (type)
             {
                 case "Referee":
-                    return (TournamentManager.TPerson.IPerson)new TournamentManager.TPerson.Referee(name, surname, age);
+                    return (TournamentManager.TPerson.IPerson)new TournamentManager.TPerson.Referee(name, surname, age,1);
                 case "Player":
                     return (TournamentManager.TPerson.IPerson)new TournamentManager.TPerson.Player(name, surname, age, number);
                 default:return null;
