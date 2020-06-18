@@ -48,12 +48,14 @@ namespace TournamentManager
                 return String.Compare(a.Name, b.Name) < 0;
             }
 
-            public override void SetMatchResult(bool result, string stat)
+            public override void SetMatchResult(bool result, bool wasPlayedBefore, bool wasWinner, string stat)
             {
-                this.MatchesPlayed++;
+                if(!wasPlayedBefore)
+                    this.MatchesPlayed++;
                 if (result)
                 {
-                    this.MatchesWon++;
+                    if(!wasWinner)
+                        this.MatchesWon++;
                     this.SumWinTime += float.Parse(stat);
                 }
                 else
@@ -61,6 +63,16 @@ namespace TournamentManager
                     this.SumLossTime += float.Parse(stat);
                 }
                     
+            }
+
+            public override void Withdraw()
+            {
+                base.Withdraw();
+                SumLossTime = 0;
+                SumWinTime = 0;
+                for (int i = 0; i < MatchesPlayed; i++)
+                    SumLossTime += 5;
+
             }
 
             public override string GetStats()

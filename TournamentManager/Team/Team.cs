@@ -9,16 +9,18 @@ namespace TournamentManager
         public abstract class Team : ITeam, ITeamId
         {
             private int idTeam;
-            
-            public int Id{
-                get { return idTeam; } 
+
+            public int Id {
+                get { return idTeam; }
             }
-            
+
+            private bool didWithdraw = false;
             public string Name { get; set; }
             [JsonProperty]
             public List<TPerson.Player> listPlayers = new List<TPerson.Player>();
             public int MatchesPlayed { get; set; }
             public int MatchesWon { get; set; }
+            public bool DidWithdraw { get { return didWithdraw; } }
 
             public Team(string name, int id)
             {
@@ -41,7 +43,13 @@ namespace TournamentManager
                 listPlayers.Remove(p);
             }
 
-            public abstract void SetMatchResult(bool result, string stat);
+            public abstract void SetMatchResult(bool result, bool wasPlayedBefore, bool wasWinner, string stat);
+
+            public virtual void Withdraw()
+            {
+                didWithdraw = true;
+                MatchesWon = 0;
+            }
 
             public abstract string GetStats();
 

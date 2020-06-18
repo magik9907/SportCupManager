@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TournamentManager
 {
@@ -79,9 +80,11 @@ namespace TournamentManager
             }
         }
 
+        //set of Exceptions which may occur whlie creating an object
         public abstract class ObjectCreationException : Exception
         { }
 
+        //set of Exceptions which may occur while operating on a Match
         public abstract class MatchRuntimeException : Exception
         {
             protected TMatch.Match match;
@@ -95,6 +98,7 @@ namespace TournamentManager
             }
         }
 
+        //set of Exceptions which may occur while operating on Round
         public abstract class RoundRuntimeException : Exception
         {
             protected TRound.Round round;
@@ -108,6 +112,7 @@ namespace TournamentManager
             }
         }
 
+        //set of Exception related to dates
         public abstract class DateException : ObjectCreationException
         {
             protected int[] date;
@@ -117,6 +122,7 @@ namespace TournamentManager
             }
         }
 
+        //set of Exceptions which may occur while operating on League
         public abstract class LeagueRuntimeException : Exception
         {
             protected TRound.League league;
@@ -130,6 +136,7 @@ namespace TournamentManager
             }
         }
 
+        //set of Exceptions which may occur while operating on PlayOff(will try to finish soon)
         public abstract class PlayOffRuntimeException : Exception
         { }
 
@@ -193,6 +200,23 @@ namespace TournamentManager
                 get
                 {
                     return match.TeamA.Name + " has already a match scheduled with " + match.TeamB.Name;
+                }
+            }
+        }
+
+        //Exception if user wanted to withdraw a team from the league and there would be less than 4 teams left
+        public class NotEnoughTeamsLeftNumber : LeagueRuntimeException
+        {
+            TTeam.ITeam team;
+            public NotEnoughTeamsLeftNumber(TRound.League league, TTeam.ITeam team) : base(league)
+            {
+                this.team = team;
+            }
+            public override string Message
+            {
+                get
+                {
+                    return "Withdrawing " + team.Name + " would leave less than 4 teams in the league. If you want to withdraw " + team.Name + ", please set up PlayOff first.";
                 }
             }
         }
@@ -300,20 +324,6 @@ namespace TournamentManager
                     }
                     return tmp + " is not in a supported format";
                 }
-            }
-        }
-
-        //Exception if user wanted to set result of a match that was already played
-        public class MatchAlreadyPlayedException : MatchRuntimeException
-        {
-            TTeam.ITeam winner;
-            public MatchAlreadyPlayedException(TMatch.Match match,  TTeam.ITeam winner) : base(match)
-            {
-                this.winner = winner;
-            }
-            public override string Message
-            {
-                get { return "The match was already played. Team " + winner.Name + " has won the match"; }
             }
         }
 

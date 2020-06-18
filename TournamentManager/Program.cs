@@ -7,7 +7,7 @@ namespace TournamentManager
     {
         static void Main(string[] args)
         {
-            TTeam.ITeam te;
+            TTeam.ITeam te1;
             ITournament t = null;
             int i;
            
@@ -33,7 +33,7 @@ namespace TournamentManager
                     i++;
                     t.AddReferee(new TPerson.Referee("j", "k", 1, i));
                     i = 1;
-                    TTeam.ITeam te1 = new TTeam.VolleyballTeam("11", i);
+                    te1 = new TTeam.VolleyballTeam("11", i);
                     te1.AddPlayer(new TPerson.Player("1", "1", 1, 1));
                     te1.AddPlayer(new TPerson.Player("2", "2", 1, 1));
                     te1.AddPlayer(new TPerson.Player("3", "3", 1, 1));

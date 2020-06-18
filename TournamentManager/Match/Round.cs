@@ -44,7 +44,7 @@ namespace TournamentManager
                     throw new WrongMonthException(date);
                 if (date[0] > MaxDays(date) || date[0] <= 0)
                     throw new WrongDayException(date);
-                this.date = date;
+                date.CopyTo(this.date, 0);
                 roundName = name;
             }
             public Round(Round round)
