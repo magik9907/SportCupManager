@@ -181,6 +181,7 @@ namespace TournamentManager
                         }
                         return;
                     }
+                if(rounds.Capacity == rounds.Count)
                 try
                 {
                     Round tmp = new Round("round played on " + date[0] + "/" + date[1] + "/" + date[2], date);
@@ -195,6 +196,8 @@ namespace TournamentManager
             //this is for automatic scheduling
             public void AutoSchedule(int[] startDate, int spaceBetweenMatches)
             {
+                if (rounds.Count != 0)
+                    throw new ForbiddenAutoScheduleException(CreateCopy());
                 //refNumber holds the number of referees required for a match
                 int i = 0, j = 0, refNumber = 1;
                 if (teams[0] is VolleyballTeam)

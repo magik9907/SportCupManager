@@ -232,6 +232,19 @@ namespace TournamentManager
             }
         }
 
+        //Exception if user wanted to autoschedule after scheduling any matches manually
+        public class ForbiddenAutoScheduleException : LeagueRuntimeException
+        {
+            public ForbiddenAutoScheduleException (TRound.League league) : base(league){}
+            public override string Message
+            {
+                get
+                {
+                    return "You can't autoschedule after scheduling a match manually";
+                }
+            }
+        }
+
         //Exception if there were two exactly same teams in the team list
         public class DuplicateTeamException : ObjectCreationException
         {
