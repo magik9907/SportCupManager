@@ -546,9 +546,7 @@ namespace SportCupManager
                 else if (WalkoverCheckbox.IsChecked.Value && winner == match.TeamB)
                 {
                     match.Walkover(match.TeamA);
-                }
-
-                if (match is VolleyballMatch)
+                }else if (match is VolleyballMatch)
                 {
                     stats = match.TeamA.Name + ": " + Stat1.Text + ", " + Stat2.Text + ", " + Stat3.Text + ". " + match.TeamB.Name + ": " + Stat4.Text + ", " + Stat5.Text + ", " + Stat6.Text;
                     match.SetResult(stats, winner);
@@ -563,6 +561,8 @@ namespace SportCupManager
                     stats = Stat1.Text;
                     match.SetResult(stats, winner);
                 }
+
+                
 
                 Save.League(CurrentTournament.League, CurrentTournament.Name);
             }
