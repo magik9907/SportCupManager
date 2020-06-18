@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using TournamentManager.TRound;
 using System.Runtime.Serialization;
 using TournamentManager.TException;
+using System.Text.RegularExpressions;
 
 namespace TournamentManager
 {
@@ -39,7 +40,31 @@ namespace TournamentManager
             t.League.Teams = t.Teams;
             t.League.Referees = t.Referees;
 
+            t.PlayOff = PlayOff(path, refDic, teamDic, enumType);
+
             return t;
+        }
+
+        public static TRound.PlayOff PlayOff(string path, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams, TEnum.TournamentDyscypline tenum)
+        {
+            TRound.PlayOff p = new TRound.PlayOff();
+
+            var json = JsonConvert.DeserializeObject<Dictionary<string, List<RoundTempl>>>(File.ReadAllText(path + "\\playoff.json"))["Rounds"];
+            List<TRound.Round> rP = new List<TRound.Round>();
+            RoundTempl elem;
+            TRound.Round round;
+            TMatch.Match match;
+            int j;
+            for (int i = 0; i < json.Count; i++)
+            {
+                elem = json[i];
+               
+                rP.Add(Round(elem, tenum, referees,teams));
+            }
+
+
+            p.Rounds = rP;
+            return p;
         }
 
 
@@ -51,61 +76,95 @@ namespace TournamentManager
 
             List<TRound.Round> rL = new List<TRound.Round>();
             RoundTempl elem;
-            TRound.Round round;
-            TMatch.Match match;
-            int j;
+           
+            
             for (int i = 0; i < json.Count; i++)
             {
                 elem = json[i];
-                round =   new TRound.Round(elem.RoundName, elem.Date);
-                switch (tenum)
-                {
-                    case TEnum.TournamentDyscypline.dodgeball:
-                        for (j = 0; j < elem.ListMatches.Count; j++)
-                        {
-                            match = new TMatch.DodgeballMatch(teams[elem.ListMatches[j].TeamA], teams[elem.ListMatches[j].TeamB], new List<TPerson.Referee>{
-                                referees[elem.ListMatches[j].RefA]
-                            });
-
-                            match.Winner = teams[elem.ListMatches[j].Winner];
-
-                            round.AddMatch(match);
-                        }
-                        break;
-                    case TEnum.TournamentDyscypline.tugofwar:
-                        for (j = 0; j < elem.ListMatches.Count; j++)
-                        {
-                            match = new TMatch.TugOfWarMatch(teams[elem.ListMatches[j].TeamA], teams[elem.ListMatches[j].TeamB], new List<TPerson.Referee>{
-                                referees[elem.ListMatches[j].RefA]
-                            });
-
-                            match.Winner = teams[elem.ListMatches[j].Winner];
-
-                            round.AddMatch(match);
-                        }
-                        break;
-                    case TEnum.TournamentDyscypline.volleyball:
-                        for (j = 0; j < elem.ListMatches.Count; j++) {
-                            match = new TMatch.VolleyballMatch(teams[elem.ListMatches[j].TeamA], teams[elem.ListMatches[j].TeamB],new List<TPerson.Referee>{
-                                referees[elem.ListMatches[j].RefA],
-                                referees[elem.ListMatches[j].assistantReferees[0]],
-                                referees[elem.ListMatches[j].assistantReferees[1]]
-                            });
-
-                            match.Winner = teams[elem.ListMatches[j].Winner];
-
-                            round.AddMatch(match);
-                        }
-                        
-                    break;
-                default: throw new TournamentDyscyplineNotIdentify();
-                }
-                rL.Add(round);
+                
+                rL.Add(Round(elem,tenum,referees, teams));
             }
             l.Rounds = rL;
             return l;
         }
-       
+
+        private static TRound.Round Round(RoundTempl elem, TEnum.TournamentDyscypline tenum, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams)
+        {
+            int j;
+            TMatch.Match match;
+            TRound.Round round = new TRound.Round(elem.RoundName, elem.Date);
+            switch (tenum)
+            {
+                case TEnum.TournamentDyscypline.dodgeball:
+                    for (j = 0; j < elem.ListMatches.Count; j++)
+                    {
+                        match = CreateMatch(elem.ListMatches[j], tenum, referees, teams);
+                        ((TMatch.DodgeballMatch)match).SetResult(elem.ListMatches[j].winnerPlayersLeft);
+                        round.AddMatch(match);
+                    }
+                    break;
+                case TEnum.TournamentDyscypline.tugofwar:
+                    for (j = 0; j < elem.ListMatches.Count; j++)
+                    {
+
+                        match = CreateMatch(elem.ListMatches[j], tenum, referees, teams);
+                        ((TMatch.TugOfWarMatch)match).SetResult(elem.ListMatches[j].matchLength);
+                        round.AddMatch(match);
+                    }
+                break;
+                case TEnum.TournamentDyscypline.volleyball:
+                    for (j = 0; j < elem.ListMatches.Count; j++)
+                {
+                        match = CreateVolleyballMatch(elem.ListMatches[j], tenum, referees, teams);
+                    round.AddMatch(match);
+                }
+
+                break;
+                default: throw new TournamentDyscyplineNotIdentify();
+            }
+            return round;
+        }
+
+        private static TMatch.Match CreateVolleyballMatch(MatchTempl elem, TEnum.TournamentDyscypline tenum, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams)
+        {
+            TMatch.Match match = new TMatch.VolleyballMatch(teams[elem.TeamA], teams[elem.TeamB], new List<TPerson.Referee>{
+                                referees[elem.RefA],
+                                referees[elem.assistantReferees[0]],
+                                referees[elem.assistantReferees[1]]
+                            });
+
+            ((TMatch.VolleyballMatch)match).SetResult(elem.ScoreTeamA, elem.ScoreTeamB);
+
+            if (elem.Winner != null)
+            {
+                match.Winner = teams[int.Parse(elem.Winner)];
+
+            }
+
+            return match;
+        }
+
+        private static TMatch.Match CreateMatch(MatchTempl elem, TEnum.TournamentDyscypline tenum, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams)
+        {
+            TMatch.Match match;
+            switch (tenum) {
+                case TEnum.TournamentDyscypline.dodgeball:
+                    
+                     match = new TMatch.DodgeballMatch(teams[elem.TeamA], teams[elem.TeamB], new List<TPerson.Referee>{
+                        referees[elem.RefA]
+                    });
+                break;
+                default: return null;
+            }
+
+            if (elem.Winner != null)
+            {
+                match.Winner = teams[int.Parse(elem.Winner)];
+
+            }  
+
+            return match;
+        }
 
         public static Dictionary<int, TPerson.Referee> Referee(string path)
         {
@@ -166,40 +225,48 @@ namespace TournamentManager
             return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
         }
 
+
+
+        // template class using tp deserialize from file  
+
         private class TeamTempl
         {
-            public List<Player> listPlayers;
-            public int Points;
-            public int ScoreDiff;
-            public int Id;
-            public string Name;
-            public int MatchesPlayed;
-            public int MatchesWon;
+            public List<Player> listPlayers=null;
+            public int Points = 0;
+            public int ScoreDiff = 0;
+            public int Id = 0;
+            public string Name = null;
+            public int MatchesPlayed = 0;
+            public int MatchesWon = 0;
 
             public class Player
             {
-                public byte Number;
-                public byte Age;
-                public string Firstname;
-                public string Lastname;
+                public byte Number = 0;
+                public byte Age = 0;
+                public string Firstname = null;
+                public string Lastname = null;
             }
         }
 
         private class RoundTempl
         {
-            public int[] Date;
-            public string RoundName;
-            public List<MatchTempl> ListMatches;
+            public int[] Date = null;
+            public string RoundName = null;
+            public List<MatchTempl> ListMatches = null;
             
         }
+
         private class MatchTempl
         {
-            public int[] assistantReferees;
-
-            public int TeamA;
-            public int TeamB;
-            public int Winner;
-            public int RefA;
+            public int[] assistantReferees = null;
+            public int[] ScoreTeamA = null;
+            public int[] ScoreTeamB = null;
+            public float matchLength = 0;
+            public int winnerPlayersLeft = 0;
+            public int TeamA = 0;
+            public int TeamB = 0;
+            public string Winner = null;
+            public int RefA = 0;
 
 
         }
