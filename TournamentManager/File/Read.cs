@@ -282,12 +282,10 @@ namespace TournamentManager
         {
             if (File.ReadLines(path + "\\teams.json").First() == "null") throw new TException.FileIsEmpty();
             var str = File.ReadAllText(path + "\\teams.json");
+          
             List<TeamTempl> teamDesc;
-
-
             teamDesc = JsonConvert.DeserializeObject<List<TeamTempl>>(str );
             
-            List<TTeam.ITeam> team = new List<TTeam.ITeam>();
             Dictionary<int, TTeam.ITeam> teamDic = new Dictionary<int, TTeam.ITeam>();
 
             Dictionary<string, float> stats ;
