@@ -17,14 +17,21 @@ namespace TournamentManager
         public class Round
         {
             private List<TMatch.Match> listMatches = new List<TMatch.Match>();
+            
             private int[] date = new int[3];
             private string roundName;
-            public int[] Date
-            { get { return date; } }
+            public int[] Date { get { return date; }  set { date = value; } }
             public string RoundName
             {
-                get { return roundName; }
+                set
+                {
+                    roundName = value;
+                }
+                get { 
+                    return roundName; 
+                }
             }
+
             public List<TMatch.Match> ListMatches
             {
                 get { return listMatches; }

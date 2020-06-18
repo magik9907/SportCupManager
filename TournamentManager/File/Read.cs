@@ -3,39 +3,109 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
+using TournamentManager.TRound;
+using System.Runtime.Serialization;
+using TournamentManager.TException;
 
 namespace TournamentManager
 {
 
-public class Read
+    public class Read
     {
-        public static ITournament Tournament( string name )
+        public static ITournament Tournament(string name)
         {
             var path = Path(name);
             var str = File.ReadAllText(path + "\\tournament.json");
-        
+
             Dictionary<string, string> tourDesc = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
-            TEnum.TournamentDyscypline enumType = (TEnum.TournamentDyscypline) int.Parse(tourDesc["Dyscypline"]);
+            TEnum.TournamentDyscypline enumType = (TEnum.TournamentDyscypline)int.Parse(tourDesc["Dyscypline"]);
             ITournament t = new Tournament(tourDesc["Name"], enumType);
+
+
             Dictionary<int, TPerson.Referee> refDic = Referee(path);
-            foreach(var x in refDic)
+            foreach (var x in refDic)
             {
                 t.AddReferee(x.Value);
             }
 
-        
-  
-            Dictionary<int, TTeam.ITeam> teamDic = Team(path,enumType);
+
+            Dictionary<int, TTeam.ITeam> teamDic = Team(path, enumType);
             foreach (var x in teamDic)
             {
                 t.AddTeam(x.Value);
             }
 
-            
-
+            t.League = League(path, refDic, teamDic, enumType);
+            t.League.Teams = t.Teams;
+            t.League.Referees = t.Referees;
 
             return t;
         }
+
+
+        public static TRound.League League(string path, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams, TEnum.TournamentDyscypline tenum)
+        {
+            TRound.League l = new TRound.League();
+
+            var json = (JsonConvert.DeserializeObject<Dictionary<string, List<RoundTempl>>>(File.ReadAllText(path + "\\league.json")))["Rounds"];
+
+            List<TRound.Round> rL = new List<TRound.Round>();
+            RoundTempl elem;
+            TRound.Round round;
+            TMatch.Match match;
+            int j;
+            for (int i = 0; i < json.Count; i++)
+            {
+                elem = json[i];
+                round =   new TRound.Round(elem.RoundName, elem.Date);
+                switch (tenum)
+                {
+                    case TEnum.TournamentDyscypline.dodgeball:
+                        for (j = 0; j < elem.ListMatches.Count; j++)
+                        {
+                            match = new TMatch.DodgeballMatch(teams[elem.ListMatches[j].TeamA], teams[elem.ListMatches[j].TeamB], new List<TPerson.Referee>{
+                                referees[elem.ListMatches[j].RefA]
+                            });
+
+                            match.Winner = teams[elem.ListMatches[j].Winner];
+
+                            round.AddMatch(match);
+                        }
+                        break;
+                    case TEnum.TournamentDyscypline.tugofwar:
+                        for (j = 0; j < elem.ListMatches.Count; j++)
+                        {
+                            match = new TMatch.TugOfWarMatch(teams[elem.ListMatches[j].TeamA], teams[elem.ListMatches[j].TeamB], new List<TPerson.Referee>{
+                                referees[elem.ListMatches[j].RefA]
+                            });
+
+                            match.Winner = teams[elem.ListMatches[j].Winner];
+
+                            round.AddMatch(match);
+                        }
+                        break;
+                    case TEnum.TournamentDyscypline.volleyball:
+                        for (j = 0; j < elem.ListMatches.Count; j++) {
+                            match = new TMatch.VolleyballMatch(teams[elem.ListMatches[j].TeamA], teams[elem.ListMatches[j].TeamB],new List<TPerson.Referee>{
+                                referees[elem.ListMatches[j].RefA],
+                                referees[elem.ListMatches[j].assistantReferees[0]],
+                                referees[elem.ListMatches[j].assistantReferees[1]]
+                            });
+
+                            match.Winner = teams[elem.ListMatches[j].Winner];
+
+                            round.AddMatch(match);
+                        }
+                        
+                    break;
+                default: throw new TournamentDyscyplineNotIdentify();
+                }
+                rL.Add(round);
+            }
+            l.Rounds = rL;
+            return l;
+        }
+       
 
         public static Dictionary<int, TPerson.Referee> Referee(string path)
         {
@@ -113,6 +183,25 @@ public class Read
                 public string Firstname;
                 public string Lastname;
             }
+        }
+
+        private class RoundTempl
+        {
+            public int[] Date;
+            public string RoundName;
+            public List<MatchTempl> ListMatches;
+            
+        }
+        private class MatchTempl
+        {
+            public int[] assistantReferees;
+
+            public int TeamA;
+            public int TeamB;
+            public int Winner;
+            public int RefA;
+
+
         }
     }
 }
