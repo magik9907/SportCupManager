@@ -167,6 +167,15 @@ namespace SportCupManager
             RefereesListView.ItemsSource = tour.Referees;
         }
 
+        private void MatchPreview_Click(object sender, RoutedEventArgs e)
+        {
+            CollapseAllGrids();
+            MatchPreviewGrid.Visibility = Visibility.Visible;
+            string name = (string)((Button)sender).Tag;
+
+            MatchList.ItemsSource = CurrentTournament.League.FindRound(name).ListMatches;
+            
+        }
 
         /* SUBMIT BUTTONS */
 
@@ -316,7 +325,7 @@ namespace SportCupManager
             {
                 if (CurrentTournament.Referees.Count < 3 * (CurrentTournament.Teams.Count / 2))
                 {
-                    SetNotification("Brak sędziów w turnieju!");
+                    SetNotification("Za mało sędziów w turnieju!");
                     return;
                 }
             }
@@ -324,7 +333,7 @@ namespace SportCupManager
             {
                 if (CurrentTournament.Referees.Count < (CurrentTournament.Teams.Count / 2))
                 {
-                    SetNotification("Brak sędziów w turnieju!");
+                    SetNotification("Za mało sędziów w turnieju!");
                     return;
                 }
             }
@@ -346,11 +355,6 @@ namespace SportCupManager
             CurrentTournament.SetAutoLeague(formattedDate, space);
             Save.Tournament(CurrentTournament);
             MenuMatch_List_Click(sender, e);
-        }
-
-        private void MatchPreview_Click(object sender, RoutedEventArgs e)
-        {
-            
         }
     }
 
