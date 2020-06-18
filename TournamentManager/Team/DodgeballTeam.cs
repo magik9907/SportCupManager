@@ -23,6 +23,14 @@ namespace TournamentManager
                 this.listPlayers.AddRange(players);
             }
 
+            public DodgeballTeam(string name, int id, List<TPerson.Player> players, Dictionary<string, float> stats) : this(name, id,players)
+            {
+                PlayersEliminated = (int)Math.Round(stats["PlayersEliminated"]);
+                SumOfPlayersLeft= (int)Math.Round(stats["SumOfPlayersLeft"]);
+                MatchesPlayed = (int)Math.Round(stats["MatchesPlayed"]);
+                MatchesWon = (int)Math.Round(stats["MatchesWon"]);
+            }
+
             public static bool operator <(DodgeballTeam a, DodgeballTeam b)
             {
                 if (a.MatchesWon != b.MatchesWon)

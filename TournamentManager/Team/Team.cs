@@ -20,7 +20,7 @@ namespace TournamentManager
             public List<TPerson.Player> listPlayers = new List<TPerson.Player>();
             public int MatchesPlayed { get; set; }
             public int MatchesWon { get; set; }
-            public bool DidWithdraw { get { return didWithdraw; } }
+            public bool DidWithdraw { get { return didWithdraw; } set { didWithdraw = value; } }
 
             public Team(string name, int id)
             {

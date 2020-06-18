@@ -21,6 +21,13 @@ namespace TournamentManager
             {
                 this.listPlayers.AddRange(players);
             }
+            public VolleyballTeam(string name, int id, List<TPerson.Player> players, Dictionary<string, float> stats) : this(name, id, players)
+            {
+                Points = (int)Math.Round(stats["Points"]);
+                ScoreDiff = (int)Math.Round(stats["ScoreDiff"]);
+                MatchesPlayed = (int)Math.Round(stats["MatchesPlayed"]);
+                MatchesWon = (int)Math.Round(stats["MatchesWon"]);
+        }
 
             public static bool operator <(VolleyballTeam a, VolleyballTeam b)
             {

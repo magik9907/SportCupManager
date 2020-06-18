@@ -7,6 +7,7 @@ using TournamentManager.TRound;
 using System.Runtime.Serialization;
 using TournamentManager.TException;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace TournamentManager
 {
@@ -21,29 +22,51 @@ namespace TournamentManager
             Dictionary<string, string> tourDesc = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
             TEnum.TournamentDyscypline enumType = (TEnum.TournamentDyscypline)int.Parse(tourDesc["Dyscypline"]);
             ITournament t = new Tournament(tourDesc["Name"], enumType);
-
-
-            Dictionary<int, TPerson.Referee> refDic = Referee(path);
-            foreach (var x in refDic)
+            Dictionary<int, TTeam.ITeam> teamDic = null;
+            Dictionary<int, TPerson.Referee> refDic = null;
+            try
             {
-                t.AddReferee(x.Value);
+                refDic = Referee(path);
+                foreach (var x in refDic)
+                {
+                    t.AddReferee(x.Value);
+                }
             }
+            catch (TException.FileIsEmpty e)
+            { }
+            catch (Exception e)
+            { }
 
-
-            Dictionary<int, TTeam.ITeam> teamDic = Team(path, enumType);
-            foreach (var x in teamDic)
+            try
             {
-                t.AddTeam(x.Value);
+                teamDic = Team(path, enumType);
+                foreach (var x in teamDic)
+                {
+                    t.AddTeam(x.Value);
+                }
             }
+            catch (TException.FileIsEmpty e)
+            { }
+            catch (Exception e)
+            { }
 
             try
             {
                 t.League = League(path, refDic, teamDic, enumType);
                 t.League.Teams = t.Teams;
                 t.League.Referees = t.Referees;
+            }
+            catch (TException.FileIsEmpty e)
+            { }
+            catch (Exception e)
+            { }
 
+            try
+            {
                 t.PlayOff = PlayOff(path, refDic, teamDic, enumType);
             }
+            catch(TException.FileIsEmpty e)
+            { }
             catch(Exception e)
             { }
 
@@ -53,7 +76,7 @@ namespace TournamentManager
         public static TRound.PlayOff PlayOff(string path, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams, TEnum.TournamentDyscypline tenum)
         {
             TRound.PlayOff p = new TRound.PlayOff();
-
+            if (File.ReadLines(path + "\\league.json").First() == "null") throw new TException.FileIsEmpty();
             var json = JsonConvert.DeserializeObject<Dictionary<string, List<RoundTempl>>>(File.ReadAllText(path + "\\playoff.json"))["Rounds"];
             List<TRound.Round> rP = new List<TRound.Round>();
             RoundTempl elem;
@@ -77,8 +100,8 @@ namespace TournamentManager
 
         public static TRound.League League(string path, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams, TEnum.TournamentDyscypline tenum)
         {
-            TRound.League l = new TRound.League();
-
+            TRound.League l =  new TRound.League();
+            if (File.ReadLines(path + "\\league.json").First() == "null") throw new TException.FileIsEmpty();
             var json = JsonConvert.DeserializeObject<Dictionary<string, List<RoundTempl>>>(File.ReadAllText(path + "\\league.json"))["Rounds"];
 
             List<TRound.Round> rL = new List<TRound.Round>();
@@ -147,6 +170,7 @@ namespace TournamentManager
                 match.Winner = teams[int.Parse(elem.Winner)];
 
             }
+            match.IsWalkover = elem.IsWalkover;
 
             return match;
         }
@@ -174,13 +198,14 @@ namespace TournamentManager
             {
                 match.Winner = teams[int.Parse(elem.Winner)];
 
-            }  
-
+            }
+            match.IsWalkover = elem.IsWalkover;
             return match;
         }
 
         public static Dictionary<int, TPerson.Referee> Referee(string path)
         {
+            if (File.ReadLines(path + "\\league.json").First() == "null") throw new TException.FileIsEmpty();
             var str = File.ReadAllText(path + "\\referees.json");
             List<Dictionary<string, string>> refDesc = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(str);
             List<TPerson.Referee> refe = new List<TPerson.Referee>();
@@ -197,6 +222,7 @@ namespace TournamentManager
 
         public static Dictionary<int, TTeam.ITeam> Team(string path, TEnum.TournamentDyscypline type)
         {
+            if (File.ReadLines(path + "\\league.json").First() == "null") throw new TException.FileIsEmpty();
             var str = File.ReadAllText(path + "\\teams.json");
             List<TeamTempl> teamDesc;
 
@@ -206,23 +232,28 @@ namespace TournamentManager
             List<TTeam.ITeam> team = new List<TTeam.ITeam>();
             Dictionary<int, TTeam.ITeam> teamDic = new Dictionary<int, TTeam.ITeam>();
 
+            Dictionary<string, float> stats ;
+
             switch (type) {
                 case TEnum.TournamentDyscypline.volleyball:
                     for (int i = 0; i < teamDesc.Count; i++)
                     {
-                        teamDic.Add(teamDesc[i].Id, new TTeam.VolleyballTeam(teamDesc[i].Name,teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
+                        stats = GetStats(teamDesc[i]);
+                        teamDic.Add(teamDesc[i].Id, new TTeam.VolleyballTeam(teamDesc[i].Name,teamDesc[i].Id, Players(teamDesc[i].listPlayers),stats));
                     }
                     break;
                 case TEnum.TournamentDyscypline.dodgeball:
                     for (int i = 0; i < teamDesc.Count; i++)
                     {
-                        teamDic.Add(teamDesc[i].Id, new TTeam.DodgeballTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
+                        stats = GetStats(teamDesc[i]);
+                        teamDic.Add(teamDesc[i].Id, new TTeam.DodgeballTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers),stats));
                     }
                     break;
                 case TEnum.TournamentDyscypline.tugofwar:
                     for (int i = 0; i < teamDesc.Count; i++)
                     {
-                        teamDic.Add(teamDesc[i].Id, new TTeam.TugOfWarTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
+                        stats = GetStats(teamDesc[i]);
+                        teamDic.Add(teamDesc[i].Id, new TTeam.TugOfWarTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers),stats));
                     }
                     break;
 
@@ -232,6 +263,23 @@ namespace TournamentManager
             return teamDic;
         }
         
+        private static Dictionary<string, float> GetStats(TeamTempl t)
+        {
+            Dictionary<string, float> stats = new Dictionary<string, float>();
+            stats.Add("Points", t.Points );
+            stats.Add("PlayersEliminated", t.PlayersEliminated );
+            stats.Add("SumOfPlayersLeft", t.SumOfPlayersLeft );
+            stats.Add("AvWinTime", t.AvWinTime );
+            stats.Add("AvLossTime", t.AvLossTime );
+            stats.Add("SumWinTime", t.SumWinTime );
+            stats.Add("SumLossTime", t.SumLossTime );
+            stats.Add("MatchesPlayed", t.MatchesPlayed );
+            stats.Add("MatchesWon", t.MatchesWon );
+            stats.Add("ScoreDiff",  t.ScoreDiff );
+
+            return stats;
+        }
+
         private static List<TPerson.Player> Players(List<TeamTempl.Player> playerDesc)
         {
             
@@ -257,12 +305,19 @@ namespace TournamentManager
         private class TeamTempl
         {
             public List<Player> listPlayers=null;
-            public int Points = 0;
-            public int ScoreDiff = 0;
+            public float Points = 0;
+            public float ScoreDiff = 0;
             public int Id = 0;
             public string Name = null;
-            public int MatchesPlayed = 0;
-            public int MatchesWon = 0;
+            public float MatchesPlayed = 0;
+            public float MatchesWon = 0;
+            public bool DidWithdraw = false;
+            public float PlayersEliminated = 0;
+            public float SumOfPlayersLeft = 0;
+            public float AvWinTime = 0;
+            public float AvLossTime = 0;
+            public float SumWinTime = 0;
+            public float SumLossTime = 0;
 
             public class Player
             {
@@ -278,7 +333,6 @@ namespace TournamentManager
             public int[] Date = null;
             public string RoundName = null;
             public List<MatchTempl> ListMatches = null;
-            
         }
 
         private class MatchTempl
@@ -292,6 +346,7 @@ namespace TournamentManager
             public int TeamB = 0;
             public string Winner = null;
             public int RefA = 0;
+            public bool IsWalkover = false;
 
 
         }

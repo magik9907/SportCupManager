@@ -8,6 +8,14 @@ namespace TournamentManager
 {
     namespace TException
     {
+        public class FileIsEmpty : Exception
+        {
+            public FileIsEmpty() : base("no text in file")
+            {
+                
+            }
+        }
+
         public class TournamentDyscyplineNotIdentify : Exception
         {
             public TournamentDyscyplineNotIdentify() : base("unknown tournament dyscypline")

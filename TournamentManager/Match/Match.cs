@@ -34,7 +34,7 @@ namespace TournamentManager
 					RefA = value;
                 } 
 			}
-			public bool IsWalkover { get { return isWalkover; } }
+			public bool IsWalkover { get { return isWalkover; } set { isWalkover = value; } }
 			public Match(Match match)
             {
 				this.teamA = match.teamA;
