@@ -358,7 +358,18 @@ namespace SportCupManager
         private void TournamentDelete_Click(object sender, RoutedEventArgs e)
         {
             string path = (string)((Button)sender).Tag;
-            Directory.Delete(path, true);
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (IOException ev)
+            {
+                SetNotification(ev.Message);
+            }
+            catch(Exception ev)
+            {
+                SetNotification(ev.Message);
+            }
             TournamentTemporary tour = new TournamentTemporary(path);
             if (CurrentTournament != null && tour.getNameFromPath() == CurrentTournament.Name)
             { 
@@ -404,9 +415,15 @@ namespace SportCupManager
             string name = (string)((Button)sender).Tag;
             string changedName = Edit_TournamentName.Text;
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\";
-            if(path + name.Replace(" ", "") != path + changedName.Replace(" ", ""))
-                Directory.Move(path + name, path + changedName);
-            if (CurrentTournament.Name == name)
+            if (path + name != path + changedName)
+                try
+                {
+                    Directory.Move(path + name.Replace(" ", ""), path + changedName.Replace(" ", ""));
+                }catch(Exception ev)
+                {
+
+                }
+            if (CurrentTournament != null && CurrentTournament.Name == changedName)
                 CurrentTournament.Name = changedName;
             MenuTournament_Load_Click(sender, e);
         }
