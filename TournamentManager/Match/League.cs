@@ -181,7 +181,6 @@ namespace TournamentManager
                         }
                         return;
                     }
-                if(rounds.Capacity == rounds.Count)
                 try
                 {
                     Round tmp = new Round("round played on " + date[0] + "/" + date[1] + "/" + date[2], date);
