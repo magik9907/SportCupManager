@@ -11,19 +11,30 @@ using System.Linq;
 
 namespace TournamentManager
 {
-
+    /// <summary>
+    /// static class, read data from file in json format
+    /// </summary>
     public class Read
     {
+        /// <summary>
+        /// Read all tournament object from files
+        /// </summary>
+        /// <param name="name">name of tournament, required to find files</param>
+        /// <returns></returns>
         public static ITournament Tournament(string name)
         {
+            ///get path to directory (my document)
             var path = Path(name);
             var str = File.ReadAllText(path + "\\tournament.json");
-
+            //tournamne properties as dictionary
             Dictionary<string, string> tourDesc = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
             TEnum.TournamentDyscypline enumType = (TEnum.TournamentDyscypline)int.Parse(tourDesc["Dyscypline"]);
             ITournament t = new Tournament(tourDesc["Name"], enumType);
-            Dictionary<int, TTeam.ITeam> teamDic = null;
+            //team dictionary contains teams with id key
+            Dictionary<int, TTeam.ITeam> teamDic = null;            
+            //referees dictionary contains referees with id key
             Dictionary<int, TPerson.Referee> refDic = null;
+            
             try
             {
                 refDic = Referee(path);
@@ -72,11 +83,19 @@ namespace TournamentManager
 
             return t;
         }
-
+        /// <summary>
+        /// create playoff object if exist
+        /// </summary>
+        /// <param name="path">path to tournamne tdirectory</param>
+        /// <param name="referees">list of refeeres with is as key</param>
+        /// <param name="teams">list of teams with is as key</param>
+        /// <param name="tenum">tournament dyscypline enum</param>
+        /// <returns> playoff object</returns>
         public static TRound.PlayOff PlayOff(string path, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams, TEnum.TournamentDyscypline tenum)
         {
             TRound.PlayOff p = new TRound.PlayOff();
-            if (File.ReadLines(path + "\\league.json").First() == "null") throw new TException.FileIsEmpty();
+            if (File.ReadLines(path + "\\playoff.json").First() == "null") 
+                throw new TException.FileIsEmpty();
             var json = JsonConvert.DeserializeObject<Dictionary<string, List<RoundTempl>>>(File.ReadAllText(path + "\\playoff.json"))["Rounds"];
             List<TRound.Round> rP = new List<TRound.Round>();
             RoundTempl elem;
@@ -97,7 +116,14 @@ namespace TournamentManager
             return p;
         }
 
-
+        /// <summary>
+        /// create league object if exist
+        /// </summary>
+        /// <param name="path">path to tournamne directory</param>
+        /// <param name="referees">list of refeeres with is as key</param>
+        /// <param name="teams">list of teams with is as key</param>
+        /// <param name="tenum">tournament dyscypline enum</param>
+        /// <returns> league object</returns>
         public static TRound.League League(string path, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams, TEnum.TournamentDyscypline tenum)
         {
             TRound.League l =  new TRound.League();
@@ -118,6 +144,14 @@ namespace TournamentManager
             return l;
         }
 
+        /// <summary>
+        /// create round object
+        /// </summary>
+        /// <param name="elem">contains required element for round</param>
+        /// <param name="tenum">tournament dyscypline as enum</param>
+        /// <param name="referees">dictionary of referees with id key</param>
+        /// <param name="teams">dictionary of teams with id key</param>
+        /// <returns>round object</returns>
         private static TRound.Round Round(RoundTempl elem, TEnum.TournamentDyscypline tenum, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams)
         {
             int j;
@@ -155,6 +189,14 @@ namespace TournamentManager
             return round;
         }
 
+        /// <summary>
+        /// create volleyball match object
+        /// </summary>
+        /// <param name="elem">contains required element for round</param>
+        /// <param name="tenum">tournament dyscypline as enum</param>
+        /// <param name="referees">dictionary of referees with id key</param>
+        /// <param name="teams">dictionary of teams with id key</param>
+        /// <returns>match object</returns>
         private static TMatch.Match CreateVolleyballMatch(MatchTempl elem, TEnum.TournamentDyscypline tenum, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams)
         {
             TMatch.Match match = new TMatch.VolleyballMatch(teams[elem.TeamA], teams[elem.TeamB], new List<TPerson.Referee>{
@@ -168,13 +210,20 @@ namespace TournamentManager
             if (elem.Winner != null)
             {
                 match.Winner = teams[int.Parse(elem.Winner)];
-
             }
             match.IsWalkover = elem.IsWalkover;
 
             return match;
         }
 
+        /// <summary>
+        /// create match object
+        /// </summary>
+        /// <param name="elem">contains required element for round</param>
+        /// <param name="tenum">tournament dyscypline as enum</param>
+        /// <param name="referees">dictionary of referees with id key</param>
+        /// <param name="teams">dictionary of teams with id key</param>
+        /// <returns>match object</returns>
         private static TMatch.Match CreateMatch(MatchTempl elem, TEnum.TournamentDyscypline tenum, Dictionary<int, TPerson.Referee> referees, Dictionary<int, TTeam.ITeam> teams)
         {
             TMatch.Match match;
@@ -203,9 +252,14 @@ namespace TournamentManager
             return match;
         }
 
+        /// <summary>
+        /// create dictionary of referees with id as a key
+        /// </summary>
+        /// <param name="path">path to tournament directory</param>
+        /// <returns>dictionary of referees with id as a key object</returns>
         public static Dictionary<int, TPerson.Referee> Referee(string path)
         {
-            if (File.ReadLines(path + "\\league.json").First() == "null") throw new TException.FileIsEmpty();
+            if (File.ReadLines(path + "\\referees.json").First() == "null") throw new TException.FileIsEmpty();
             var str = File.ReadAllText(path + "\\referees.json");
             List<Dictionary<string, string>> refDesc = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(str);
             List<TPerson.Referee> refe = new List<TPerson.Referee>();
@@ -219,10 +273,14 @@ namespace TournamentManager
             return refDic;
         }
 
-
+        /// <summary>
+        /// create dictionary of teams with id as a key
+        /// </summary>
+        /// <param name="path">path to tournament directory</param>
+        /// <returns>dictionary of teams with id as a key object</returns>
         public static Dictionary<int, TTeam.ITeam> Team(string path, TEnum.TournamentDyscypline type)
         {
-            if (File.ReadLines(path + "\\league.json").First() == "null") throw new TException.FileIsEmpty();
+            if (File.ReadLines(path + "\\teams.json").First() == "null") throw new TException.FileIsEmpty();
             var str = File.ReadAllText(path + "\\teams.json");
             List<TeamTempl> teamDesc;
 
@@ -263,6 +321,11 @@ namespace TournamentManager
             return teamDic;
         }
         
+        /// <summary>
+        /// set dictionary with stats to load to team
+        /// </summary>
+        /// <param name="t">stats that was read from file as teamTempl type</param>
+        /// <returns>dictionary of stats</returns>
         private static Dictionary<string, float> GetStats(TeamTempl t)
         {
             Dictionary<string, float> stats = new Dictionary<string, float>();
@@ -280,6 +343,11 @@ namespace TournamentManager
             return stats;
         }
 
+        /// <summary>
+        /// create team player
+        /// </summary>
+        /// <param name="playerDesc"> properties of player</param>
+        /// <returns>player object</returns>
         private static List<TPerson.Player> Players(List<TeamTempl.Player> playerDesc)
         {
             
@@ -292,7 +360,11 @@ namespace TournamentManager
             return players;
         }
         
-
+        /// <summary>
+        /// get path to tournament directory
+        /// </summary>
+        /// <param name="name">tournament name</param>
+        /// <returns>string with path</returns>
         private static string Path(string name)
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
@@ -300,7 +372,7 @@ namespace TournamentManager
 
 
 
-        // template class using tp deserialize from file  
+        // template classes using to deserialize from file  
 
         private class TeamTempl
         {
