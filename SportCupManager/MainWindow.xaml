@@ -177,12 +177,29 @@
                     <Button Name="PlayoffCreateButton" Content="Generuj Finały" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="PlayoffCreateButton_Click"/>
                 </Grid>
                 <Grid x:Name="PlayoffListGrid" Visibility="Collapsed">
+                    <Label Name="CurrentMode" />
                     <ItemsControl  Name="PlayoffList">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
                                     <Label FontSize="25" Margin="10, 0, 0, 0" Content="{Binding RoundName}" />
-                                    <Button Content="Podgląd" Margin="0, 10, 500, 10" Height="25" Width="100" Tag="{Binding RoundName}" Click="MatchPreview_Click" />
+                                    <Button Content="Podgląd" Margin="0, 10, 500, 10" Height="25" Width="100" Tag="{Binding RoundName}" Click="PlayoffPreview_Click" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+                <Grid x:Name="PlayoffPreviewGrid">
+                    <Label Name="PlayoffRoundNameHidden" Tag="" Visibility="Collapsed" />
+                    <ItemsControl  Name="PlayoffMatchList" AlternationCount="999999">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
+                                    <Label FontSize="25" Margin="0, 0, 22 ,0" HorizontalAlignment="Left" Content="{Binding TeamA.Name}" />
+                                    <Label FontSize="25" Margin="0, -44, 22 ,0" HorizontalAlignment="Center" Content="VS" />
+                                    <Label FontSize="25" Margin="0, -44, 0 ,0" HorizontalAlignment="Right" Content="{Binding TeamB.Name}" />
+                                    <Button Content="Podgląd" Margin="0, 10, 500, 10" Height="25" Width="100" Tag="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}, StringFormat=.{0}}" Click="MatchDetailsPreview_Click" />
+                                    <Button Content="Wprowadź dane" Margin="110, -35, 400, 10" Height="25" Width="100" Tag="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}, StringFormat=.{0}}" Click="MatchEditData_Click" />
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -203,7 +220,7 @@
                 <Button x:Name="Match_List" Content="Lista" HorizontalAlignment="Center" Margin="0,422,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuMatch_List_Click"/>
                 <Label Content="Finały" Margin="0,478,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
                 <Button x:Name="Playoff_Create" Content="Generuj" HorizontalAlignment="Center" Margin="0,525,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuPlayoff_Create_Click"/>
-                <Button x:Name="Match_List_Copy" Content="Lista" HorizontalAlignment="Center" Margin="0,581,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuPlayoff_List_Click"/>
+                <Button x:Name="Playoff_List" Content="Lista" HorizontalAlignment="Center" Margin="0,581,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuPlayoff_List_Click"/>
             </Grid>
         </ScrollViewer>
         <Label Name="CurrentlyLoaded" Content="" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="790" Height="40" FontSize="22"/>

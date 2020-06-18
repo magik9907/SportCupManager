@@ -138,6 +138,7 @@ namespace SportCupManager
             else
                 SetNotification("Brak rund!");
             RoundList.Items.Refresh();
+            CurrentMode.Content = "match";
         }
 
         private void MenuPlayoff_Create_Click(object sender, RoutedEventArgs e)
@@ -149,6 +150,7 @@ namespace SportCupManager
             }
             CollapseAllGrids();
             PlayoffCreateGrid.Visibility = Visibility.Visible;
+            CurrentMode.Content = "playoff";
         }
 
         private void MenuPlayoff_List_Click(object sender, RoutedEventArgs e)
@@ -160,6 +162,11 @@ namespace SportCupManager
             }
             CollapseAllGrids();
             PlayoffListGrid.Visibility = Visibility.Visible;
+            if (CurrentTournament.PlayOff != null && CurrentTournament.PlayOff.Rounds.Count > 1)
+                PlayoffList.ItemsSource = CurrentTournament.PlayOff.Rounds;
+            else
+                SetNotification("Brak rund!");
+            PlayoffList.Items.Refresh();
         }
 
         /* SUBMENU */
@@ -199,6 +206,7 @@ namespace SportCupManager
 
             MatchList.ItemsSource = CurrentTournament.League.FindRound(name).ListMatches;
             RoundNameHidden.Tag = name;
+            CurrentMode.Content = "match";
         }
 
         private void MatchDetailsPreview_Click(object sender, RoutedEventArgs e)
@@ -206,7 +214,12 @@ namespace SportCupManager
             CollapseAllGrids();
             MatchDetailsGrid.Visibility = Visibility.Visible;
             int index = (int)((Button)sender).Tag;
-            Round currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
+            Round currentRound = null;
+            if (CurrentMode.Content == "playoff")
+                currentRound = CurrentTournament.PlayOff.FindRound((string)PlayoffRoundNameHidden.Tag);
+            else if(CurrentMode.Content == "match")
+                currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
+
             TournamentManager.TMatch.Match match = currentRound.ListMatches[index];
 
             DetailTeamA.Content = match.TeamA.Name;
@@ -280,10 +293,15 @@ namespace SportCupManager
                 DetailStatC.Content = "Ilość Pozostałych Graczy";
             }
         }
+
         private void MatchEditData_Click(object sender, RoutedEventArgs e)
         {
             int index = (int)((Button)sender).Tag;
-            Round currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
+            Round currentRound = null;
+            if (CurrentMode.Content == "playoff")
+                currentRound = CurrentTournament.PlayOff.FindRound((string)PlayoffRoundNameHidden.Tag);
+            else if(CurrentMode.Content == "match")
+                currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
             TournamentManager.TMatch.Match match = currentRound.ListMatches[index];
             if (match.WasPlayed())
             {
@@ -328,6 +346,17 @@ namespace SportCupManager
             {
                 Stat1.Text = "Ilość pozostałych graczy zwycięskiej drużyny";
             }
+        }
+
+        private void PlayoffPreview_Click(object sender, RoutedEventArgs e)
+        {
+            CollapseAllGrids();
+            PlayoffPreviewGrid.Visibility = Visibility.Visible;
+            string name = (string)((Button)sender).Tag;
+
+            PlayoffMatchList.ItemsSource = CurrentTournament.PlayOff.FindRound(name).ListMatches;
+            PlayoffRoundNameHidden.Tag = name;
+            CurrentMode.Content = "playoff";
         }
 
         /* SUBMIT BUTTONS */
@@ -401,10 +430,10 @@ namespace SportCupManager
 
         private void TournamentEditButton_Click(object sender, RoutedEventArgs e)
         {
-            string name = (string)((Button)sender).Tag;
-            string changedName = Edit_TournamentName.Text;
+            string name = ((string)((Button)sender).Tag).Replace(" ", "");
+            string changedName = Edit_TournamentName.Text.Replace(" ", "");
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\";
-            if(path + name.Replace(" ", "") != path + changedName.Replace(" ", ""))
+            if(path + name != path + changedName)
                 Directory.Move(path + name, path + changedName);
             if (CurrentTournament.Name == name)
                 CurrentTournament.Name = changedName;
@@ -485,19 +514,16 @@ namespace SportCupManager
                 DateTime date = Date.SelectedDate.Value;
                 int[] formattedDate = { date.Day, date.Month, date.Year };
                 int space;
-                try
-                {
-                    space = Int32.Parse(SpaceBetweenMatches.Text);
-                }
-                catch (FormatException)
-                {
-                    SetNotification("Dni między meczami musi być liczbą!");
-                    return;
-                }
+                space = Int32.Parse(SpaceBetweenMatches.Text);
 
                 CurrentTournament.SetAutoLeague(formattedDate, space);
                 Save.League(CurrentTournament.League, CurrentTournament.Name);
                 MenuMatch_List_Click(sender, e);
+            }
+            catch (FormatException)
+            {
+                SetNotification("Dni między meczami musi być liczbą!");
+                return;
             }
             catch (NotEnoughRefereesException)
             {
@@ -509,7 +535,11 @@ namespace SportCupManager
         {
             try
             {
-                Round currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
+                Round currentRound = null;
+                if(CurrentMode.Content == "playoff")
+                    currentRound = CurrentTournament.PlayOff.FindRound((string)PlayoffRoundNameHidden.Tag);
+                else if(CurrentMode.Content == "match")
+                    currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
                 TournamentManager.TMatch.Match match = currentRound.ListMatches[(int)MatchIndexHidden.Content];
                 ITeam winner = (WinnerBox.Text == match.TeamA.Name) ? match.TeamA : match.TeamB;
                 string stats;
@@ -523,23 +553,29 @@ namespace SportCupManager
                     match.Walkover(match.TeamA);
                 }
 
-                if (match is VolleyballMatch)
+                if(!match.IsWalkover)
                 {
-                    stats = match.TeamA.Name + ": " + Stat1.Text + ", " + Stat2.Text + ", " + Stat3.Text + ". " + match.TeamB.Name + ": " + Stat4.Text + ", " + Stat5.Text + ", " + Stat6.Text;
-                    match.SetResult(stats, winner);
-                }
-                else if (match is TugOfWarMatch)
-                {
-                    stats = Stat1.Text;
-                    match.SetResult(stats, winner);
-                }
-                else if (match is DodgeballMatch)
-                {
-                    stats = Stat1.Text;
-                    match.SetResult(stats, winner);
+                    if (match is VolleyballMatch)
+                    {
+                        stats = match.TeamA.Name + ": " + Stat1.Text + ", " + Stat2.Text + ", " + Stat3.Text + ". " + match.TeamB.Name + ": " + Stat4.Text + ", " + Stat5.Text + ", " + Stat6.Text;
+                        match.SetResult(stats, winner);
+                    }
+                    else if (match is TugOfWarMatch)
+                    {
+                        stats = Stat1.Text;
+                        match.SetResult(stats, winner);
+                    }
+                    else if (match is DodgeballMatch)
+                    {
+                        stats = Stat1.Text;
+                        match.SetResult(stats, winner);
+                    }
                 }
 
-                Save.League(CurrentTournament.League, CurrentTournament.Name);
+                if (CurrentMode.Content == "playoff")
+                    Save.PlayOff(CurrentTournament.PlayOff, CurrentTournament.Name);
+                else if (CurrentMode.Content == "match")
+                    Save.League(CurrentTournament.League, CurrentTournament.Name);
             }
             catch (NotIntPlayersException)
             {
@@ -562,29 +598,22 @@ namespace SportCupManager
                 SetNotification("Niepoprawnie podane sety!");
             }
 
-            MenuMatch_List_Click(sender, e);
+            if (CurrentMode.Content == "playoff")
+                MenuPlayoff_List_Click(sender, e);
+            else if (CurrentMode.Content == "match")
+                MenuMatch_List_Click(sender, e);
         }
 
         private void PlayoffCreateButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                DateTime date = Date.SelectedDate.Value;
+                DateTime date = DatePlayoff.SelectedDate.Value;
                 int[] formattedDate = { date.Day, date.Month, date.Year };
-                int space;
-                try
-                {
-                    space = Int32.Parse(SpaceBetweenMatches.Text);
-                }
-                catch (FormatException)
-                {
-                    SetNotification("Dni między meczami musi być liczbą!");
-                    return;
-                }
 
-                CurrentTournament.SetAutoLeague(formattedDate, space);
-                Save.League(CurrentTournament.League, CurrentTournament.Name);
-                MenuMatch_List_Click(sender, e);
+                CurrentTournament.SetPlayOff(formattedDate);
+                Save.PlayOff(CurrentTournament.PlayOff, CurrentTournament.Name);
+                MenuPlayoff_List_Click(sender, e);
             }
             catch (NotEnoughRefereesException)
             {

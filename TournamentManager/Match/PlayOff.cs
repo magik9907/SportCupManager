@@ -146,6 +146,15 @@ namespace TournamentManager
                 }
                 t.Withdraw();
             }
+            public Round FindRound(string name)
+            {
+                foreach (Round round in Rounds)
+                {
+                    if (round.RoundName == name)
+                        return round;
+                }
+                return null;
+            }
         }
     }
 }
