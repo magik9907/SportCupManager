@@ -25,7 +25,7 @@ namespace TournamentManager
                 {
                     Referees(t.Referees, name);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
 
                 }
@@ -33,7 +33,7 @@ namespace TournamentManager
                 {
                     Teams(t.Teams, name);
                 }
-                catch (Exception e) 
+                catch (Exception) 
                 {
                 
                 }
@@ -41,7 +41,7 @@ namespace TournamentManager
                 try
                 {
                     League(t.League, name);
-                }catch(Exception e)
+                }catch(Exception)
                 {
 
                 }
@@ -50,7 +50,7 @@ namespace TournamentManager
 
 
                     PlayOff(t.PlayOff, name);
-                }catch(Exception e)
+                }catch(Exception)
                 {
 
                 }
