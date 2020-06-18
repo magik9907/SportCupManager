@@ -365,7 +365,7 @@ namespace TournamentManager
         /// <returns>string with path</returns>
         private static string Path(string name)
         {
-            return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+            return (Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name).Replace(" ","");
         }
 
 

@@ -143,7 +143,7 @@ namespace TournamentManager
 				//a safety check just in case stat is not a number 
 				try
 				{
-					matchLength = float.Parse(stat, System.Globalization.CultureInfo.InvariantCulture);
+					matchLength = float.Parse(stat);
 					if (matchLength < 0)
                     {
 						matchLength = 0;
@@ -155,11 +155,11 @@ namespace TournamentManager
 				{
 					throw new NotNumberMatchLengthException(CreateCopy());
 				}
-				winner.SetMatchResult(true, tmp != 0, tmp != 0 && this.Winner == winner, stat);
+				winner.SetMatchResult(true, tmp != 0, tmp != 0 && this.Winner == winner, stat + " - " + tmp.ToString());
 				if (winner == TeamA)
-					TeamB.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == winner, stat);
+					TeamB.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == TeamB, stat + " - " + tmp.ToString());
 				else
-					TeamA.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == winner, stat);
+					TeamA.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == TeamA, stat + " - " + tmp.ToString());
 				base.SetResult(stat, winner);
 			}
 			
@@ -331,7 +331,8 @@ namespace TournamentManager
 					throw new SetResultForWalkoverException(CreateCopy());
 				int resultCheck = 0, scoreDiff = 0;
 				int earlierScoreDiff = 0, earlierPoints = 0;
-				if(WasPlayed())
+				if (WasPlayed())
+				{
 					for (int i = 0; i < 3; i++)
 					{
 						earlierScoreDiff += scoreTeamA[i] - scoreTeamB[i];
@@ -340,6 +341,11 @@ namespace TournamentManager
 						if (scoreTeamA[i] < scoreTeamB[i])
 							earlierPoints--;
 					}
+					if (earlierPoints > 0)
+						earlierPoints++;
+					else
+						earlierPoints += 2;
+				}
 				//split the strings into strings containing name of the teams and their scores
 				string[] tmp = stat.Split(new string[] {". ", ", ", ": "}, StringSplitOptions.RemoveEmptyEntries);
 				//string should split into 8 smaller string (2 for names of teams, 6 in total for scores in sets)
@@ -453,15 +459,16 @@ namespace TournamentManager
 					}
 					throw new WrongWinnerException(CreateCopy(), winner);
 				}
+				var temp = 3 - earlierPoints;
 				if (winner == TeamA)
                 {
-					TeamA.SetMatchResult(true, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == winner, (1+ Math.Abs(resultCheck)).ToString() + ", " + (scoreDiff-earlierScoreDiff).ToString());
-					TeamB.SetMatchResult(false, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == winner, (2 - Math.Abs(resultCheck)).ToString() + ", " + (earlierScoreDiff-scoreDiff).ToString());
+					TeamA.SetMatchResult(true, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == TeamA, (1 + Math.Abs(resultCheck) - earlierPoints).ToString() + ", " + (scoreDiff-earlierScoreDiff).ToString());
+					TeamB.SetMatchResult(false, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == TeamB, (2 - Math.Abs(resultCheck) - temp).ToString() + ", " + (earlierScoreDiff-scoreDiff).ToString());
 				}
 				else
                 {
-					TeamA.SetMatchResult(false, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == winner, (2 - Math.Abs(resultCheck)).ToString() + ", " + (scoreDiff-earlierScoreDiff).ToString());
-					TeamB.SetMatchResult(true, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == winner, (1 + Math.Abs(resultCheck)).ToString() + ", " + (earlierScoreDiff-scoreDiff).ToString());
+					TeamA.SetMatchResult(false, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == TeamA, (2 - Math.Abs(resultCheck) - earlierPoints).ToString() + ", " + (earlierScoreDiff - scoreDiff).ToString());
+					TeamB.SetMatchResult(true, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == TeamB, (1 + Math.Abs(resultCheck) - temp).ToString() + ", " + (scoreDiff - earlierScoreDiff).ToString());
 				}
 				base.SetResult(stat, winner);
 			}
