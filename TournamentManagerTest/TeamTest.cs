@@ -19,13 +19,13 @@ namespace TournamentManagerTest
         public void ConstructorTestTeam()
         {
             Assert.ThrowsException<TournamentManager.TException.TeamMissingNameException>(
-                () => new DodgeballTeam(null)
+                () => new DodgeballTeam(null,0)
             );
             Assert.ThrowsException<TournamentManager.TException.TeamMissingNameException>(
-                () => new TugOfWarTeam(null)
+                () => new TugOfWarTeam(null,0)
             );
             Assert.ThrowsException<TournamentManager.TException.TeamMissingNameException>(
-                () => new VolleyballTeam(null)
+                () => new VolleyballTeam(null,0)
             );
         }
     }

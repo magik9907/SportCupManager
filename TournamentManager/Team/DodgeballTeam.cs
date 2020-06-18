@@ -53,22 +53,19 @@ namespace TournamentManager
                 return String.Compare(a.Name, b.Name) < 0;
             }
 
+            //new string format: "Players left, players eliminated"
             public override void SetMatchResult(bool result, bool wasPlayedBefore, bool wasWinner, string stat)
             {
+                string[] tmp = stat.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
                 if(!wasPlayedBefore)
                     this.MatchesPlayed++;
-                if (result)
-                {
-                    if (!wasWinner)
-                        this.MatchesWon++;
-                    SumOfPlayersLeft += Int32.Parse(stat);
-                }
-                else
-                {
-                    if (wasWinner)
-                        this.MatchesWon--;
-                    PlayersEliminated += Int32.Parse(stat);
-                }
+                if (result && !wasWinner)
+                    this.MatchesWon++;
+                if (!result && wasWinner)
+                    this.MatchesWon--;
+                SumOfPlayersLeft += Int32.Parse(tmp[0]);
+                PlayersEliminated += Int32.Parse(tmp[1]);
+                
             }
 
             public override void Withdraw()
@@ -76,8 +73,7 @@ namespace TournamentManager
                 base.Withdraw();
                 PlayersEliminated = 0;
                 SumOfPlayersLeft = 0;
-                for (int i = 0; i < MatchesPlayed; i++)
-                    SumOfPlayersLeft -= 6;
+                PlayersEliminated = 0;
             }
 
             public override string GetStats()

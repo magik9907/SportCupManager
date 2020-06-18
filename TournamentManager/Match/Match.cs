@@ -174,9 +174,9 @@ namespace TournamentManager
 				if (IsWalkover == false)
 				{
 					if (absentee == TeamA)
-						SetResult("5", TeamB);
+						SetResult("0", TeamB);
 					else
-						SetResult("5", TeamA);
+						SetResult("0", TeamA);
 				}
 				else
 					matchLength = 0;
@@ -211,7 +211,16 @@ namespace TournamentManager
 			{
 				if (IsWalkover)
 					throw new SetResultForWalkoverException(CreateCopy());
-				int tmp = winnerPlayersLeft;
+				int playersEliminatedChange = 0, playersLeftChange = 0;
+				if (this.Winner == winner)
+					playersLeftChange = winnerPlayersLeft;
+				else
+                {
+					if(this.Winner != null)
+                    {
+						playersEliminatedChange = 6 - winnerPlayersLeft;
+                    }
+                }
 				//if stat is not a number parse will throw format exception
 				try
 				{
@@ -231,11 +240,11 @@ namespace TournamentManager
 				{
 					throw new NotIntPlayersException(CreateCopy());
 				}
-				winner.SetMatchResult(true, tmp != 0, tmp != 0 && this.Winner == winner, (winnerPlayersLeft - tmp).ToString());
+				winner.SetMatchResult(true, playersEliminatedChange != 0 || playersLeftChange != 0, (playersEliminatedChange != 0 || playersLeftChange != 0) && this.Winner == winner, (winnerPlayersLeft - playersLeftChange).ToString() + ", " + playersEliminatedChange.ToString());
 				if (winner == TeamA)
-					TeamB.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == winner, (6 - winnerPlayersLeft).ToString());
+					TeamB.SetMatchResult(false, playersEliminatedChange != 0 || playersLeftChange != 0, (playersEliminatedChange != 0 || playersLeftChange != 0) && this.Winner == TeamB, (-playersLeftChange).ToString() + ", " + (6 - winnerPlayersLeft - playersEliminatedChange).ToString());
 				else
-					TeamA.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == winner, (6 - winnerPlayersLeft).ToString());
+					TeamA.SetMatchResult(false, playersEliminatedChange != 0 || playersLeftChange != 0, (playersEliminatedChange != 0 || playersLeftChange != 0) && this.Winner == TeamA, (-playersLeftChange).ToString() + ", " + (6 - winnerPlayersLeft - playersEliminatedChange).ToString());
 				base.SetResult(stat, winner);
 			}
 			
@@ -249,9 +258,9 @@ namespace TournamentManager
 				if (IsWalkover == false)
 				{
 					if (absentee == TeamA)
-						SetResult("5", TeamB);
+						SetResult("6", TeamB);
 					else
-						SetResult("5", TeamB);
+						SetResult("6", TeamA);
 				}
 				else
 					winnerPlayersLeft = 0;
@@ -264,17 +273,19 @@ namespace TournamentManager
 			[JsonProperty]
 			[JsonConverter(typeof(RefereeIdConverter))]
 			private List<TPerson.Referee> assistantReferees = new List<TPerson.Referee>(2);
-			//the score means points gained by team in each set
+			//the score means points gained by teams in each set
 			[JsonProperty]
 			private int[] scoreTeamA = new int[3] {0, 0, 0};
 			[JsonProperty]
 			private int[] scoreTeamB = new int[3] {0, 0, 0};
 			
+			//Main constructor
 			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r)
 			{
 				SetReferees(r);
 			}
 			
+			//copying constructor
 			public VolleyballMatch(VolleyballMatch match) : base(match)
 			{
 				this.scoreTeamA = match.scoreTeamA;
@@ -286,7 +297,7 @@ namespace TournamentManager
 			{
 				set { assistantReferees = value; }
 			}
-			
+			//Copying method
 			public override Match CreateCopy()
 			{
 				return new VolleyballMatch(this);
@@ -298,6 +309,7 @@ namespace TournamentManager
 				assistantReferees.AddRange( r.GetRange(1, 2));
 			}
 
+			//returns a list of referees
 			public override List<TPerson.Referee> GetReferees()
 			{
 				List<TPerson.Referee> tmp = base.GetReferees();
@@ -305,14 +317,14 @@ namespace TournamentManager
 				return tmp;
 			}
 
-
+			//this method is required for saving results in files
 			public void SetResult(int[] scoreA, int[] scoreB)
 			{
 				scoreTeamA = scoreA;
 				scoreTeamB = scoreB;
 			}
 
-			//the expected format is "team1.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). team2.Name:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
+			//the expected format is "team1.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). team2.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				if (IsWalkover)
@@ -424,6 +436,7 @@ namespace TournamentManager
 					scoreDiff += scoreTeamA[i] - scoreTeamB[i];
 					}
                 }
+				//checking if a team which should have won by what the stat indicates was set as a winner
 				if ((resultCheck > 0 && TeamA != winner) || (resultCheck < 0 && TeamB != winner))
 				{
 					for (int j = 0; j < 3; j++)
@@ -446,6 +459,7 @@ namespace TournamentManager
 				base.SetResult(stat, winner);
 			}
 
+			//returns scores for each team set by set
 			public override string GetStat()
             {
 				string stat = "a: ";
@@ -467,6 +481,7 @@ namespace TournamentManager
 				return stat;
             }
 
+			//sets the match as a Walkover
             public override void Walkover(ITeam absentee)
             {
 				if(IsWalkover == false)

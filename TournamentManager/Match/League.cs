@@ -9,6 +9,7 @@ using TournamentManager.TPerson;
 using TournamentManager.TTeam;
 using Newtonsoft.Json;
 using TournamentManager.TMatch;
+using System.Runtime.InteropServices;
 
 namespace TournamentManager
 {
@@ -53,8 +54,10 @@ namespace TournamentManager
             //DON'T REMOVE!!!
             public League() { }
 
+            //main constructor for the program
             public League(List<TTeam.ITeam> t, List<TPerson.Referee> referees)
             {
+                //refsRequired holds the number of referees needed to hold a match
                 int refsRequired = 1;
                 if (t[0] is VolleyballTeam)
                     refsRequired = 3;
@@ -75,6 +78,7 @@ namespace TournamentManager
                 this.teams = t;
             }
 
+            //Copying constructor
             public League(League copy)
             {
                 this.teams = copy.teams;
@@ -82,15 +86,18 @@ namespace TournamentManager
                 this.referees = copy.referees;
             }
 
+            //copying method
             public League CreateCopy()
             {
                 return new League(this);
             }
 
+            //method used to sort teams. BubbleSort is used because of it's simplicity
             public void SortTeams()
             {
                 for (int i = 0; i < teams.Count; i++)
                     for (int j = 0; j < teams.Count - 1; j++)
+                    //to sort the teams we need to know what those teams are (to determine criteria). That's why we're casting teams before comparing
                     {
                         if (teams[0] is VolleyballTeam)
                             if ((VolleyballTeam)teams[j] < (VolleyballTeam)teams[j + 1])
@@ -116,6 +123,7 @@ namespace TournamentManager
                     }
             }
 
+            //setting the result from the level of tournament. Used in early console versions
             public void SetResult(string stat, TTeam.ITeam winner, TTeam.ITeam loser)
             {
                 for (int i = 0; i < rounds.Count; i++)
@@ -126,13 +134,14 @@ namespace TournamentManager
                     }
             }
 
+            //getting top number of teams
             public List<TTeam.ITeam> GetFinalTeams(int number)
             {
                 SortTeams();
                 return teams.GetRange(0, number);
             }
 
-            //this is for manual scheduling. Probably should make a flag to make it exclusive with 
+            //this is for manual scheduling
             public void ScheduleMatch(TMatch.Match match, int[] date)
             {
                 for (int i = 0; i < teams.Count; i++)
@@ -160,10 +169,12 @@ namespace TournamentManager
                             throw new AlreadyPlayingInLeagueException(CreateCopy(), match);
                         if (!match.IsPlaying(teams[i]))
                         {
+                            //check if the team from table is already schedule to play a team from this match
                             if (rounds[j].IsScheduled(teams[i], match.TeamA))
                                 flagA = true;
                             if (rounds[j].IsScheduled(teams[i], match.TeamB))
                                 flagB = true;
+                            //if not, we're checking can still play them, even if we schedule this match
                             if (!rounds[j].IsPlaying(match.TeamA) && !rounds[j].IsPlaying(teams[i]))
                                 if (!rounds[j].IsPlaying(match.TeamB) && !rounds[j].IsPlaying(teams[i]) && flagAnB == false)
                                     flagAnB = true;
@@ -177,6 +188,7 @@ namespace TournamentManager
                     if (((!flagAnB && !(flagA && flagB)) || !(flagA || flagB)) && !match.IsPlaying(teams[i]))
                         throw new ImpossibleScheduleException(CreateCopy());
                 }
+                //If there exists a round played on this day, match will be added to said round
                 for (int i = 0; i < rounds.Count; i++)
                     if (rounds[i].Date[0] == date[0] && rounds[i].Date[1] == date[1] && rounds[i].Date[2] == date[2])
                     {
@@ -191,6 +203,7 @@ namespace TournamentManager
                         }
                         return;
                     }
+                //if not, we're creating a new round
                 try
                 {
                     Round tmp = new Round("round played on " + date[0] + "/" + date[1] + "/" + date[2], date);
@@ -203,7 +216,9 @@ namespace TournamentManager
                 }
             }
 
-            //this is for automatic scheduling
+            //this is for automatic scheduling. It's mutually exclusive with manual scheduling
+            //Idea for this implementation was taken from wikipedia
+            //https://en.wikipedia.org/wiki/Round-robin_tournament#Original_construction_of_pairing_tables_by_Richard_Schurig_(1886)
             public void AutoSchedule(int[] startDate, int spaceBetweenMatches)
             {
                 if (rounds.Count != 0)
@@ -250,6 +265,7 @@ namespace TournamentManager
                 return date;
             }
 
+            //this returns whether or not the league part of tournament has been finished
             public bool IsFinished()
             {
                 if(rounds.Count == rounds.Capacity)
@@ -264,6 +280,7 @@ namespace TournamentManager
                 return false;
             }
 
+            //This method withdraws a team from the tournament and sets all of it's results to losses
             public void WithdrawTeam(TTeam.ITeam t)
             {
                 int teamsLeft = 0;
@@ -278,6 +295,7 @@ namespace TournamentManager
                 t.Withdraw();
             }
 
+            //returns a round with a specified name
             public Round FindRound(string name)
             {
                 foreach (Round round in Rounds)

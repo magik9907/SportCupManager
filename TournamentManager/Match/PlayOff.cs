@@ -16,7 +16,6 @@ namespace TournamentManager
     {
         public class PlayOff
         {
-            
             private List<Round> rounds = new List<Round>(2);
             private List<TPerson.Referee> referees;
             [JsonIgnore]
@@ -43,8 +42,10 @@ namespace TournamentManager
                 } 
             }
             
+            //constructor for reading from files
             public PlayOff() { }
-            
+
+            //Main Constructor
             public PlayOff(List<TTeam.ITeam> t, List<TPerson.Referee> referees, int[] startDate)
             {
                 //semis and finals will be generated on two consecutive days
@@ -78,17 +79,20 @@ namespace TournamentManager
                 GenerateRound(t, "semi-finals");
             }
             
+            //copying constructor
             public PlayOff(PlayOff copy)
             {
                 this.referees = copy.referees;
                 this.rounds = copy.rounds;
             }
             
+            //copying method
             public PlayOff CreateCopy()
             {
                 return new PlayOff(this);
             }
             
+            //return a winner of the PlayOff
             public TTeam.ITeam GetWinner()
             {
                 if (rounds.Count == 2)
@@ -97,6 +101,7 @@ namespace TournamentManager
                 return null;
             }
             
+            //method generates a round by a said name
             private void GenerateRound(List<TTeam.ITeam> teams, string name)
             {
                 int roundNumber, refNumber = 1;
@@ -110,6 +115,7 @@ namespace TournamentManager
                     rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i * refNumber, refNumber)));
             }
             
+            //SetResult sets a result of a match played by a team
             public void SetResult(string stat, TTeam.ITeam winner)
             {
                 if (!rounds[0].IsFinished())
@@ -125,6 +131,7 @@ namespace TournamentManager
                     GenerateRound(new List<TTeam.ITeam> { rounds[0].ListMatches[0].Winner, rounds[0].ListMatches[1].Winner }, "final");
             }
             
+            //withdraw a team from the PlayOffs
             public void WithdrawTeam(TTeam.ITeam t)
             {
                 if (rounds[0].GetMatch(t).Winner == t)
