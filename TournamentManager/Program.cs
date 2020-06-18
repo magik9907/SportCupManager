@@ -13,7 +13,8 @@ namespace TournamentManager
            
                     t = new Tournament("volley", TEnum.TournamentDyscypline.volleyball);
                     i = 1;
-                    t.AddReferee(new TPerson.Referee("a", "a", 1, i));
+                    TPerson.Referee r = new TPerson.Referee("a", "a", 1, i);
+                    t.AddReferee(r);
                     i++;
                     t.AddReferee(new TPerson.Referee("b", "b", 1, i));
                     i++;
@@ -152,6 +153,7 @@ namespace TournamentManager
                     for (i = 0; i < t.League.Teams.Count; i++)
                         for (int j = t.League.Teams.Count - 1; j > i; j--)
                             t.League.SetResult(t.League.Teams[i].Name + ": 21, 21, 0. " + t.League.Teams[j].Name + ": 0, 0, 0", t.League.Teams[i], t.League.Teams[j]);
+                    t.League.WithdrawTeam(te1);
                     t.SetPlayOff(new int[] { 1, 1, 1 });
                     Console.WriteLine(t.PlayOff.GetWinner());
                     Save.Tournament(t);

@@ -110,6 +110,8 @@ namespace TournamentManager
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
+				if (IsWalkover)
+					throw new SetResultForWalkoverException(CreateCopy());
 				float tmp = matchLength;
 				//a safety check just in case stat is not a number 
 				try
@@ -168,6 +170,8 @@ namespace TournamentManager
 			}
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
+				if (IsWalkover)
+					throw new SetResultForWalkoverException(CreateCopy());
 				int tmp = winnerPlayersLeft;
 				//if stat is not a number parse will throw format exception
 				try
@@ -249,6 +253,8 @@ namespace TournamentManager
             //the expected format is "team1.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). team2.Name:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
             public override void SetResult(string stat, TTeam.ITeam winner)
 			{
+				if (IsWalkover)
+					throw new SetResultForWalkoverException(CreateCopy());
 				int resultCheck = 0, scoreDiff = 0;
 				int earlierResult = 0;
 				for (int i = 0; i < 3; i++)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using TournamentManager.TRound;
 
 namespace TournamentManager
 {
@@ -138,13 +139,23 @@ namespace TournamentManager
 
         //set of Exceptions which may occur while operating on PlayOff(will try to finish soon)
         public abstract class PlayOffRuntimeException : Exception
-        { }
+        {
+            protected TRound.PlayOff playoff;
+            public PlayOffRuntimeException(TRound.PlayOff playoff)
+            {
+                this.playoff = playoff;
+            }
+            public TRound.PlayOff RecreatePlayOff()
+            {
+                return playoff;
+            }
+        }
 
-
-        public class AlreadyFinishedException : Exception
+        //Exception if PlayOff is finished but user tries to set a result
+        public class AlreadyFinishedException : PlayOffRuntimeException
         {
             private TTeam.ITeam winner;
-            public AlreadyFinishedException(TTeam.ITeam winner)
+            public AlreadyFinishedException(TRound.PlayOff playoff, TTeam.ITeam winner) : base(playoff)
             {
                 this.winner = winner;
             }
@@ -349,6 +360,20 @@ namespace TournamentManager
                 get
                 {
                     return "Team you want to set as a winner is not playing!";
+                }
+            }
+        }
+
+        //Exception if user wanted to set a result to a match that ended in walkover
+        public class SetResultForWalkoverException : MatchRuntimeException
+        {
+            public SetResultForWalkoverException(TMatch.Match match) : base(match)
+            { }
+            public override string Message
+            {
+                get
+                {
+                    return "This match has ended by a walkover. You can't change this result";
                 }
             }
         }
