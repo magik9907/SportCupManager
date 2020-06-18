@@ -187,8 +187,8 @@ namespace SportCupManager
             TournamentEditButton.Tag = name;
             RefereeCreateButton.Tag = name;
 
-            ITournament tour = Read.Tournament(name);
-            RefereesListView.ItemsSource = tour.Referees;
+            CurrentTournament = Read.Tournament(name);
+            RefereesListView.ItemsSource = CurrentTournament.Referees;
         }
 
         private void MatchPreview_Click(object sender, RoutedEventArgs e)
@@ -419,12 +419,20 @@ namespace SportCupManager
                 try
                 {
                     Directory.Move(path + name.Replace(" ", ""), path + changedName.Replace(" ", ""));
-                }catch(Exception ev)
+                }catch(IOException ev)
                 {
-
+                    SetNotification("IOEXCEPTION "+ ev.Message);
                 }
-            if (CurrentTournament != null && CurrentTournament.Name == changedName)
+                catch(Exception ev)
+                {
+                    SetNotification(ev.Message);
+                }
+            if (CurrentTournament != null && CurrentTournament.Name != changedName)
+            {
                 CurrentTournament.Name = changedName;
+                Save.TournamentObject(CurrentTournament, changedName);
+            }
+            CurrentTournament = null;
             MenuTournament_Load_Click(sender, e);
         }
 

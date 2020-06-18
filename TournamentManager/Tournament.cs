@@ -129,7 +129,7 @@ namespace TournamentManager
         /// <summary>
         /// contain name of tournament
         /// </summary>
-        private readonly string name;
+        private string name;
 
         /// <summary>
         /// contain league object
@@ -274,7 +274,7 @@ namespace TournamentManager
             {
                 return name;
             }
-            set { }
+            set { name = value; }
         }
 
         [JsonIgnore]

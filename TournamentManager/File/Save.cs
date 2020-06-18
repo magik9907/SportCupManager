@@ -73,6 +73,14 @@ namespace TournamentManager
             SerializeObject(path, "referees.json", r);
         }
 
+        public static void TournamentObject(ITournament t, string name = null)
+        {
+            IsNameAndObject(name, t, "Tournament");
+
+            var path = Path(name);
+            SerializeObject(path, "tournament.json", t);
+        }
+
         /// <summary>
         /// save teams to json file (teams.json)
         /// </summary>
