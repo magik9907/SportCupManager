@@ -196,6 +196,8 @@ namespace TournamentManager
             //this is for automatic scheduling
             public void AutoSchedule(int[] startDate, int spaceBetweenMatches)
             {
+                if (rounds.Count != 0)
+                    throw new ForbiddenAutoScheduleException(CreateCopy());
                 //refNumber holds the number of referees required for a match
                 int i = 0, j = 0, refNumber = 1;
                 if (teams[0] is VolleyballTeam)
@@ -263,6 +265,16 @@ namespace TournamentManager
                     if(rounds[i].IsFinished() && rounds[i].IsPlaying(t))
                             rounds[i].GetMatch(t).Walkover(t);
                 t.Withdraw();
+            }
+
+            public Round FindRound(string name)
+            {
+                foreach (Round round in Rounds)
+                {
+                    if (round.RoundName == name)
+                        return round;
+                }
+                return null;
             }
         }
     }
