@@ -155,7 +155,10 @@ namespace TournamentManager
                             t.League.SetResult("4,1", t.League.Teams[i], t.League.Teams[j]);
                     t.League.WithdrawTeam(te);
                     t.SetPlayOff(new int[] { 1, 1, 1 });
-                    Console.WriteLine(t.PlayOff.GetWinner());
+                    t.PlayOff.SetResult("1,3456", t.PlayOff.Rounds[0].ListMatches[0].TeamA);
+                    t.PlayOff.SetResult("1,3456", t.PlayOff.Rounds[0].ListMatches[1].TeamA);
+                    t.PlayOff.SetResult("1,3456", t.PlayOff.Rounds[1].ListMatches[0].TeamA);
+            Console.WriteLine(t.PlayOff.GetWinner());
                     Save.Tournament(t);
                     ITournament newT;
                     newT = Read.Tournament("volley");

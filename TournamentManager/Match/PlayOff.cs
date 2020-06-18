@@ -106,13 +106,13 @@ namespace TournamentManager
                     rounds[0].SetResult(stat, winner);
                 else
                 {
-                    if (GetWinner() == null)
-                        GenerateRound(new List<TTeam.ITeam> { rounds[0].ListMatches[0].Winner, rounds[0].ListMatches[1].Winner }, "final");
                     if (!rounds[1].IsFinished())
                         rounds[1].SetResult(stat, winner);
                     else
                         throw new AlreadyFinishedException(CreateCopy(), GetWinner());
                 }
+                if (rounds[0].IsFinished() && !rounds[1].IsFinished())
+                    GenerateRound(new List<TTeam.ITeam> { rounds[0].ListMatches[0].Winner, rounds[0].ListMatches[1].Winner }, "final");
             }
             public void WithdrawTeam(TTeam.ITeam t)
             {
