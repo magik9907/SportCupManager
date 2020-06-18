@@ -273,17 +273,19 @@ namespace TournamentManager
 			[JsonProperty]
 			[JsonConverter(typeof(RefereeIdConverter))]
 			private List<TPerson.Referee> assistantReferees = new List<TPerson.Referee>(2);
-			//the score means points gained by team in each set
+			//the score means points gained by teams in each set
 			[JsonProperty]
 			private int[] scoreTeamA = new int[3] {0, 0, 0};
 			[JsonProperty]
 			private int[] scoreTeamB = new int[3] {0, 0, 0};
 			
+			//Main constructor
 			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r)
 			{
 				SetReferees(r);
 			}
 			
+			//copying constructor
 			public VolleyballMatch(VolleyballMatch match) : base(match)
 			{
 				this.scoreTeamA = match.scoreTeamA;
@@ -295,7 +297,7 @@ namespace TournamentManager
 			{
 				set { assistantReferees = value; }
 			}
-			
+			//Copying method
 			public override Match CreateCopy()
 			{
 				return new VolleyballMatch(this);
@@ -307,6 +309,7 @@ namespace TournamentManager
 				assistantReferees.AddRange( r.GetRange(1, 2));
 			}
 
+			//returns a list of referees
 			public override List<TPerson.Referee> GetReferees()
 			{
 				List<TPerson.Referee> tmp = base.GetReferees();
@@ -314,7 +317,7 @@ namespace TournamentManager
 				return tmp;
 			}
 
-
+			//this method is required for saving results in files
 			public void SetResult(int[] scoreA, int[] scoreB)
 			{
 				scoreTeamA = scoreA;
@@ -433,6 +436,7 @@ namespace TournamentManager
 					scoreDiff += scoreTeamA[i] - scoreTeamB[i];
 					}
                 }
+				//checking if a team which should have won by what the stat indicates was set as a winner
 				if ((resultCheck > 0 && TeamA != winner) || (resultCheck < 0 && TeamB != winner))
 				{
 					for (int j = 0; j < 3; j++)
@@ -455,6 +459,7 @@ namespace TournamentManager
 				base.SetResult(stat, winner);
 			}
 
+			//returns scores for each team set by set
 			public override string GetStat()
             {
 				string stat = "a: ";
@@ -476,6 +481,7 @@ namespace TournamentManager
 				return stat;
             }
 
+			//sets the match as a Walkover
             public override void Walkover(ITeam absentee)
             {
 				if(IsWalkover == false)
