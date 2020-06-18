@@ -92,6 +92,22 @@ namespace TournamentManager
                 return new League(this);
             }
 
+            //method for generating the league table. Might Come in handy
+            public string[,] GenerateTable()
+            {
+                SortTeams();
+                string[,] table = new string[teams.Count , 5];
+                for(int i = 0; i < teams.Count; i++)
+                {
+                    table[i, 0] = (i+1).ToString() + ".";
+                    table[i, 1] = teams[i].Name;
+                    string[] tmp = teams[i].GetStats().Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int j = 0; j < 3; j++)
+                        table[i, j + 2] = tmp[j];
+                }
+                return table;
+            }
+
             //method used to sort teams. BubbleSort is used because of it's simplicity
             public void SortTeams()
             {
