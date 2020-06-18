@@ -21,6 +21,8 @@ using TournamentManager.TTeam;
 using TournamentManager.TMatch;
 using TournamentManager.TRound;
 using System.Text.RegularExpressions;
+using TournamentManager.TException;
+using System.Reflection.PortableExecutable;
 
 namespace SportCupManager
 {
@@ -174,7 +176,125 @@ namespace SportCupManager
             string name = (string)((Button)sender).Tag;
 
             MatchList.ItemsSource = CurrentTournament.League.FindRound(name).ListMatches;
-            
+            RoundNameHidden.Tag = name;
+        }
+
+        private void MatchDetailsPreview_Click(object sender, RoutedEventArgs e)
+        {
+            CollapseAllGrids();
+            MatchDetailsGrid.Visibility = Visibility.Visible;
+            int index = (int)((Button)sender).Tag;
+            Round currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
+            TournamentManager.TMatch.Match match = currentRound.ListMatches[index];
+
+            DetailTeamA.Content = match.TeamA.Name;
+            DetailTeamB.Content = match.TeamB.Name;
+            List<Referee> referees = match.GetReferees();
+            DetailRefereeA.Content = referees[0].Fullname + ", " + referees[0].Age + " lat";
+            try
+            {
+                DetailRefereeB.Content = referees[1].Fullname + ", " + referees[1].Age + " lat";
+                DetailRefereeC.Content = referees[2].Fullname + ", " + referees[2].Age + " lat";
+            }
+            catch(ArgumentOutOfRangeException) { }
+
+            if(match.Winner != null)
+            { 
+                if (match.Winner.Name == match.TeamA.Name)
+                {
+                    DetailResultA.Content = "ZWYCIĘZCA";
+                    DetailResultA.Foreground = Brushes.Green;
+                }
+                else if (match.Winner.Name == match.TeamB.Name)
+                {
+                    DetailResultB.Content = "ZWYCIĘZCA";
+                    DetailResultB.Foreground = Brushes.Green;
+                }
+
+                if (match.IsWalkover && match.Winner.Name != match.TeamA.Name)
+                {
+                    DetailResultA.Content = "PODDAŁ SIĘ";
+                    DetailResultA.Foreground = Brushes.Red;
+                }
+                else if (match.IsWalkover && match.Winner.Name != match.TeamB.Name)
+                {
+                    DetailResultB.Content = "PODDAŁ SIĘ";
+                    DetailResultB.Foreground = Brushes.Red;
+                }
+            }
+            string[] statsA = match.TeamA.GetStats().Split(", ");
+            string[] statsB = match.TeamB.GetStats().Split(", ");
+
+            DetailTeamAStatA.Content = statsA[0];
+            DetailTeamAStatB.Content = statsA[1];
+            DetailTeamAStatC.Content = statsA[2];
+
+            DetailTeamBStatA.Content = statsB[0];
+            DetailTeamBStatB.Content = statsB[1];
+            DetailTeamBStatC.Content = statsB[2];
+
+            if (match is VolleyballMatch)
+            {
+                DetailStatA.Content = "Ilość Punktów";
+                DetailStatB.Content = "Wygrane Mecze";
+                DetailStatC.Content = "Różnica Małych Punktów";
+            }
+            else if(match is TugOfWarMatch)
+            {
+                DetailStatA.Content = "Wygrane Mecze";
+                DetailStatB.Content = "Średni Czas Wygrywania";
+                DetailStatC.Content = "Średni Czas Przegrywania";
+            }
+            else if(match is DodgeballMatch)
+            {
+                DetailStatA.Content = "Wygrane Mecze";
+                DetailStatB.Content = "Ilość Wyeliminowanych Graczy";
+                DetailStatC.Content = "Ilość Pozostałych Graczy";
+            }
+        }
+        private void MatchEditData_Click(object sender, RoutedEventArgs e)
+        {
+            CollapseAllGrids();
+            MatchEditDataGrid.Visibility = Visibility.Visible;
+
+            int index = (int)((Button)sender).Tag;
+            Round currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
+            TournamentManager.TMatch.Match match = currentRound.ListMatches[index];
+
+            MatchIndexHidden.Content = index;
+
+            ChooseTeamA.Content = match.TeamA.Name;
+            ChooseTeamB.Content = match.TeamB.Name;
+
+            Stat2.Visibility = Visibility.Collapsed;
+            Stat3.Visibility = Visibility.Collapsed;
+            Stat4.Visibility = Visibility.Collapsed;
+            Stat5.Visibility = Visibility.Collapsed;
+            Stat6.Visibility = Visibility.Collapsed;
+
+            if (match is VolleyballMatch)
+            {
+                Stat2.Visibility = Visibility.Visible;
+                Stat3.Visibility = Visibility.Visible;
+                Stat4.Visibility = Visibility.Visible;
+                Stat5.Visibility = Visibility.Visible;
+                Stat6.Visibility = Visibility.Visible;
+
+                Stat1.Text = "Drużyna 1 - Set 1";
+                Stat2.Text = "Drużyna 1 - Set 2";
+                Stat3.Text = "Drużyna 1 - Set 3";
+                Stat4.Text = "Drużyna 2 - Set 1";
+                Stat5.Text = "Drużyna 2 - Set 2";
+                Stat6.Text = "Drużyna 2 - Set 3";
+            }
+            else if (match is TugOfWarMatch)
+            {
+                Stat1.Text = "Czas Meczu";
+            }
+            else if (match is DodgeballMatch)
+            {
+                Stat1.Text = "Ilość pozostałych graczy zwycięskiej drużyny";
+            }
         }
 
         /* SUBMIT BUTTONS */
@@ -234,7 +354,7 @@ namespace SportCupManager
                 Team team = CurrentTournament.FindTeam((string)((Button)sender).Tag);
                 team.AddPlayer(player);
                 PlayersListView.Items.Refresh();
-                Save.Tournament(CurrentTournament);
+                Save.Teams(CurrentTournament.Teams, (string)((Button)sender).Tag);
             }
             catch (FormatException)
             {
@@ -271,7 +391,7 @@ namespace SportCupManager
 
             CurrentTournament.AddTeam(team);
             SetNotification("Pomyślnie dodano drużynę");
-            Save.Tournament(CurrentTournament);
+            Save.Teams(CurrentTournament.Teams, CurrentTournament.Name);
             MenuTeam_Edit_Click(sender, e);
         }
 
@@ -280,7 +400,7 @@ namespace SportCupManager
             string name = (string)((Button)sender).Tag;
             Team team = CurrentTournament.FindTeam(name);
             CurrentTournament.RemoveTeam(team);
-            Save.Tournament(CurrentTournament);
+            Save.Teams(CurrentTournament.Teams, CurrentTournament.Name);
             MenuTeam_Edit_Click(sender, e);
         }
 
@@ -288,7 +408,7 @@ namespace SportCupManager
         {
             Team team = CurrentTournament.FindTeam((string)((Button)sender).Tag);
             team.Name = Edit_TeamName.Text;
-            Save.Tournament(CurrentTournament);
+            Save.Teams(CurrentTournament.Teams, CurrentTournament.Name);
             MenuTeam_Edit_Click(sender, e);
         }
 
@@ -301,7 +421,7 @@ namespace SportCupManager
                 int id = tour.Referees.Count + 1;
                 Referee referee = new Referee(RefereeFirstName.Text, RefereeSurName.Text, Convert.ToByte(RefereeAge.Text), id);
                 tour.AddReferee(referee);
-                Save.Tournament(tour);
+                Save.Referees(tour.Referees, name);
                 if (CurrentTournament != null && name == CurrentTournament.Name)
                     CurrentTournament = Read.Tournament(name);
                 RefereesListView.ItemsSource = tour.Referees;
@@ -324,46 +444,62 @@ namespace SportCupManager
                 SetNotification("Za mało drużyn w turnieju!");
                 return;
             }
-            
-            if(CurrentTournament.Dyscypline == TournamentDyscypline.volleyball)
-            {
-                if (CurrentTournament.Referees.Count < 3 * (CurrentTournament.Teams.Count / 2))
-                {
-                    SetNotification("Za mało sędziów w turnieju!");
-                    return;
-                }
-            }
-            else
-            {
-                if (CurrentTournament.Referees.Count < (CurrentTournament.Teams.Count / 2))
-                {
-                    SetNotification("Za mało sędziów w turnieju!");
-                    return;
-                }
-            }
-            
 
-            DateTime date = Date.SelectedDate.Value;
-            int[] formattedDate = { date.Day, date.Month, date.Year };
-            int space;
             try
             {
-                space = Int32.Parse(SpaceBetweenMatches.Text);
-            }
-            catch(FormatException)
-            {
-                SetNotification("Dni między meczami musi być liczbą!");
-                return;
-            }
+                DateTime date = Date.SelectedDate.Value;
+                int[] formattedDate = { date.Day, date.Month, date.Year };
+                int space;
+                try
+                {
+                    space = Int32.Parse(SpaceBetweenMatches.Text);
+                }
+                catch (FormatException)
+                {
+                    SetNotification("Dni między meczami musi być liczbą!");
+                    return;
+                }
 
-            CurrentTournament.SetAutoLeague(formattedDate, space);
-            Save.Tournament(CurrentTournament);
-            MenuMatch_List_Click(sender, e);
+                CurrentTournament.SetAutoLeague(formattedDate, space);
+                Save.League(CurrentTournament.League, CurrentTournament.Name);
+                MenuMatch_List_Click(sender, e);
+            }
+            catch (NotEnoughRefereesException)
+            {
+                SetNotification("Za mało sędziów w turnieju!");
+            }
         }
 
-        private void MatchDetailsPreview_Click(object sender, RoutedEventArgs e)
+        private void MatchDataSubmit_Click(object sender, RoutedEventArgs e)
         {
+            Round currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
+            TournamentManager.TMatch.Match match = currentRound.ListMatches[(int)MatchIndexHidden.Content];
+            ITeam winner = (WinnerBox.Text == match.TeamA.Name) ? match.TeamA : match.TeamB;
+            string stats;
+            if (match is VolleyballMatch)
+            {
+                stats = match.TeamA.Name + ": " + Stat1.Text + ", " + Stat2.Text + ", " + Stat3.Text + ". " + match.TeamB.Name + ": " + Stat4.Text + ", " + Stat5.Text + ", " + Stat6.Text;
+                match.SetResult(stats, winner);
+            }
+            else if (match is TugOfWarMatch)
+            {
+                stats = Stat1.Text;
+                match.SetResult(stats, winner);
+            }
+            else if (match is DodgeballMatch)
+            {
+                stats = Stat1.Text;
+                match.SetResult(stats, winner);
+            }
 
+            if(WalkoverCheckbox.IsChecked.Value && winner == match.TeamA)
+            {
+                match.Walkover(match.TeamB);
+            }
+            else if(WalkoverCheckbox.IsChecked.Value && winner == match.TeamB)
+            {
+                match.Walkover(match.TeamA);
+            }
         }
     }
 

@@ -120,27 +120,56 @@
                     </ItemsControl>
                 </Grid>
                 <Grid x:Name="MatchPreviewGrid" Visibility="Collapsed">
-                    <ItemsControl  Name="MatchList">
+                    <Label Name="RoundNameHidden" Tag="" Visibility="Collapsed" />
+                    <ItemsControl  Name="MatchList" AlternationCount="999999">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="30,30,30,0" Background="#FFC2C2FF">
                                     <Label FontSize="25" Margin="0, 0, 22 ,0" HorizontalAlignment="Left" Content="{Binding TeamA.Name}" />
                                     <Label FontSize="25" Margin="0, -44, 22 ,0" HorizontalAlignment="Center" Content="VS" />
                                     <Label FontSize="25" Margin="0, -44, 0 ,0" HorizontalAlignment="Right" Content="{Binding TeamB.Name}" />
-                                    <Button Content="Podgląd" Margin="0, 10, 500, 10" Height="25" Width="100" Click="MatchDetailsPreview_Click" />
+                                    <Button Content="Podgląd" Margin="0, 10, 500, 10" Height="25" Width="100" Tag="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}, StringFormat=.{0}}" Click="MatchDetailsPreview_Click" />
+                                    <Button Content="Wprowadź dane" Margin="110, -35, 400, 10" Height="25" Width="100" Tag="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}, StringFormat=.{0}}" Click="MatchEditData_Click" />
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
-                <Grid x:Name="MatchDetailsGrid">
-                    <Label Content="DruzynA" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="45" Width="333" FontSize="24" FontWeight="Bold"/>
-                    <Label Content="DruzynB" HorizontalAlignment="Left" Margin="343,10,0,0" VerticalAlignment="Top" Height="45" Width="332" FontSize="24" HorizontalContentAlignment="Right" FontWeight="Bold"/>
+                <Grid x:Name="MatchDetailsGrid" Visibility="Collapsed">
+                    <Label Name="DetailTeamA" Content="" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="45" Width="333" FontSize="24" FontWeight="Bold"/>
+                    <Label Name="DetailTeamB" Content="" HorizontalAlignment="Left" Margin="343,10,0,0" VerticalAlignment="Top" Height="45" Width="332" FontSize="24" HorizontalContentAlignment="Right" FontWeight="Bold"/>
                     <Label Content="VS" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Height="45" Width="47" FontSize="24" HorizontalContentAlignment="Center" FontWeight="Bold"/>
                     <Label Content="Sędziowie" HorizontalAlignment="Center" Margin="0,55,0,0" VerticalAlignment="Top" Width="132" HorizontalContentAlignment="Center" FontSize="22" FontWeight="Normal"/>
-                    <Label Content="Jan Kowalski, 25 lat" HorizontalAlignment="Center" Margin="0,94,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" FontSize="18"/>
-                    <Label Content="Zbyszek Nowak, 55 lat" HorizontalAlignment="Center" Margin="0,118,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" FontSize="18"/>
-
+                    <Label Name="DetailRefereeA" Content="" HorizontalAlignment="Center" Margin="0,88,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" FontSize="16"/>
+                    <Label Name="DetailRefereeB" Content="" HorizontalAlignment="Center" Margin="0,112,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" FontSize="16"/>
+                    <Label Name="DetailRefereeC" Content="" HorizontalAlignment="Center" Margin="0,136,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" FontSize="16"/>
+                    <Label Name="DetailResultA" Content="" HorizontalAlignment="Left" Margin="10,44,0,0" VerticalAlignment="Top" Height="45" Width="147" FontSize="20" FontWeight="Bold" Foreground="#FF00CE11"/>
+                    <Label Name="DetailResultB" Content="" HorizontalAlignment="Left" Margin="528,44,0,0" VerticalAlignment="Top" Height="45" Width="147" FontSize="20" FontWeight="Bold" Foreground="Red" HorizontalContentAlignment="Right"/>
+                    <Label Name="DetailStatA" Content="Statystyka pierwsza" HorizontalAlignment="Center" Margin="0,176,0,0" VerticalAlignment="Top" Width="355" HorizontalContentAlignment="Center" FontSize="22"/>
+                    <Label Name="DetailStatB" Content="Statystyka druga" HorizontalAlignment="Center" Margin="0,210,0,0" VerticalAlignment="Top" Width="355" HorizontalContentAlignment="Center" FontSize="22"/>
+                    <Label Name="DetailStatC" Content="Statystyka trzecia" HorizontalAlignment="Center" Margin="0,244,0,0" VerticalAlignment="Top" Width="355" HorizontalContentAlignment="Center" FontSize="22"/>
+                    <Label Name="DetailTeamAStatA" Content="Plewy1" HorizontalAlignment="Left" Margin="10,176,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Left" FontSize="22"/>
+                    <Label Name="DetailTeamAStatB" Content="Plewy2" HorizontalAlignment="Left" Margin="10,210,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Left" FontSize="22"/>
+                    <Label Name="DetailTeamAStatC" Content="Plewy3" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Left" FontSize="22"/>
+                    <Label Name="DetailTeamBStatA" Content="Pprawy1" HorizontalAlignment="Left" Margin="469,176,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Right" FontSize="22"/>
+                    <Label Name="DetailTeamBStatB" Content="Pprawy2" HorizontalAlignment="Left" Margin="469,210,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Right" FontSize="22"/>
+                    <Label Name="DetailTeamBStatC" Content="Pprawy3" HorizontalAlignment="Left" Margin="469,244,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Right" FontSize="22"/>
+                </Grid>
+                <Grid x:Name="MatchEditDataGrid">
+                    <Label Content="Wprowadzanie Danych" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="30"/>
+                    <ComboBox Name="WinnerBox" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="189" FontSize="18">
+                        <ComboBoxItem Name="ChooseTeamA" Content="" IsSelected="True"></ComboBoxItem>
+                        <ComboBoxItem Name="ChooseTeamB" Content=""></ComboBoxItem>
+                    </ComboBox>
+                    <TextBox Name="Stat1" HorizontalAlignment="Left" MaxHeight="30" Margin="10,95,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
+                    <TextBox Name="Stat2" HorizontalAlignment="Left" MaxHeight="30" Margin="11,126,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="188" FontSize="18"/>
+                    <TextBox Name="Stat3" HorizontalAlignment="Left" MaxHeight="30" Margin="11,157,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="188" FontSize="18"/>
+                    <TextBox Name="Stat4" HorizontalAlignment="Left" MaxHeight="30" Margin="219,95,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
+                    <TextBox Name="Stat5" HorizontalAlignment="Left" MaxHeight="30" Margin="220,126,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="188" FontSize="18"/>
+                    <TextBox Name="Stat6" HorizontalAlignment="Left" MaxHeight="30" Margin="220,157,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="188" FontSize="18"/>
+                    <CheckBox Name="WalkoverCheckbox" Content="Walkower" HorizontalAlignment="Left" Margin="220,65,0,0" VerticalAlignment="Top" FontSize="16" VerticalContentAlignment="Center"/>
+                    <Button Content="Wprowadź Dane" HorizontalAlignment="Left" Margin="538,404,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="137" Click="MatchDataSubmit_Click"/>
+                    <Label Name="MatchIndexHidden" Tag="" Visibility="Collapsed" />
                 </Grid>
             </Grid>
         </ScrollViewer>
