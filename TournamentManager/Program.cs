@@ -7,6 +7,7 @@ namespace TournamentManager
     {
         static void Main(string[] args)
         {
+            /*
             TTeam.ITeam te1;
             ITournament t = null;
             int i;
@@ -55,10 +56,10 @@ namespace TournamentManager
                     t.AddTeam(new TTeam.VolleyballTeam("55", i));
                     i++;
                     t.AddTeam(new TTeam.VolleyballTeam("66", i));
+            */
 
 
-
-                    /*
+                   
                     ITournament t = new Tournament("dodge", TEnum.TournamentDyscypline.dodgeball);
 
                     int i =1;
@@ -103,7 +104,6 @@ namespace TournamentManager
                     t.AddTeam(new TTeam.DodgeballTeam("55",i));
                     i++;
                     t.AddTeam(new TTeam.DodgeballTeam("66",i));
-                    */
                     /*
 
                     ITournament t = new Tournament("tugofwar", TEnum.TournamentDyscypline.tugofwar);
@@ -152,8 +152,8 @@ namespace TournamentManager
                     t.SetAutoLeague(new int[] { 1, 1, 1 }, 1);
                     for (i = 0; i < t.League.Teams.Count; i++)
                         for (int j = t.League.Teams.Count - 1; j > i; j--)
-                            t.League.SetResult(t.League.Teams[i].Name + ": 21, 21, 0. " + t.League.Teams[j].Name + ": 0, 0, 0", t.League.Teams[i], t.League.Teams[j]);
-                    t.League.WithdrawTeam(te1);
+                            t.League.SetResult("4", t.League.Teams[i], t.League.Teams[j]);
+                    t.League.WithdrawTeam(te);
                     t.SetPlayOff(new int[] { 1, 1, 1 });
                     Console.WriteLine(t.PlayOff.GetWinner());
                     Save.Tournament(t);
