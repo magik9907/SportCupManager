@@ -62,7 +62,7 @@ namespace TournamentManager
             }
         }
 
-        public static void Referees(List<TPerson.Referee> r = null, string name = null)
+        public static void Referees(List<TPerson.Referee> r , string name = null)
         {
             IsNameAndObject(name, r, "TPerson.Referee");
 
@@ -71,7 +71,7 @@ namespace TournamentManager
             SerializeObject(path, "referees.json", r);
         }
 
-        public static void Teams(List<TTeam.ITeam> t = null, string name = null)
+        public static void Teams(List<TTeam.ITeam> t , string name = null)
         {
             IsNameAndObject(name, t, "TTeam.ITeam");
 
@@ -80,7 +80,7 @@ namespace TournamentManager
             SerializeObject(path, "teams.json", t);
         }
 
-        public static void League(TRound.League l = null, string name = null)
+        public static void League(TRound.League l , string name = null)
         {
             IsNameAndObject(name, l, "TRound.League");
 
@@ -89,7 +89,7 @@ namespace TournamentManager
             SerializeObject(path, "league.json", l);
         }
 
-        public static void PlayOff(TRound.PlayOff p = null, string name = null)
+        public static void PlayOff(TRound.PlayOff p , string name = null)
         {
             IsNameAndObject(name, p, "TRound.PlayOff");
 
