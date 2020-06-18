@@ -57,9 +57,7 @@ namespace TournamentManager
             var json = JsonConvert.DeserializeObject<Dictionary<string, List<RoundTempl>>>(File.ReadAllText(path + "\\playoff.json"))["Rounds"];
             List<TRound.Round> rP = new List<TRound.Round>();
             RoundTempl elem;
-            TRound.Round round;
-            TMatch.Match match;
-            int j;
+
             for (int i = 0; i < json.Count; i++)
             {
                 elem = json[i];
@@ -81,7 +79,7 @@ namespace TournamentManager
         {
             TRound.League l = new TRound.League();
 
-            var json = (JsonConvert.DeserializeObject<Dictionary<string, List<RoundTempl>>>(File.ReadAllText(path + "\\league.json")))["Rounds"];
+            var json = JsonConvert.DeserializeObject<Dictionary<string, List<RoundTempl>>>(File.ReadAllText(path + "\\league.json"))["Rounds"];
 
             List<TRound.Round> rL = new List<TRound.Round>();
             RoundTempl elem;
@@ -163,6 +161,12 @@ namespace TournamentManager
                         referees[elem.RefA]
                     });
                 break;
+                case TEnum.TournamentDyscypline.tugofwar:
+
+                    match = new TMatch.TugOfWarMatch(teams[elem.TeamA], teams[elem.TeamB], new List<TPerson.Referee>{
+                        referees[elem.RefA]
+                    });
+                    break;
                 default: return null;
             }
 
@@ -207,6 +211,18 @@ namespace TournamentManager
                     for (int i = 0; i < teamDesc.Count; i++)
                     {
                         teamDic.Add(teamDesc[i].Id, new TTeam.VolleyballTeam(teamDesc[i].Name,teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
+                    }
+                    break;
+                case TEnum.TournamentDyscypline.dodgeball:
+                    for (int i = 0; i < teamDesc.Count; i++)
+                    {
+                        teamDic.Add(teamDesc[i].Id, new TTeam.DodgeballTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
+                    }
+                    break;
+                case TEnum.TournamentDyscypline.tugofwar:
+                    for (int i = 0; i < teamDesc.Count; i++)
+                    {
+                        teamDic.Add(teamDesc[i].Id, new TTeam.TugOfWarTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
                     }
                     break;
 

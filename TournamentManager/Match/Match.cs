@@ -56,6 +56,10 @@ namespace TournamentManager
 			}
 			//Function takes a list of referees because VolleyballMatch needs 3 of them
 			public virtual void SetReferees(List<TPerson.Referee> r) { RefA = r.ElementAt(0); }
+			public virtual List<TPerson.Referee> GetReferees()
+            {
+				return new List<TPerson.Referee>() { RefA };
+            }
 			//those virtual methods will be defined in subclasses
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
@@ -263,14 +267,21 @@ namespace TournamentManager
 				assistantReferees.AddRange( r.GetRange(1, 2));
 			}
 
+			public override List<TPerson.Referee> GetReferees()
+			{
+				List<TPerson.Referee> tmp = base.GetReferees();
+				tmp.AddRange(assistantReferees);
+				return tmp;
+			}
 
-			//the expected format is "team1.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). team2.Name:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
+
 			public void SetResult(int[] scoreA, int[] scoreB)
 			{
 				scoreTeamA = scoreA;
 				scoreTeamB = scoreB;
 			}
 
+			//the expected format is "team1.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). team2.Name:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				if (IsWalkover)
