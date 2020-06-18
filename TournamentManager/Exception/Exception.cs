@@ -8,6 +8,9 @@ namespace TournamentManager
 {
     namespace TException
     {
+        /// <summary>
+        /// Exception of empty file
+        /// </summary>
         public class FileIsEmpty : Exception
         {
             public FileIsEmpty() : base("no text in file")
@@ -16,6 +19,9 @@ namespace TournamentManager
             }
         }
 
+        /// <summary>
+        /// Dyscypline is not known for program
+        /// </summary>
         public class TournamentDyscyplineNotIdentify : Exception
         {
             public TournamentDyscyplineNotIdentify() : base("unknown tournament dyscypline")
@@ -24,6 +30,9 @@ namespace TournamentManager
             }
         }
 
+        /// <summary>
+        /// Name for tournament must be defined
+        /// </summary>
         public class TournamentNameMustBeDefine : Exception
         {
             public TournamentNameMustBeDefine() : base("Tournament Name is not defined")
@@ -81,6 +90,9 @@ namespace TournamentManager
             }
         }
 
+        /// <summary>
+        /// name for team is not set
+        /// </summary>
         public class TeamMissingNameException : Exception
         {
             public TeamMissingNameException() : base("There is missing name parameter for Team.")

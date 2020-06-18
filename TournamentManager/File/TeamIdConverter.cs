@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 
 namespace TournamentManager
 {
+    /// <summary>
+    ///  Custom json converter to serialize with only id
+    /// </summary>
     public class TeamIdConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
