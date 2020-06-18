@@ -60,6 +60,8 @@ namespace TournamentManager
                 }
                 else
                 {
+                    if (wasWinner)
+                        this.MatchesWon--;
                     this.SumLossTime += float.Parse(stat);
                 }
                     

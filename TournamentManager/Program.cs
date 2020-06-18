@@ -178,8 +178,8 @@ namespace TournamentManager
              t.SetAutoLeague(new int[] { 1, 1, 1 }, 1);
                     for (i = 0; i < t.League.Teams.Count; i++)
                         for (int j = t.League.Teams.Count - 1; j > i; j--)
-                            t.League.SetResult("5", t.League.Teams[i], t.League.Teams[j]);
-                   
+                            t.League.SetResult("782,21", t.League.Teams[i], t.League.Teams[j]);
+                   t.League.WithdrawTeam(te);
                     t.SetPlayOff(new int[] { 1, 1, 1 });
                     t.PlayOff.SetResult("1,3456", t.PlayOff.Rounds[0].ListMatches[0].TeamA);
                     t.PlayOff.SetResult("1,3456", t.PlayOff.Rounds[0].ListMatches[1].TeamA);
