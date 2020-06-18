@@ -83,9 +83,6 @@ namespace TournamentManager
                 base.Withdraw();
                 SumLossTime = 0;
                 SumWinTime = 0;
-                for (int i = 0; i < MatchesPlayed; i++)
-                    SumLossTime += 5;
-
             }
 
             public override string GetStats()
