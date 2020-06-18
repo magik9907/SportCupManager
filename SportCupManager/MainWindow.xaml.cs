@@ -194,8 +194,8 @@ namespace SportCupManager
             TournamentEditButton.Tag = name;
             RefereeCreateButton.Tag = name;
 
-            ITournament tour = Read.Tournament(name);
-            RefereesListView.ItemsSource = tour.Referees;
+            CurrentTournament = Read.Tournament(name);
+            RefereesListView.ItemsSource = CurrentTournament.Referees;
         }
 
         private void MatchPreview_Click(object sender, RoutedEventArgs e)
@@ -387,7 +387,18 @@ namespace SportCupManager
         private void TournamentDelete_Click(object sender, RoutedEventArgs e)
         {
             string path = (string)((Button)sender).Tag;
-            Directory.Delete(path, true);
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (IOException ev)
+            {
+                SetNotification(ev.Message);
+            }
+            catch(Exception ev)
+            {
+                SetNotification(ev.Message);
+            }
             TournamentTemporary tour = new TournamentTemporary(path);
             if (CurrentTournament != null && tour.getNameFromPath() == CurrentTournament.Name)
             { 
@@ -433,10 +444,24 @@ namespace SportCupManager
             string name = ((string)((Button)sender).Tag).Replace(" ", "");
             string changedName = Edit_TournamentName.Text.Replace(" ", "");
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\";
-            if(path + name != path + changedName)
-                Directory.Move(path + name, path + changedName);
-            if (CurrentTournament.Name == name)
+            if (path + name != path + changedName)
+                try
+                {
+                    Directory.Move(path + name.Replace(" ", ""), path + changedName.Replace(" ", ""));
+                }catch(IOException ev)
+                {
+                    SetNotification("IOEXCEPTION "+ ev.Message);
+                }
+                catch(Exception ev)
+                {
+                    SetNotification(ev.Message);
+                }
+            if (CurrentTournament != null && CurrentTournament.Name != changedName)
+            {
                 CurrentTournament.Name = changedName;
+                Save.TournamentObject(CurrentTournament, changedName);
+            }
+            CurrentTournament = null;
             MenuTournament_Load_Click(sender, e);
         }
 
@@ -552,8 +577,7 @@ namespace SportCupManager
                 {
                     match.Walkover(match.TeamA);
                 }
-
-                if(!match.IsWalkover)
+                else if (match is VolleyballMatch)
                 {
                     if (match is VolleyballMatch)
                     {
