@@ -72,6 +72,15 @@ namespace TournamentManager
                 this.referees = referees;
                 GenerateRound(t, "semi-finals");
             }
+            public PlayOff(PlayOff copy)
+            {
+                this.referees = copy.referees;
+                this.rounds = copy.rounds;
+            }
+            public PlayOff CreateCopy()
+            {
+                return new PlayOff(this);
+            }
             public TTeam.ITeam GetWinner()
             {
                 if (rounds.Count == 2)
@@ -102,15 +111,22 @@ namespace TournamentManager
                     if (!rounds[1].IsFinished())
                         rounds[1].SetResult(stat, winner);
                     else
-                        throw new AlreadyFinishedException(GetWinner());
+                        throw new AlreadyFinishedException(CreateCopy(), GetWinner());
                 }
             }
             public void WithdrawTeam(TTeam.ITeam t)
             {
                 if (rounds[0].GetMatch(t).Winner == t)
                 {
-
+                    rounds[0].GetMatch(t).Walkover(t);
+                    if (rounds[0].IsFinished())
+                    {
+                        if (rounds.Count == 2)
+                            rounds.RemoveAt(1);
+                        GenerateRound(new List<TTeam.ITeam> { rounds[0].ListMatches[0].Winner, rounds[0].ListMatches[1].Winner }, "final");
+                    }
                 }
+                t.Withdraw();
             }
         }
     }

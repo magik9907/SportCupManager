@@ -253,7 +253,11 @@ namespace TournamentManager
             }
             public void WithdrawTeam(TTeam.ITeam t)
             {
-                if (teams.Count <= 4)
+                int teamsLeft = 0;
+                for (int i = 0; i < teams.Count; i++)
+                    if (!teams[i].DidWithdraw)
+                        teamsLeft++;
+                if (teamsLeft <= 4)
                     throw new NotEnoughTeamsLeftNumber(CreateCopy(), t);
                 for (int i = 0; i < rounds.Count; i++)
                     if(rounds[i].IsFinished() && rounds[i].IsPlaying(t))

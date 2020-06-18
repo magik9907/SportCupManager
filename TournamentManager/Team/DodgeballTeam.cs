@@ -57,7 +57,6 @@ namespace TournamentManager
                 }
                 else
                     PlayersEliminated += Int32.Parse(stat);
-                Withdraw();
             }
 
             public override void Withdraw()
