@@ -18,6 +18,7 @@ namespace TournamentManager
 			private TTeam.ITeam teamB;
 			private TTeam.ITeam winner = null;
 			private bool isWalkover = false;
+			
 			[JsonConverter(typeof(TeamIdConverter))]
 			public TTeam.ITeam TeamA { get { return teamA; } set { teamA = value; } }
 
@@ -26,15 +27,19 @@ namespace TournamentManager
 
 			[JsonConverter(typeof(TeamIdConverter))]
 			public TTeam.ITeam Winner { get { return winner; } set { winner = value; } }
+			
 			[JsonProperty]
 			[JsonConverter(typeof(RefereeIdConverter))]
 			private TPerson.Referee RefA;
+			
 			public TPerson.Referee Referee { set
                 {
 					RefA = value;
                 } 
 			}
+			
 			public bool IsWalkover { get { return isWalkover; } set { isWalkover = value; } }
+			
 			public Match(Match match)
             {
 				this.teamA = match.teamA;
@@ -42,10 +47,12 @@ namespace TournamentManager
 				this.winner = match.winner;
 				this.RefA = match.RefA;
             }
+			
 			public virtual Match CreateCopy()
 			{
 				return null;
 			}
+			
 			public Match(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r)
 			{
 				if (a == b)
@@ -54,12 +61,15 @@ namespace TournamentManager
 				teamB = b;
 				RefA = r.ElementAt(0);
 			}
+			
 			//Function takes a list of referees because VolleyballMatch needs 3 of them
 			public virtual void SetReferees(List<TPerson.Referee> r) { RefA = r.ElementAt(0); }
+			
 			public virtual List<TPerson.Referee> GetReferees()
             {
 				return new List<TPerson.Referee>() { RefA };
             }
+			
 			//those virtual methods will be defined in subclasses
 			public virtual void SetResult(string stat, TTeam.ITeam winner)
 			{
@@ -68,8 +78,10 @@ namespace TournamentManager
 				else
 					throw new WinnerIsNotPlayingException(CreateCopy());
 			}
+			
 			public virtual string GetStat() { return null; }
 			//It's just a basic try, can be changed if needed
+			
 			public bool IsPlaying(TTeam.ITeam team)
             {
 				return team == TeamA || team == TeamB;
@@ -79,6 +91,7 @@ namespace TournamentManager
             {
 				return Winner != null || IsWalkover;
             }
+			
 			public static Match CreateMatch(TTeam.ITeam team1, TTeam.ITeam team2, List<TPerson.Referee> refs)
             {
 				if (team1 is DodgeballTeam)
@@ -89,6 +102,7 @@ namespace TournamentManager
 					else
 						return new TMatch.VolleyballMatch(team1, team2, refs);
 			}
+			
 			public virtual void Walkover(TTeam.ITeam absentee)
             {
 				if (IsWalkover == true)
@@ -101,16 +115,20 @@ namespace TournamentManager
 		{
 			[JsonProperty]
 			private float matchLength = 0;
+			
 			//constructor uses a constructor of its superclass
 			public TugOfWarMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
+			
 			public TugOfWarMatch(TugOfWarMatch match) : base(match)
 			{
 				this.matchLength = match.matchLength;
 			}
+			
 			public override Match CreateCopy()
 			{
 				return new TugOfWarMatch(this);
 			}
+			
 			public void SetResult(float matchLength)
 			{
 				this.matchLength = matchLength;
@@ -144,12 +162,14 @@ namespace TournamentManager
 					TeamA.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == winner, stat);
 				base.SetResult(stat, winner);
 			}
+			
 			//getStat returns time in seconds (with miliseconds)
 			public override string GetStat()
 			{
 				return matchLength.ToString();
 			}
-            public override void Walkover(ITeam absentee)
+            
+			public override void Walkover(ITeam absentee)
             {
 				if (IsWalkover == false)
 				{
@@ -169,11 +189,14 @@ namespace TournamentManager
 			//we might need to change that name
 			[JsonProperty]
 			private int winnerPlayersLeft = 0;
+			
 			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
+			
 			public DodgeballMatch(DodgeballMatch match) : base(match)
 			{
 				this.winnerPlayersLeft = match.winnerPlayersLeft;
 			}
+			
 			public override Match CreateCopy()
 			{
 				return new DodgeballMatch(this);
@@ -215,10 +238,12 @@ namespace TournamentManager
 					TeamA.SetMatchResult(false, tmp != 0, tmp != 0 && this.Winner == winner, (6 - winnerPlayersLeft).ToString());
 				base.SetResult(stat, winner);
 			}
+			
 			public override string GetStat()
 			{
 				return winnerPlayersLeft.ToString();
 			}
+			
 			public override void Walkover(ITeam absentee)
 			{
 				if (IsWalkover == false)
@@ -244,23 +269,29 @@ namespace TournamentManager
 			private int[] scoreTeamA = new int[3] {0, 0, 0};
 			[JsonProperty]
 			private int[] scoreTeamB = new int[3] {0, 0, 0};
+			
 			public VolleyballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r)
 			{
 				SetReferees(r);
 			}
-			private List<TPerson.Referee> AssistantReferees
-            {
-				set { assistantReferees = value; }
-            }
+			
 			public VolleyballMatch(VolleyballMatch match) : base(match)
 			{
 				this.scoreTeamA = match.scoreTeamA;
 				this.scoreTeamB = match.scoreTeamB;
 			}
+
+
+			private List<TPerson.Referee> AssistantReferees
+			{
+				set { assistantReferees = value; }
+			}
+			
 			public override Match CreateCopy()
 			{
 				return new VolleyballMatch(this);
 			}
+			
 			public override void SetReferees(List<TPerson.Referee> r)
 			{
 				

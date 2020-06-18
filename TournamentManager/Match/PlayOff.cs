@@ -20,16 +20,19 @@ namespace TournamentManager
             private List<Round> rounds = new List<Round>(2);
             private List<TPerson.Referee> referees;
             [JsonIgnore]
+           
             public List<TPerson.Referee> Referees
             {
                 set { referees = value; }
             }
+            
             public void addReferee(TPerson.Referee refe)
             {
                 if (referees == null)
                     referees = new List<TPerson.Referee>();
                 referees.Add(refe);
             }
+            
             public List<Round> Rounds
             {
                 get { 
@@ -39,7 +42,9 @@ namespace TournamentManager
                     rounds = value;
                 } 
             }
+            
             public PlayOff() { }
+            
             public PlayOff(List<TTeam.ITeam> t, List<TPerson.Referee> referees, int[] startDate)
             {
                 //semis and finals will be generated on two consecutive days
@@ -72,15 +77,18 @@ namespace TournamentManager
                 this.referees = referees;
                 GenerateRound(t, "semi-finals");
             }
+            
             public PlayOff(PlayOff copy)
             {
                 this.referees = copy.referees;
                 this.rounds = copy.rounds;
             }
+            
             public PlayOff CreateCopy()
             {
                 return new PlayOff(this);
             }
+            
             public TTeam.ITeam GetWinner()
             {
                 if (rounds.Count == 2)
@@ -88,6 +96,7 @@ namespace TournamentManager
                         return rounds[1].ListMatches[0].Winner;
                 return null;
             }
+            
             private void GenerateRound(List<TTeam.ITeam> teams, string name)
             {
                 int roundNumber, refNumber = 1;
@@ -100,6 +109,7 @@ namespace TournamentManager
                 for (int i = 0; i < teams.Count / 2; i++)
                     rounds[roundNumber].AddMatch(TMatch.Match.CreateMatch(teams[i], teams[teams.Count - 1 - i], referees.GetRange(i * refNumber, refNumber)));
             }
+            
             public void SetResult(string stat, TTeam.ITeam winner)
             {
                 if (!rounds[0].IsFinished())
@@ -114,6 +124,7 @@ namespace TournamentManager
                 if (rounds[0].IsFinished() && !rounds[1].IsFinished())
                     GenerateRound(new List<TTeam.ITeam> { rounds[0].ListMatches[0].Winner, rounds[0].ListMatches[1].Winner }, "final");
             }
+            
             public void WithdrawTeam(TTeam.ITeam t)
             {
                 if (rounds[0].GetMatch(t).Winner == t)

@@ -184,13 +184,13 @@ namespace TournamentManager
             this.name = name;
             this.dyscypline = dyscypline;
         }
-
+      
         public void AddReferee(TPerson.Referee referee = null)
         {
             IsObjectNotDefined(referee, "Referee");
             referees.Add(referee);
         }
-
+        
         public void AddReferee(List<TPerson.Referee> referees = null)
         {
             IsObjectNotDefined(referees, "Referee");
