@@ -142,6 +142,7 @@ namespace TournamentManager
                 match.Winner = teams[int.Parse(elem.Winner)];
 
             }
+            match.IsWalkover = elem.IsWalkover;
 
             return match;
         }
@@ -169,8 +170,8 @@ namespace TournamentManager
             {
                 match.Winner = teams[int.Parse(elem.Winner)];
 
-            }  
-
+            }
+            match.IsWalkover = elem.IsWalkover;
             return match;
         }
 
@@ -201,23 +202,28 @@ namespace TournamentManager
             List<TTeam.ITeam> team = new List<TTeam.ITeam>();
             Dictionary<int, TTeam.ITeam> teamDic = new Dictionary<int, TTeam.ITeam>();
 
+            Dictionary<string, float> stats ;
+
             switch (type) {
                 case TEnum.TournamentDyscypline.volleyball:
                     for (int i = 0; i < teamDesc.Count; i++)
                     {
-                        teamDic.Add(teamDesc[i].Id, new TTeam.VolleyballTeam(teamDesc[i].Name,teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
+                        stats = GetStats(teamDesc[i]);
+                        teamDic.Add(teamDesc[i].Id, new TTeam.VolleyballTeam(teamDesc[i].Name,teamDesc[i].Id, Players(teamDesc[i].listPlayers),stats));
                     }
                     break;
                 case TEnum.TournamentDyscypline.dodgeball:
                     for (int i = 0; i < teamDesc.Count; i++)
                     {
-                        teamDic.Add(teamDesc[i].Id, new TTeam.DodgeballTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
+                        stats = GetStats(teamDesc[i]);
+                        teamDic.Add(teamDesc[i].Id, new TTeam.DodgeballTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers),stats));
                     }
                     break;
                 case TEnum.TournamentDyscypline.tugofwar:
                     for (int i = 0; i < teamDesc.Count; i++)
                     {
-                        teamDic.Add(teamDesc[i].Id, new TTeam.TugOfWarTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers)));
+                        stats = GetStats(teamDesc[i]);
+                        teamDic.Add(teamDesc[i].Id, new TTeam.TugOfWarTeam(teamDesc[i].Name, teamDesc[i].Id, Players(teamDesc[i].listPlayers),stats));
                     }
                     break;
 
@@ -227,6 +233,23 @@ namespace TournamentManager
             return teamDic;
         }
         
+        private static Dictionary<string, float> GetStats(TeamTempl t)
+        {
+            Dictionary<string, float> stats = new Dictionary<string, float>();
+            stats.Add("Points", t.Points );
+            stats.Add("PlayersEliminated", t.PlayersEliminated );
+            stats.Add("SumOfPlayersLeft", t.SumOfPlayersLeft );
+            stats.Add("AvWinTime", t.AvWinTime );
+            stats.Add("AvLossTime", t.AvLossTime );
+            stats.Add("SumWinTime", t.SumWinTime );
+            stats.Add("SumLossTime", t.SumLossTime );
+            stats.Add("MatchesPlayed", t.MatchesPlayed );
+            stats.Add("MatchesWon", t.MatchesWon );
+            stats.Add("ScoreDiff",  t.ScoreDiff );
+
+            return stats;
+        }
+
         private static List<TPerson.Player> Players(List<TeamTempl.Player> playerDesc)
         {
             
@@ -252,12 +275,19 @@ namespace TournamentManager
         private class TeamTempl
         {
             public List<Player> listPlayers=null;
-            public int Points = 0;
-            public int ScoreDiff = 0;
+            public float Points = 0;
+            public float ScoreDiff = 0;
             public int Id = 0;
             public string Name = null;
-            public int MatchesPlayed = 0;
-            public int MatchesWon = 0;
+            public float MatchesPlayed = 0;
+            public float MatchesWon = 0;
+            public bool DidWithdraw = false;
+            public float PlayersEliminated = 0;
+            public float SumOfPlayersLeft = 0;
+            public float AvWinTime = 0;
+            public float AvLossTime = 0;
+            public float SumWinTime = 0;
+            public float SumLossTime = 0;
 
             public class Player
             {
@@ -273,7 +303,6 @@ namespace TournamentManager
             public int[] Date = null;
             public string RoundName = null;
             public List<MatchTempl> ListMatches = null;
-            
         }
 
         private class MatchTempl
@@ -287,6 +316,7 @@ namespace TournamentManager
             public int TeamB = 0;
             public string Winner = null;
             public int RefA = 0;
+            public bool IsWalkover = false;
 
 
         }

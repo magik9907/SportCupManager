@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TournamentManager.TPerson;
 
 namespace TournamentManager
 {
@@ -24,6 +25,16 @@ namespace TournamentManager
             public TugOfWarTeam(string name, int id, List<TPerson.Player> players) : this(name, id)
             {
                 this.listPlayers.AddRange(players);
+            }
+
+            public TugOfWarTeam(string name, int id, List<TPerson.Player> players, Dictionary<string, float> stats) : this(name, id,players)
+            {
+                AvWinTime = stats["AvWinTime"];
+                AvLossTime = stats["AvLossTime"];
+                SumWinTime = stats["SumWinTime"];
+                SumLossTime = stats["SumLossTime"];
+                MatchesPlayed = (int)Math.Round(stats["MatchesPlayed"]);
+                MatchesWon = (int)Math.Round(stats["MatchesWon"]);
             }
 
             public static bool operator <(TugOfWarTeam a, TugOfWarTeam b)
