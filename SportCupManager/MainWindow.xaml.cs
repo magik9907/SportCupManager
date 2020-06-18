@@ -313,7 +313,7 @@ namespace SportCupManager
         private void TournamentCreateButton_Click(object sender, RoutedEventArgs e)
         {
             string name = Create_TournamentName.Text;
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name.Replace(" ", "");
             if (Directory.Exists(path))
             {
                 SetNotification("Ta nazwa turnieju jest już zajęta!");
@@ -382,7 +382,7 @@ namespace SportCupManager
             string name = (string)((Button)sender).Tag;
             string changedName = Edit_TournamentName.Text;
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\";
-            if(path + name != path + changedName)
+            if(path + name.Replace(" ", "") != path + changedName.Replace(" ", ""))
                 Directory.Move(path + name, path + changedName);
             MenuTournament_Load_Click(sender, e);
         }
