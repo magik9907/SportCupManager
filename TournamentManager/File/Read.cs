@@ -62,6 +62,10 @@ namespace TournamentManager
                 rP.Add(Round(elem, tenum, referees,teams));
             }
 
+            foreach(var x in referees)
+            {
+                p.addReferee(x.Value);
+            }
 
             p.Rounds = rP;
             return p;

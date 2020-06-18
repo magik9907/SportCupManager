@@ -24,6 +24,12 @@ namespace TournamentManager
             {
                 set { referees = value; }
             }
+            public void addReferee(TPerson.Referee refe)
+            {
+                if (referees == null)
+                    referees = new List<TPerson.Referee>();
+                referees.Add(refe);
+            }
             public List<Round> Rounds
             {
                 get { 
