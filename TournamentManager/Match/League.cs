@@ -17,6 +17,7 @@ namespace TournamentManager
         public class League
         {
             private List<Round> rounds;
+            
             [JsonProperty]
             public List<Round> Rounds
             {
@@ -264,6 +265,16 @@ namespace TournamentManager
                     if(rounds[i].IsFinished() && rounds[i].IsPlaying(t))
                             rounds[i].GetMatch(t).Walkover(t);
                 t.Withdraw();
+            }
+
+            public Round FindRound(string name)
+            {
+                foreach (Round round in Rounds)
+                {
+                    if (round.RoundName == name)
+                        return round;
+                }
+                return null;
             }
         }
     }

@@ -107,6 +107,11 @@ namespace TournamentManager
 			{
 				return new TugOfWarMatch(this);
 			}
+			public void SetResult(float matchLength)
+			{
+				this.matchLength = matchLength;
+			}
+
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
@@ -158,6 +163,7 @@ namespace TournamentManager
 		public class DodgeballMatch : Match
 		{
 			//we might need to change that name
+			[JsonProperty]
 			private int winnerPlayersLeft = 0;
 			public DodgeballMatch(TTeam.ITeam a, TTeam.ITeam b, List<TPerson.Referee> r) : base(a, b, r) { }
 			public DodgeballMatch(DodgeballMatch match) : base(match)
@@ -168,6 +174,12 @@ namespace TournamentManager
 			{
 				return new DodgeballMatch(this);
 			}
+
+			public void SetResult(int wPlayersLeft)
+			{
+				winnerPlayersLeft = wPlayersLeft;
+			}
+
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				if (IsWalkover)
@@ -250,8 +262,16 @@ namespace TournamentManager
 				
 				assistantReferees.AddRange( r.GetRange(1, 2));
 			}
-            //the expected format is "team1.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). team2.Name:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
-            public override void SetResult(string stat, TTeam.ITeam winner)
+
+
+			//the expected format is "team1.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). team2.Name:scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
+			public void SetResult(int[] scoreA, int[] scoreB)
+			{
+				scoreTeamA = scoreA;
+				scoreTeamB = scoreB;
+			}
+
+			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
 				if (IsWalkover)
 					throw new SetResultForWalkoverException(CreateCopy());
