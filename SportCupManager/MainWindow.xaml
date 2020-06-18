@@ -48,7 +48,7 @@
                     <TextBox Name="RefereeFirstName" HorizontalAlignment="Left" Margin="10,150,0,0" Text="Imię" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
                     <TextBox Name="RefereeSurName" HorizontalAlignment="Left" Margin="10,181,0,0" Text="Nazwisko" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" FontSize="18"/>
                     <TextBox Name="RefereeAge" HorizontalAlignment="Left" Margin="10,0,0,0" Text="Wiek" TextWrapping="Wrap" VerticalAlignment="Center" Width="189" FontSize="18"/>
-                    <ListView Margin="236,150,204,110" Name="RefereesListView" MaxHeight="180">
+                    <ListView Margin="236,150,204,110" Name="RefereesListView" MaxHeight="170">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn DisplayMemberBinding="{Binding Firstname}" Header="Firstname" Width="90"/>
@@ -90,7 +90,7 @@
                     <Label Content="Dodaj Zawodnika" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" FontSize="22"/>
                     <Button Name="PlayerCreateButton" Content="Stwórz Zawodnika" HorizontalAlignment="Left" Margin="10,274,0,0" VerticalAlignment="Top" FontSize="18" Height="34" Width="154" Click="PlayerCreateButton_Click"/>
                     <Label Content="Lista Zawodników" HorizontalAlignment="Center" Margin="0,111,0,0" VerticalAlignment="Top" FontSize="22"/>
-                    <ListView Margin="218,150,218,126" Name="PlayersListView" MaxHeight="180">
+                    <ListView Margin="218,150,218,126" Name="PlayersListView" MaxHeight="170">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn DisplayMemberBinding="{Binding Firstname}" Header="Firstname" Width="65"/>
