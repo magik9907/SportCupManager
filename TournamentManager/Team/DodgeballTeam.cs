@@ -59,12 +59,16 @@ namespace TournamentManager
                     this.MatchesPlayed++;
                 if (result)
                 {
-                    if(!wasWinner)
+                    if (!wasWinner)
                         this.MatchesWon++;
                     SumOfPlayersLeft += Int32.Parse(stat);
                 }
                 else
+                {
+                    if (wasWinner)
+                        this.MatchesWon--;
                     PlayersEliminated += Int32.Parse(stat);
+                }
             }
 
             public override void Withdraw()

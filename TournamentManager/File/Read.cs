@@ -36,11 +36,16 @@ namespace TournamentManager
                 t.AddTeam(x.Value);
             }
 
-            t.League = League(path, refDic, teamDic, enumType);
-            t.League.Teams = t.Teams;
-            t.League.Referees = t.Referees;
+            try
+            {
+                t.League = League(path, refDic, teamDic, enumType);
+                t.League.Teams = t.Teams;
+                t.League.Referees = t.Referees;
 
-            t.PlayOff = PlayOff(path, refDic, teamDic, enumType);
+                t.PlayOff = PlayOff(path, refDic, teamDic, enumType);
+            }
+            catch(Exception e)
+            { }
 
             return t;
         }

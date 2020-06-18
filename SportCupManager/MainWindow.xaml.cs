@@ -183,7 +183,7 @@ namespace SportCupManager
         {
             string name = Create_TournamentName.Text;
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TournamentManager\\data\\" + name;
-            if (!Directory.Exists(path))
+            if (Directory.Exists(path))
             {
                 SetNotification("Ta nazwa turnieju jest już zajęta!");
                 return;
@@ -296,12 +296,16 @@ namespace SportCupManager
         {
             try
             {
-                ITournament tour = Read.Tournament((string)((Button)sender).Tag);
+                string name = (string)((Button)sender).Tag;
+                ITournament tour = Read.Tournament(name);
                 int id = tour.Referees.Count + 1;
                 Referee referee = new Referee(RefereeFirstName.Text, RefereeSurName.Text, Convert.ToByte(RefereeAge.Text), id);
                 tour.AddReferee(referee);
-                RefereesListView.Items.Refresh();
                 Save.Tournament(tour);
+                if (CurrentTournament != null && name == CurrentTournament.Name)
+                    CurrentTournament = Read.Tournament(name);
+                RefereesListView.ItemsSource = tour.Referees;
+                RefereesListView.Items.Refresh();
             }
             catch (FormatException)
             {
@@ -355,6 +359,11 @@ namespace SportCupManager
             CurrentTournament.SetAutoLeague(formattedDate, space);
             Save.Tournament(CurrentTournament);
             MenuMatch_List_Click(sender, e);
+        }
+
+        private void MatchDetailsPreview_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 

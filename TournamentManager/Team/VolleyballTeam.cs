@@ -57,6 +57,8 @@ namespace TournamentManager
                     this.MatchesPlayed++;
                 if (result && !wasWinner)
                     this.MatchesWon++;
+                if (!result && wasWinner)
+                    this.MatchesWon--;
                 string[] args = stat.Split(", ");
                 Points += Int32.Parse(args[0]); // adding to Points
                 ScoreDiff += Int32.Parse(args[1]); // adding to ScoreDiff

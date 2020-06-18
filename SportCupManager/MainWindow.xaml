@@ -119,7 +119,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
-                <Grid x:Name="MatchPreviewGrid">
+                <Grid x:Name="MatchPreviewGrid" Visibility="Collapsed">
                     <ItemsControl  Name="MatchList">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -127,11 +127,20 @@
                                     <Label FontSize="25" Margin="0, 0, 22 ,0" HorizontalAlignment="Left" Content="{Binding TeamA.Name}" />
                                     <Label FontSize="25" Margin="0, -44, 22 ,0" HorizontalAlignment="Center" Content="VS" />
                                     <Label FontSize="25" Margin="0, -44, 0 ,0" HorizontalAlignment="Right" Content="{Binding TeamB.Name}" />
-                                    <Button Content="Podgląd" Margin="0, 10, 500, 10" Height="25" Width="100" Click="MatchPreview_Click" />
+                                    <Button Content="Podgląd" Margin="0, 10, 500, 10" Height="25" Width="100" Click="MatchDetailsPreview_Click" />
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                </Grid>
+                <Grid x:Name="MatchDetailsGrid">
+                    <Label Content="DruzynA" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="45" Width="333" FontSize="24" FontWeight="Bold"/>
+                    <Label Content="DruzynB" HorizontalAlignment="Left" Margin="343,10,0,0" VerticalAlignment="Top" Height="45" Width="332" FontSize="24" HorizontalContentAlignment="Right" FontWeight="Bold"/>
+                    <Label Content="VS" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Height="45" Width="47" FontSize="24" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                    <Label Content="Sędziowie" HorizontalAlignment="Center" Margin="0,55,0,0" VerticalAlignment="Top" Width="132" HorizontalContentAlignment="Center" FontSize="22" FontWeight="Normal"/>
+                    <Label Content="Jan Kowalski, 25 lat" HorizontalAlignment="Center" Margin="0,94,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" FontSize="18"/>
+                    <Label Content="Zbyszek Nowak, 55 lat" HorizontalAlignment="Center" Margin="0,118,0,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" FontSize="18"/>
+
                 </Grid>
             </Grid>
         </ScrollViewer>
@@ -146,7 +155,7 @@
                 <Label Content="Mecze" Margin="0,319,0,0" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" />
                 <Button Name="Match_Create" Content="Stwórz" HorizontalAlignment="Center" Margin="0,366,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuMatch_Create_Click"/>
                 <Button x:Name="Match_List" Content="Lista" HorizontalAlignment="Center" Margin="0,422,0,0" VerticalAlignment="Top" Height="51" Width="102" FontSize="16" Click="MenuMatch_List_Click"/>
-        </Grid>
+            </Grid>
         </ScrollViewer>
         <Label Name="CurrentlyLoaded" Content="" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="790" Height="40" FontSize="22"/>
 
