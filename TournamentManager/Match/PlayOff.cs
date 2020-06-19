@@ -91,7 +91,32 @@ namespace TournamentManager
             {
                 return new PlayOff(this);
             }
-            
+
+            /// <summary>
+            /// method generate finals round
+            /// </summary>
+            public void GenerateFinals()
+            {
+                int i, j;
+                List<TTeam.ITeam> finalTeams;
+                for ( i = 0; i < rounds.Count; i++)
+                {
+                    if(rounds[i].RoundName == "semi-finals" )
+                    {
+                        if(rounds[i].IsFinished())
+                            break;
+                        throw new TException.RoundNotFinieshedException("semi-finals");
+                    }
+                }
+                finalTeams = new List<TTeam.ITeam>();
+                for ( j = 0; j < rounds.Count; j++)
+                {
+                    finalTeams.Add(rounds[i].ListMatches[j].Winner);
+                    
+                }
+                GenerateRound(finalTeams, "final");
+            }
+
             //return a winner of the PlayOff
             public TTeam.ITeam GetWinner()
             {

@@ -286,7 +286,8 @@ namespace TournamentManager
             //this returns whether or not the league part of tournament has been finished
             public bool IsFinished()
             {
-                if(rounds.Count == rounds.Capacity)
+                rounds.TrimExcess();
+                if (rounds.Count == rounds.Capacity)
                 {
                     for (int i = 0; i < rounds.Count; i++)
                     {
