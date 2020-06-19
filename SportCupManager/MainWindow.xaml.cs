@@ -143,9 +143,15 @@ namespace SportCupManager
 
         private void MenuPlayoff_Create_Click(object sender, RoutedEventArgs e)
         {
+            
             if (CurrentTournament == null)
             {
                 SetNotification("Nie wybrano turnieju!");
+                return;
+            }
+            if (!(CurrentTournament.League.IsFinished()))
+            {
+                SetNotification("League nie została dokończona");
                 return;
             }
             CollapseAllGrids();
@@ -331,12 +337,12 @@ namespace SportCupManager
                 Stat5.Visibility = Visibility.Visible;
                 Stat6.Visibility = Visibility.Visible;
 
-                Stat1.Text = "Drużyna 1 - Set 1";
-                Stat2.Text = "Drużyna 1 - Set 2";
-                Stat3.Text = "Drużyna 1 - Set 3";
-                Stat4.Text = "Drużyna 2 - Set 1";
-                Stat5.Text = "Drużyna 2 - Set 2";
-                Stat6.Text = "Drużyna 2 - Set 3";
+                Stat1.Text = match.TeamA.Name+" - Set 1";
+                Stat2.Text = match.TeamA.Name+" - Set 2";
+                Stat3.Text = match.TeamA.Name+"- Set 3";
+                Stat4.Text = match.TeamB.Name+" - Set 1";
+                Stat5.Text = match.TeamB.Name + "- Set 2";
+                Stat6.Text = match.TeamB.Name + " - Set 3";
             }
             else if (match is TugOfWarMatch)
             {
@@ -353,8 +359,26 @@ namespace SportCupManager
             CollapseAllGrids();
             PlayoffPreviewGrid.Visibility = Visibility.Visible;
             string name = (string)((Button)sender).Tag;
-
-            PlayoffMatchList.ItemsSource = CurrentTournament.PlayOff.FindRound(name).ListMatches;
+            List <TournamentManager.TMatch.Match> listMatches = CurrentTournament.PlayOff.FindRound(name).ListMatches;
+            if(name =="final")
+                if (!(CurrentTournament.PlayOff.FindRound("semi-finals").IsFinished()))
+                {
+                    SetNotification("Semif-finals nie są dokończone");
+                    return;
+                }    
+            if(name == "final" && listMatches.Count == 0)
+            {
+                try
+                {
+                    CurrentTournament.PlayOff.GenerateFinals();
+                    listMatches = CurrentTournament.PlayOff.FindRound(name).ListMatches;
+                }
+                catch (RoundNotFinieshedException ev)
+                {
+                    SetNotification(ev.Message);
+                }
+            }
+            PlayoffMatchList.ItemsSource = listMatches;
             PlayoffRoundNameHidden.Tag = name;
             CurrentMode.Content = "playoff";
         }

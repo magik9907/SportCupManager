@@ -161,6 +161,7 @@ namespace TournamentManager
         public abstract class PlayOffRuntimeException : Exception
         {
             protected TRound.PlayOff playoff;
+            public PlayOffRuntimeException () {}
             public PlayOffRuntimeException(TRound.PlayOff playoff)
             {
                 this.playoff = playoff;
@@ -184,6 +185,23 @@ namespace TournamentManager
                 get
                 {
                     return "The tournament has already finished! " + winner.Name + " has won the Tournament";
+                }
+            }
+        }
+
+        //Exception if PlayOff is finished but user tries to set a result
+        public class RoundNotFinieshedException : PlayOffRuntimeException
+        {
+            string name;
+            public RoundNotFinieshedException(string name) : base ()
+            {
+                this.name = name;
+            }
+            public override string Message
+            {
+                get
+                {
+                    return  name + " have't finished yet.";
                 }
             }
         }
