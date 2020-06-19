@@ -239,11 +239,20 @@ namespace SportCupManager
                 {
                     DetailResultA.Content = "ZWYCIĘZCA";
                     DetailResultA.Foreground = Brushes.Green;
+                    DetailResultB.Content = "PRZEGRANY";
+                    DetailResultB.Foreground = Brushes.Red;
                 }
                 else if (match.Winner.Name == match.TeamB.Name)
                 {
                     DetailResultB.Content = "ZWYCIĘZCA";
                     DetailResultB.Foreground = Brushes.Green;
+                    DetailResultA.Content = "PRZEGRANY";
+                    DetailResultA.Foreground = Brushes.Red;
+                }
+                else
+                {
+                    DetailResultA.Content = "";
+                    DetailResultB.Content = "";
                 }
 
                 if (match.IsWalkover && match.Winner.Name != match.TeamA.Name)
@@ -634,6 +643,10 @@ namespace SportCupManager
             catch (NoSetWinnerException)
             {
                 SetNotification("Niepoprawnie podane sety!");
+            }
+            catch (WrongWinnerException)
+            {
+                SetNotification("Podany wynik nie zgadza się z podanym zwycięzcą");
             }
 
             if(flag)

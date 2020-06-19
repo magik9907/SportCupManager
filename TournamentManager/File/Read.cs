@@ -205,12 +205,11 @@ namespace TournamentManager
                                 referees[elem.assistantReferees[1]]
                             });
 
-            ((TMatch.VolleyballMatch)match).SetResult(elem.ScoreTeamA, elem.ScoreTeamB);
-
             if (elem.Winner != null)
             {
                 match.Winner = teams[int.Parse(elem.Winner)];
             }
+            ((TMatch.VolleyballMatch)match).SetResult(elem.ScoreTeamA, elem.ScoreTeamB);
             match.IsWalkover = elem.IsWalkover;
 
             return match;

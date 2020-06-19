@@ -132,13 +132,16 @@ namespace TournamentManager
 			public void SetResult(float matchLength)
 			{
 				this.matchLength = matchLength;
+				if(Winner != null)
+                {
+					TeamA.SetMatchResult(TeamA == Winner, false, false, matchLength + " - " + 0.ToString());
+					TeamB.SetMatchResult(TeamB == Winner, false, false, matchLength + " - " + 0.ToString());
+				}
 			}
 
 			//This is based on the assumption that stat is going to be in seconds (possibly with miliseconds)
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
-				if (IsWalkover)
-					throw new SetResultForWalkoverException(CreateCopy());
 				float tmp = matchLength;
 				//a safety check just in case stat is not a number 
 				try
@@ -205,12 +208,20 @@ namespace TournamentManager
 			public void SetResult(int wPlayersLeft)
 			{
 				winnerPlayersLeft = wPlayersLeft;
+				if(Winner == TeamA)
+                {
+					TeamA.SetMatchResult(TeamA == Winner, false, false, winnerPlayersLeft + ", " + 6);
+					TeamB.SetMatchResult(TeamB == Winner, false, false, 0 + ", " + (6-winnerPlayersLeft));
+				}
+				if (Winner == TeamB)
+				{
+					TeamB.SetMatchResult(TeamB == Winner, false, false, winnerPlayersLeft + ", " + 6);
+					TeamA.SetMatchResult(TeamA == Winner, false, false, 0 + ", " + (6 - winnerPlayersLeft));
+				}
 			}
 
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
-				if (IsWalkover)
-					throw new SetResultForWalkoverException(CreateCopy());
 				int playersEliminatedChange = 0, playersLeftChange = 0;
 				if (this.Winner == winner)
 					playersLeftChange = winnerPlayersLeft;
@@ -322,13 +333,30 @@ namespace TournamentManager
 			{
 				scoreTeamA = scoreA;
 				scoreTeamB = scoreB;
+				int resultCheck = 0, scoreDiff = 0;
+				for(int i = 0; i < 3; i++)
+                {
+					if (scoreA[i] > scoreB[i])
+						resultCheck++;
+					else if (scoreTeamA[i] < scoreTeamB[i])
+						resultCheck--;
+					scoreDiff = scoreTeamA[i] - scoreTeamB[i];
+                }
+				if (Winner == TeamA)
+				{
+					TeamA.SetMatchResult(true, false, false, (1 + Math.Abs(resultCheck)).ToString() + ", " + (scoreDiff).ToString());
+					TeamB.SetMatchResult(false, false, false, (2 - Math.Abs(resultCheck)).ToString() + ", " + (- scoreDiff).ToString());
+				}
+				if(Winner == TeamB)
+				{
+					TeamA.SetMatchResult(false, false, false, (2 - Math.Abs(resultCheck)).ToString() + ", " + (- scoreDiff).ToString());
+					TeamB.SetMatchResult(true, false, false, (1 + Math.Abs(resultCheck)).ToString() + ", " + (scoreDiff).ToString());
+				}
 			}
 
 			//the expected format is "team1.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played). team2.Name: scoreInSet1, scoreInSet2, scoreInSet3(0 if not played)"
 			public override void SetResult(string stat, TTeam.ITeam winner)
 			{
-				if (IsWalkover)
-					throw new SetResultForWalkoverException(CreateCopy());
 				int resultCheck = 0, scoreDiff = 0;
 				int earlierScoreDiff = 0, earlierPoints = 0;
 				if (WasPlayed())
@@ -459,7 +487,9 @@ namespace TournamentManager
 					}
 					throw new WrongWinnerException(CreateCopy(), winner);
 				}
-				var temp = 3 - earlierPoints;
+				int temp = 0;
+				if(WasPlayed())
+					temp = 3 - earlierPoints;
 				if (winner == TeamA)
                 {
 					TeamA.SetMatchResult(true, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == TeamA, (1 + Math.Abs(resultCheck) - earlierPoints).ToString() + ", " + (scoreDiff-earlierScoreDiff).ToString());
@@ -467,8 +497,8 @@ namespace TournamentManager
 				}
 				else
                 {
-					TeamA.SetMatchResult(false, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == TeamA, (2 - Math.Abs(resultCheck) - earlierPoints).ToString() + ", " + (earlierScoreDiff - scoreDiff).ToString());
-					TeamB.SetMatchResult(true, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == TeamB, (1 + Math.Abs(resultCheck) - temp).ToString() + ", " + (scoreDiff - earlierScoreDiff).ToString());
+					TeamA.SetMatchResult(false, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == TeamA, (2 - Math.Abs(resultCheck) - temp).ToString() + ", " + (earlierScoreDiff - scoreDiff).ToString());
+					TeamB.SetMatchResult(true, earlierScoreDiff != 0, earlierScoreDiff != 0 && this.Winner == TeamB, (1 + Math.Abs(resultCheck) - earlierPoints).ToString() + ", " + (scoreDiff - earlierScoreDiff).ToString());
 				}
 				base.SetResult(stat, winner);
 			}
