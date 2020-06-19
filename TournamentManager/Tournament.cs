@@ -224,7 +224,8 @@ namespace TournamentManager
 
         public void SetPlayOff(int[] date)
         {
-
+            if (league == null)
+                throw new LeagueHasNotBeenCreatedException();
             List<TTeam.ITeam> teams = league.GetFinalTeams(4);
             CheckNumberOfTeams(league.GetFinalTeams(4), 4);
             playoff = new TRound.PlayOff(teams, Referees, date);

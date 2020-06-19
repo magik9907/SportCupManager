@@ -558,6 +558,7 @@ namespace SportCupManager
 
         private void MatchDataSubmit_Click(object sender, RoutedEventArgs e)
         {
+            bool flag = false;
             try
             {
                 Round currentRound = null;
@@ -572,34 +573,52 @@ namespace SportCupManager
                 if (WalkoverCheckbox.IsChecked.Value && winner == match.TeamA)
                 {
                     match.Walkover(match.TeamB);
+                    flag = true;
                 }
                 else if (WalkoverCheckbox.IsChecked.Value && winner == match.TeamB)
                 {
                     match.Walkover(match.TeamA);
+                    flag = true;
                 }
                 else if (match is VolleyballMatch)
                 {
-                    if (match is VolleyballMatch)
-                    {
-                        stats = match.TeamA.Name + ": " + Stat1.Text + ", " + Stat2.Text + ", " + Stat3.Text + ". " + match.TeamB.Name + ": " + Stat4.Text + ", " + Stat5.Text + ", " + Stat6.Text;
-                        match.SetResult(stats, winner);
-                    }
-                    else if (match is TugOfWarMatch)
-                    {
-                        stats = Stat1.Text;
-                        match.SetResult(stats, winner);
-                    }
-                    else if (match is DodgeballMatch)
-                    {
-                        stats = Stat1.Text;
-                        match.SetResult(stats, winner);
-                    }
+                    stats = match.TeamA.Name + ": " + Stat1.Text + ", " + Stat2.Text + ", " + Stat3.Text + ". " + match.TeamB.Name + ": " + Stat4.Text + ", " + Stat5.Text + ", " + Stat6.Text;
+                    match.SetResult(stats, winner);
+                    flag = true;
+                }
+                else if (match is TugOfWarMatch)
+                {
+                    stats = Stat1.Text;
+                    match.SetResult(stats, winner);
+                    flag = true;
+                }
+                else if (match is DodgeballMatch)
+                {
+                    stats = Stat1.Text;
+                    match.SetResult(stats, winner);
+                    flag = true;
                 }
 
                 if (CurrentMode.Content == "playoff")
                     Save.PlayOff(CurrentTournament.PlayOff, CurrentTournament.Name);
                 else if (CurrentMode.Content == "match")
                     Save.League(CurrentTournament.League, CurrentTournament.Name);
+            }
+            catch (NotNumberMatchLengthException)
+            {
+                SetNotification("Czas powinien być liczbą!");
+            }
+            catch (NegativeMatchLengthException)
+            {
+                SetNotification("Czas powinien być dodatni!");
+            }
+            catch(TooHighPlayersLeftException)
+            {
+                SetNotification("Na boisku nie może zostać więcej niż 6 graczy!");
+            }
+            catch (NegativePlayersNumberException)
+            {
+                SetNotification("Liczba graczy powinna być dodatnia!");
             }
             catch (NotIntPlayersException)
             {
@@ -622,10 +641,13 @@ namespace SportCupManager
                 SetNotification("Niepoprawnie podane sety!");
             }
 
-            if (CurrentMode.Content == "playoff")
-                MenuPlayoff_List_Click(sender, e);
-            else if (CurrentMode.Content == "match")
-                MenuMatch_List_Click(sender, e);
+            if(flag)
+            {
+                if (CurrentMode.Content == "playoff")
+                    MenuPlayoff_List_Click(sender, e);
+                else if (CurrentMode.Content == "match")
+                    MenuMatch_List_Click(sender, e);
+            }
         }
 
         private void PlayoffCreateButton_Click(object sender, RoutedEventArgs e)
@@ -642,6 +664,18 @@ namespace SportCupManager
             catch (NotEnoughRefereesException)
             {
                 SetNotification("Za mało sędziów w turnieju!");
+            }
+            catch (NotEnoughtTeamsNumber)
+            {
+                SetNotification("Za mało drużyn w turnieju!");
+            }
+            catch (LeagueNotFinishedException)
+            {
+                SetNotification("Liga jeszcze się nie zakończyła!");
+            }
+            catch (LeagueHasNotBeenCreatedException)
+            {
+                SetNotification("Najpierw ustal mecze w lidze!");
             }
         }
     }
