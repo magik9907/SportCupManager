@@ -149,6 +149,13 @@ namespace SportCupManager
                 SetNotification("Nie wybrano turnieju!");
                 return;
             }
+
+            if (CurrentTournament.League == null)
+            {
+                SetNotification("Nie rozegrano meczy pierwszej fazy!");
+                return;
+            }
+
             if (!(CurrentTournament.League.IsFinished()))
             {
                 SetNotification("League nie została dokończona");
