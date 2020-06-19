@@ -303,11 +303,6 @@ namespace SportCupManager
             else if(CurrentMode.Content == "match")
                 currentRound = CurrentTournament.League.FindRound((string)RoundNameHidden.Tag);
             TournamentManager.TMatch.Match match = currentRound.ListMatches[index];
-            if (match.WasPlayed())
-            {
-                MenuMatch_List_Click(sender, e);
-                return;
-            }
 
             CollapseAllGrids();
             MatchEditDataGrid.Visibility = Visibility.Visible;

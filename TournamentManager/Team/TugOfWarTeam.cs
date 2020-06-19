@@ -111,6 +111,7 @@ namespace TournamentManager
 
             public override string GetStats()
             {
+                SetAverages();
                 return MatchesWon + ", " + AvWinTime + ", " + AvLossTime;
             }
         }
