@@ -455,7 +455,7 @@ namespace SportCupManager
                 Team team = CurrentTournament.FindTeam((string)((Button)sender).Tag);
                 team.AddPlayer(player);
                 PlayersListView.Items.Refresh();
-                Save.Teams(CurrentTournament.Teams, (string)((Button)sender).Tag);
+                Save.Teams(CurrentTournament.Teams, CurrentTournament.Name);
             }
             catch (FormatException)
             {
