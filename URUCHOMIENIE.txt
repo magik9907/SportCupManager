@@ -1,0 +1,21 @@
+Testowe pliki z danymi z folderu :
+
+
+TestowePliki
+
+
+Należy umieścić w folderzez z dokumentami
+
+C:\Users\[Uzytkownik]\Documents\
+
+Przykładowa poprawna ścieżka
+
+C:\Users\Kowalski\Documents\TournamentManager\
+
+
+kod należy skompilować aby móc uruchomić (uruchomić projekt za pomocą pliku z rozszerzeniem .sln)
+
+Diagram jest umieszczony w katalogu TestowePliki : UML.png
+
+Program testowany w środowisku Windows 10;
+program tworzony w Visual Studio 2019 

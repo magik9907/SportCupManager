@@ -1,0 +1,52 @@
+[
+  {
+    "listPlayers": [],
+    "Points": 0,
+    "ScoreDiff": 0,
+    "Id": 1,
+    "Name": "Nazwa",
+    "MatchesPlayed": 0,
+    "MatchesWon": 0,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "Points": 0,
+    "ScoreDiff": 0,
+    "Id": 2,
+    "Name": "2",
+    "MatchesPlayed": 0,
+    "MatchesWon": 0,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "Points": 0,
+    "ScoreDiff": 0,
+    "Id": 3,
+    "Name": "3",
+    "MatchesPlayed": 0,
+    "MatchesWon": 0,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "Points": 0,
+    "ScoreDiff": 0,
+    "Id": 4,
+    "Name": "4",
+    "MatchesPlayed": 0,
+    "MatchesWon": 0,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "Points": 0,
+    "ScoreDiff": 0,
+    "Id": 5,
+    "Name": "5",
+    "MatchesPlayed": 0,
+    "MatchesWon": 0,
+    "DidWithdraw": false
+  }
+]

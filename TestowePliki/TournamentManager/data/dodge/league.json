@@ -1,0 +1,174 @@
+{
+  "Rounds": [
+    {
+      "Date": [
+        3,
+        6,
+        2020
+      ],
+      "RoundName": "Round 1",
+      "ListMatches": [
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 10,
+          "TeamA": 2,
+          "TeamB": 1,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 1,
+          "TeamA": 3,
+          "TeamB": 7,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 2,
+          "TeamA": 6,
+          "TeamB": 5,
+          "Winner": null,
+          "IsWalkover": false
+        }
+      ]
+    },
+    {
+      "Date": [
+        4,
+        6,
+        2020
+      ],
+      "RoundName": "Round 2",
+      "ListMatches": [
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 10,
+          "TeamA": 5,
+          "TeamB": 1,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 1,
+          "TeamA": 7,
+          "TeamB": 6,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 2,
+          "TeamA": 2,
+          "TeamB": 3,
+          "Winner": null,
+          "IsWalkover": false
+        }
+      ]
+    },
+    {
+      "Date": [
+        5,
+        6,
+        2020
+      ],
+      "RoundName": "Round 3",
+      "ListMatches": [
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 10,
+          "TeamA": 3,
+          "TeamB": 1,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 1,
+          "TeamA": 6,
+          "TeamB": 2,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 2,
+          "TeamA": 5,
+          "TeamB": 7,
+          "Winner": null,
+          "IsWalkover": false
+        }
+      ]
+    },
+    {
+      "Date": [
+        6,
+        6,
+        2020
+      ],
+      "RoundName": "Round 4",
+      "ListMatches": [
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 10,
+          "TeamA": 7,
+          "TeamB": 1,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 1,
+          "TeamA": 2,
+          "TeamB": 5,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 2,
+          "TeamA": 3,
+          "TeamB": 6,
+          "Winner": null,
+          "IsWalkover": false
+        }
+      ]
+    },
+    {
+      "Date": [
+        7,
+        6,
+        2020
+      ],
+      "RoundName": "Round 5",
+      "ListMatches": [
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 10,
+          "TeamA": 6,
+          "TeamB": 1,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 1,
+          "TeamA": 5,
+          "TeamB": 3,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 2,
+          "TeamA": 7,
+          "TeamB": 2,
+          "Winner": null,
+          "IsWalkover": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "Rounds": [
+    {
+      "Date": [
+        1,
+        1,
+        1
+      ],
+      "RoundName": "semi-finals",
+      "ListMatches": [
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 1,
+          "TeamA": 2,
+          "TeamB": 6,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "winnerPlayersLeft": 0,
+          "RefA": 2,
+          "TeamA": 4,
+          "TeamB": 3,
+          "Winner": null,
+          "IsWalkover": false
+        }
+      ]
+    },
+    {
+      "Date": [
+        2,
+        1,
+        1
+      ],
+      "RoundName": "final",
+      "ListMatches": []
+    }
+  ]
+}

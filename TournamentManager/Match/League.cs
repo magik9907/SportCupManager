@@ -286,17 +286,14 @@ namespace TournamentManager
             //this returns whether or not the league part of tournament has been finished
             public bool IsFinished()
             {
-                rounds.TrimExcess();
-                if (rounds.Count == rounds.Capacity)
-                {
+                
                     for (int i = 0; i < rounds.Count; i++)
                     {
                         if (!rounds[i].IsFinished())
                             return false;
                     }
                     return true;
-                }
-                return false;
+                
             }
 
             //This method withdraws a team from the tournament and sets all of it's results to losses

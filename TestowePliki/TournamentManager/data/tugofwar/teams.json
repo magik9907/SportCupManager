@@ -1,0 +1,111 @@
+[
+  {
+    "listPlayers": [
+      {
+        "Number": 1,
+        "Age": 1,
+        "Firstname": "1",
+        "Lastname": "1"
+      },
+      {
+        "Number": 1,
+        "Age": 1,
+        "Firstname": "2",
+        "Lastname": "2"
+      },
+      {
+        "Number": 1,
+        "Age": 1,
+        "Firstname": "3",
+        "Lastname": "3"
+      },
+      {
+        "Number": 1,
+        "Age": 1,
+        "Firstname": "4",
+        "Lastname": "4"
+      }
+    ],
+    "AvWinTime": 0.0,
+    "AvLossTime": 0.0,
+    "SumWinTime": 30.0,
+    "SumLossTime": 0.0,
+    "Id": 1,
+    "Name": "11",
+    "MatchesPlayed": 6,
+    "MatchesWon": 6,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "AvWinTime": 0.0,
+    "AvLossTime": 0.0,
+    "SumWinTime": 25.0,
+    "SumLossTime": 5.0,
+    "Id": 2,
+    "Name": "11",
+    "MatchesPlayed": 6,
+    "MatchesWon": 5,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "AvWinTime": 0.0,
+    "AvLossTime": 0.0,
+    "SumWinTime": 20.0,
+    "SumLossTime": 10.0,
+    "Id": 3,
+    "Name": "22",
+    "MatchesPlayed": 6,
+    "MatchesWon": 4,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "AvWinTime": 0.0,
+    "AvLossTime": 0.0,
+    "SumWinTime": 15.0,
+    "SumLossTime": 15.0,
+    "Id": 4,
+    "Name": "33",
+    "MatchesPlayed": 6,
+    "MatchesWon": 3,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "AvWinTime": 0.0,
+    "AvLossTime": 0.0,
+    "SumWinTime": 10.0,
+    "SumLossTime": 20.0,
+    "Id": 5,
+    "Name": "44",
+    "MatchesPlayed": 6,
+    "MatchesWon": 2,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "AvWinTime": 0.0,
+    "AvLossTime": 0.0,
+    "SumWinTime": 5.0,
+    "SumLossTime": 25.0,
+    "Id": 6,
+    "Name": "55",
+    "MatchesPlayed": 6,
+    "MatchesWon": 1,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "AvWinTime": 0.0,
+    "AvLossTime": 0.0,
+    "SumWinTime": 0.0,
+    "SumLossTime": 30.0,
+    "Id": 7,
+    "Name": "66",
+    "MatchesPlayed": 6,
+    "MatchesWon": 0,
+    "DidWithdraw": false
+  }
+]

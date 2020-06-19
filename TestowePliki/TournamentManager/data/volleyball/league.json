@@ -1,0 +1,264 @@
+{
+  "Rounds": [
+    {
+      "Date": [
+        5,
+        6,
+        2020
+      ],
+      "RoundName": "Round 1",
+      "ListMatches": [
+        {
+          "assistantReferees": [
+            2,
+            3
+          ],
+          "scoreTeamA": [
+            21,
+            21,
+            0
+          ],
+          "scoreTeamB": [
+            0,
+            0,
+            0
+          ],
+          "RefA": 1,
+          "TeamA": 2,
+          "TeamB": 5,
+          "Winner": 2,
+          "IsWalkover": true
+        },
+        {
+          "assistantReferees": [
+            5,
+            6
+          ],
+          "scoreTeamA": [
+            21,
+            21,
+            0
+          ],
+          "scoreTeamB": [
+            0,
+            0,
+            0
+          ],
+          "RefA": 4,
+          "TeamA": 3,
+          "TeamB": 4,
+          "Winner": 3,
+          "IsWalkover": true
+        }
+      ]
+    },
+    {
+      "Date": [
+        6,
+        6,
+        2020
+      ],
+      "RoundName": "Round 2",
+      "ListMatches": [
+        {
+          "assistantReferees": [
+            2,
+            3
+          ],
+          "scoreTeamA": [
+            0,
+            0,
+            0
+          ],
+          "scoreTeamB": [
+            0,
+            0,
+            0
+          ],
+          "RefA": 1,
+          "TeamA": 5,
+          "TeamB": 3,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "assistantReferees": [
+            5,
+            6
+          ],
+          "scoreTeamA": [
+            21,
+            21,
+            0
+          ],
+          "scoreTeamB": [
+            0,
+            0,
+            0
+          ],
+          "RefA": 4,
+          "TeamA": 1,
+          "TeamB": 2,
+          "Winner": 1,
+          "IsWalkover": true
+        }
+      ]
+    },
+    {
+      "Date": [
+        7,
+        6,
+        2020
+      ],
+      "RoundName": "Round 3",
+      "ListMatches": [
+        {
+          "assistantReferees": [
+            2,
+            3
+          ],
+          "scoreTeamA": [
+            0,
+            0,
+            0
+          ],
+          "scoreTeamB": [
+            21,
+            21,
+            0
+          ],
+          "RefA": 1,
+          "TeamA": 3,
+          "TeamB": 1,
+          "Winner": 1,
+          "IsWalkover": true
+        },
+        {
+          "assistantReferees": [
+            5,
+            6
+          ],
+          "scoreTeamA": [
+            0,
+            0,
+            0
+          ],
+          "scoreTeamB": [
+            0,
+            0,
+            0
+          ],
+          "RefA": 4,
+          "TeamA": 4,
+          "TeamB": 5,
+          "Winner": null,
+          "IsWalkover": false
+        }
+      ]
+    },
+    {
+      "Date": [
+        8,
+        6,
+        2020
+      ],
+      "RoundName": "Round 4",
+      "ListMatches": [
+        {
+          "assistantReferees": [
+            2,
+            3
+          ],
+          "scoreTeamA": [
+            0,
+            0,
+            0
+          ],
+          "scoreTeamB": [
+            0,
+            0,
+            0
+          ],
+          "RefA": 1,
+          "TeamA": 1,
+          "TeamB": 4,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "assistantReferees": [
+            5,
+            6
+          ],
+          "scoreTeamA": [
+            0,
+            0,
+            0
+          ],
+          "scoreTeamB": [
+            0,
+            0,
+            0
+          ],
+          "RefA": 4,
+          "TeamA": 2,
+          "TeamB": 3,
+          "Winner": null,
+          "IsWalkover": false
+        }
+      ]
+    },
+    {
+      "Date": [
+        9,
+        6,
+        2020
+      ],
+      "RoundName": "Round 5",
+      "ListMatches": [
+        {
+          "assistantReferees": [
+            2,
+            3
+          ],
+          "scoreTeamA": [
+            0,
+            0,
+            0
+          ],
+          "scoreTeamB": [
+            0,
+            0,
+            0
+          ],
+          "RefA": 1,
+          "TeamA": 4,
+          "TeamB": 2,
+          "Winner": null,
+          "IsWalkover": false
+        },
+        {
+          "assistantReferees": [
+            5,
+            6
+          ],
+          "scoreTeamA": [
+            0,
+            0,
+            0
+          ],
+          "scoreTeamB": [
+            0,
+            0,
+            0
+          ],
+          "RefA": 4,
+          "TeamA": 5,
+          "TeamB": 1,
+          "Winner": null,
+          "IsWalkover": false
+        }
+      ]
+    }
+  ]
+}

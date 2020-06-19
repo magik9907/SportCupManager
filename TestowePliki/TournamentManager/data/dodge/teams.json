@@ -1,0 +1,87 @@
+[
+  {
+    "listPlayers": [],
+    "PlayersEliminated": 2,
+    "SumOfPlayersLeft": 21,
+    "Id": 2,
+    "Name": "11",
+    "MatchesPlayed": 6,
+    "MatchesWon": 6,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "PlayersEliminated": 5,
+    "SumOfPlayersLeft": 16,
+    "Id": 3,
+    "Name": "22",
+    "MatchesPlayed": 6,
+    "MatchesWon": 4,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "PlayersEliminated": 10,
+    "SumOfPlayersLeft": 5,
+    "Id": 6,
+    "Name": "55",
+    "MatchesPlayed": 6,
+    "MatchesWon": 2,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "PlayersEliminated": 9,
+    "SumOfPlayersLeft": 8,
+    "Id": 5,
+    "Name": "44",
+    "MatchesPlayed": 6,
+    "MatchesWon": 2,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [],
+    "PlayersEliminated": 13,
+    "SumOfPlayersLeft": 0,
+    "Id": 7,
+    "Name": "66",
+    "MatchesPlayed": 6,
+    "MatchesWon": 0,
+    "DidWithdraw": false
+  },
+  {
+    "listPlayers": [
+      {
+        "Number": 1,
+        "Age": 1,
+        "Firstname": "1",
+        "Lastname": "1"
+      },
+      {
+        "Number": 1,
+        "Age": 1,
+        "Firstname": "2",
+        "Lastname": "2"
+      },
+      {
+        "Number": 1,
+        "Age": 1,
+        "Firstname": "3",
+        "Lastname": "3"
+      },
+      {
+        "Number": 1,
+        "Age": 1,
+        "Firstname": "4",
+        "Lastname": "4"
+      }
+    ],
+    "PlayersEliminated": 0,
+    "SumOfPlayersLeft": -36,
+    "Id": 1,
+    "Name": "11",
+    "MatchesPlayed": 6,
+    "MatchesWon": 0,
+    "DidWithdraw": false
+  }
+]

@@ -1,0 +1,48 @@
+{
+  "Rounds": [
+    {
+      "Date": [
+        26,
+        6,
+        2020
+      ],
+      "RoundName": "semi-finals",
+      "ListMatches": [
+        {
+          "matchLength": 0.0,
+          "RefA": 1,
+          "TeamA": 1,
+          "TeamB": 4,
+          "Winner": 1,
+          "IsWalkover": true
+        },
+        {
+          "matchLength": 0.0,
+          "RefA": 2,
+          "TeamA": 2,
+          "TeamB": 3,
+          "Winner": 2,
+          "IsWalkover": true
+        }
+      ]
+    },
+    {
+      "Date": [
+        27,
+        6,
+        2020
+      ],
+      "RoundName": "final",
+      "ListMatches": [
+        {
+          "matchLength": 0.0,
+          "RefA": 1,
+          "TeamA": 1,
+          "TeamB": 2,
+          "Winner": 1,
+          "IsWalkover": true
+        }
+      ]
+    }
+  ]
+}
