@@ -221,6 +221,20 @@ namespace TournamentManager
             }
         }
 
+        //Exception if the league is not finished
+        public class LeagueNotFinishedException : ObjectCreationException
+        {
+            public override string Message
+            { get { return "You can't get final teams if the league is not finished!"; } }
+        }
+
+        //Exception if user wants to start the PlayOff without starting the League
+        public class LeagueHasNotBeenCreatedException : ObjectCreationException
+        {
+            public override string Message
+            { get { return "You can't create PlayOffs without creating the league first"; } }
+        }
+
         //Exception if the schedule is impossible
         public class ImpossibleScheduleException : LeagueRuntimeException
         {

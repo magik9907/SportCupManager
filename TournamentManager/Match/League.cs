@@ -153,6 +153,8 @@ namespace TournamentManager
             //getting top number of teams
             public List<TTeam.ITeam> GetFinalTeams(int number)
             {
+                if (!IsFinished())
+                    throw new LeagueNotFinishedException();
                 SortTeams();
                 return teams.GetRange(0, number);
             }
